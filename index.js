@@ -73,7 +73,7 @@ class Doc extends EventEmitter {
 
       this.emit('data', {
         eventLoopDelay: Math.max(0, loopDelta),
-        cpu: (100 * (raw.cpu.user + raw.cpu.system)) / elapsedNs,
+        cpu: (100 * (raw.cpu.user + raw.cpu.system)) / (elapsedNs / 1e3),
         memory: process.memoryUsage(),
         raw
       })
