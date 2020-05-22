@@ -9,6 +9,7 @@
 
 <!-- toc -->
 
+- [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
   * [Doc([options])](#docoptions)
@@ -16,6 +17,12 @@
       - [data](#data)
 
 <!-- tocstop -->
+
+## Installation
+
+```bash
+$ npm i @dnlup/doc
+```
 
 ## Usage
 ```js
