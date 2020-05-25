@@ -2,7 +2,56 @@
 
 const tap = require('tap')
 const { monitorEventLoopDelay } = require('perf_hooks')
+const isCi = require('is-ci')
+const semver = require('semver')
 const doc = require('./')
+
+const performDetailedCheck = process.platform === 'linux' || !isCi
+const isGte12 = semver.gte(process.versions.node, '12.0.0')
+
+const checks = {
+  eventLoopDelay (value) {
+    if (performDetailedCheck) {
+      const level = isGte12 ? 1 : 20
+      return value > 0 && value < level
+    }
+    return value >= 0
+  },
+  cpu (value) {
+    if (performDetailedCheck) {
+      return value > 0 && value < 20
+    }
+    // Apparently, sometimes cpu usage is zero on windows runners.
+    return value >= 0
+  },
+  rss (value) {
+    if (performDetailedCheck) {
+      const level = isGte12 ? 130 : 150
+      return value > 0 && value < level * 1e6
+    }
+    return value > 0
+  },
+  heapTotal (value) {
+    if (performDetailedCheck) {
+      const level = isGte12 ? 80 : 100
+      return value > 0 && value < level * 1e6
+    }
+    return value > 0
+  },
+  heapUsed (value) {
+    if (performDetailedCheck) {
+      const level = isGte12 ? 60 : 80
+      return value > 0 && value < level * 1e6
+    }
+    return value > 0
+  },
+  external (value) {
+    if (performDetailedCheck) {
+      return value > 0 && value < 10 * 1e6
+    }
+    return value > 0
+  }
+}
 
 tap.test('should throw an error if options are invalid', t => {
   let error = t.throws(() => doc({ sampleInterval: 'skdjfh' }))
@@ -32,7 +81,9 @@ tap.test('data event', t => {
   // Since the internal timer of the Doc instance
   // is unref(ed), manually schedule work on the event loop
   // to avoid premature exiting from the test
-  setTimeout(() => {}, 2000)
+  const timoeut = setTimeout(() => {}, 2000)
+  t.teardown(() => clearTimeout(timoeut))
+
   d.once('data', data => {
     const end = process.hrtime(start)
     const elapsed = end[0] * 1e3 + end[1] / 1e6
@@ -47,12 +98,12 @@ tap.test('data event', t => {
     t.equal('number', typeof data.memory.heapTotal)
     t.equal('number', typeof data.memory.heapUsed)
     t.equal('number', typeof data.memory.external)
-    t.true(data.eventLoopDelay > 0)
-    t.true(data.cpu > 0 && data.cpu < 100)
-    t.true(data.memory.rss > 0)
-    t.true(data.memory.heapTotal > 0)
-    t.true(data.memory.heapUsed > 0)
-    t.true(data.memory.external > 0)
+    t.true(checks.eventLoopDelay(data.eventLoopDelay), `event loop delay check: ${data.eventLoopDelay}`)
+    t.true(checks.cpu(data.cpu), `cpu check: ${data.cpu}`)
+    t.true(checks.rss(data.memory.rss), `rss check: ${data.memory.rss}`)
+    t.true(checks.heapTotal(data.memory.heapTotal), `heapTotal check: ${data.memory.heapTotal}`)
+    t.true(checks.heapUsed(data.memory.heapUsed), `heapUsed check: ${data.memory.heapUsed}`)
+    t.true(checks.external(data.memory.external), `external check: ${data.memory.external}`)
     t.end()
   })
 })
