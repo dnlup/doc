@@ -6,8 +6,12 @@
   "scripts": {
     "lint": "standard --fix",
     "test": "tap test.js",
+    "doc": "doctoc README.md",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
-    "postrelease": "git push --follow-tags origin master"
+    "postrelease": "npm run push && npm publish",
+    "next": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
+    "postnext": "npm run push && npm publish --tag next",
+    "push": "git push origin ---follow-tags `git rev-parse --abbrev-ref HEAD`"
   },
   "repository": {
     "type": "git",
@@ -27,7 +31,7 @@
     "health",
     "metrics"
   ],
-  "author": "Daniele Belardi  <dwon.dnl@gmail.com>",
+  "author": "Daniele Belardi <dwon.dnl@gmail.com>",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
@@ -41,12 +45,9 @@
     "npm": ">=6"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
+    "doctoc": "^1.4.0",
     "husky": "^4.2.5",
     "is-ci": "^2.0.0",
-    "lint-staged": "^10.2.6",
-    "markdown-toc": "^1.2.0",
     "semver": "^7.3.2",
     "standard": "^14.3.4",
     "standard-version": "^8.0.0",
