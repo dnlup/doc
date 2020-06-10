@@ -7,16 +7,18 @@
 
 > Get usage and health data about your Node.js process
 
-<!-- toc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
-  * [Doc([options])](#docoptions)
-    + [events](#events)
+  - [Doc([options])](#docoptions)
+    - [events](#events)
       - [data](#data)
 
-<!-- tocstop -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
 
