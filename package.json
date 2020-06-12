@@ -9,8 +9,8 @@
     "doc": "doctoc README.md",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
     "postrelease": "npm run push && npm publish",
-    "pre-release": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
-    "postpre-release": "npm run push && npm publish --tag prerelease",
+    "next": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
+    "postnext": "npm run push && npm publish --tag next",
     "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`"
   },
   "repository": {
