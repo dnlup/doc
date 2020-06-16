@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "standard --fix",
     "test": "tap test.js",
-    "doc": "doctoc README.md",
+    "doc": "markdown-toc -i README.md",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
     "postrelease": "npm run push && npm publish",
     "next": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
@@ -45,9 +45,10 @@
     "npm": ">=6"
   },
   "devDependencies": {
-    "doctoc": "^1.4.0",
     "husky": "^4.2.5",
     "is-ci": "^2.0.0",
+    "lint-staged": "^10.2.10",
+    "markdown-toc": "^1.2.0",
     "semver": "^7.3.2",
     "standard": "^14.3.4",
     "standard-version": "^8.0.0",
