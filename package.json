@@ -49,7 +49,9 @@
     "npm": ">=6"
   },
   "standard": {
-    "ignore": ["index.d.ts"]
+    "ignore": [
+      "index.d.ts"
+    ]
   },
   "tsd": {
     "directory": "."
