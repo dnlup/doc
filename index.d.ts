@@ -1,5 +1,7 @@
-declare module '@dnlup/doc' {
-  export interface DocOptions {
+import { EventEmitter } from 'events'
+
+declare namespace Doc {
+  interface DocOptions {
     /**
      * Sample interval (ms), each sampleInterval ms a data event is emitted.
      * On Node 10 the default value is 500 while on Node >= 12 is 1000.
@@ -7,7 +9,7 @@ declare module '@dnlup/doc' {
      * sample the event loop and this allows to increase the default sample
      * interval on Node >= 12.
      */
-    sampleInterval?: number;
+    sampleInterval?: number,
 
     /**
      * Options to setup `perf_hooks.monitorEventLoopDelay`.
@@ -16,27 +18,27 @@ declare module '@dnlup/doc' {
       /**
        * The sampling rate in milliseconds. Must be greater than zero. Default: 10.
        */
-      resolution: number;
-    };
+      resolution: number,
+    }
   }
 
   /**
    * On Node 12 and above this is a Histogram instance from 'perf_hooks'.
    */
   interface EventLoopDelayHistogram {
-    min: number;
-    max: number;
-    mean: number;
-    stddev: number;
-    percentiles: Map<number, number>;
-    exceeds: number;
+    min: number,
+    max: number,
+    mean: number,
+    stddev: number,
+    percentiles: Map<number, number>,
+    exceeds: number,
   }
 
-  export interface DocData {
+  interface DocData {
     /**
      * Event loop delay (ms).
      */
-    eventLoopDelay: number;
+    eventLoopDelay: number,
     /**
      * Object containing memory usage stats.
      */
@@ -44,24 +46,24 @@ declare module '@dnlup/doc' {
       /**
        * RSS memory (bytes).
        */
-      rss: number;
+      rss: number,
       /**
        * Total heap Memory (bytes).
        */
-      heapTotal: number;
+      heapTotal: number,
       /**
        * Heap memory used (bytes).
        */
-      heapUsed: number;
+      heapUsed: number,
       /**
        * External memory (bytes).
        */
-      external: number;
-    };
+      external: number,
+    },
     /**
      * CPU usage percentage.
      */
-    cpu: number;
+    cpu: number,
     /**
      * Object containing raw values
      */
@@ -70,23 +72,22 @@ declare module '@dnlup/doc' {
        * Raw representation of the event loop delay, on Node 10 it is the delay
        * in nanoseconds, on Node >= 12 is a Histogram instance
        */
-      eventLoopDelay: number | EventLoopDelayHistogram;
+      eventLoopDelay: number | EventLoopDelayHistogram,
       /**
        * Object containing the raw values returned from `process.cpuUsage()`.
        */
       cpu: {
-        user: number;
-        system: number;
-      };
-    };
+        user: number,
+        system: number,
+      },
+    }
   }
 
-  import { EventEmitter } from 'events';
-
-  export interface DocInstance extends EventEmitter {
-    on(event: 'data', listener: (data: DocData) => void);
+  interface DocInstance extends EventEmitter {
+    on(event: 'data', listener: (data: DocData) => void): this
   }
-
-  declare function NewDoc(options?: DocOptions): DocInstance;
-  export = NewDoc;
 }
+
+declare function Doc(options?: Doc.DocOptions): Doc.DocInstance
+
+export = Doc
