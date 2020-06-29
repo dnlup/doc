@@ -50,6 +50,26 @@ const checks = {
       return value > 0 && value < 10 * 1e6
     }
     return value > 0
+  },
+  gc (value) {
+    // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
+    return value.major > 0 && value.minor > 0 && value.incremental > 0
+  }
+}
+
+// Since the internal timer of the Doc instance
+// is unref(ed), manually schedule work on the event loop
+// to avoid premature exiting from the test
+function preventTestExitingEarly (t, ms) {
+  const timeout = setTimeout(() => {}, ms)
+  t.teardown(() => clearTimeout(timeout))
+}
+
+function doThingsWithMemory (upper) {
+  const pool = []
+  for (let i = 0; i < upper; ++i) {
+    pool.push({ foo: { bar: { baz: i } } })
+    setTimeout(() => pool.pop(), 5)
   }
 }
 
@@ -78,11 +98,7 @@ tap.test('data event', t => {
   const start = process.hrtime()
   const d = doc()
 
-  // Since the internal timer of the Doc instance
-  // is unref(ed), manually schedule work on the event loop
-  // to avoid premature exiting from the test
-  const timoeut = setTimeout(() => {}, 2000)
-  t.teardown(() => clearTimeout(timoeut))
+  preventTestExitingEarly(t, 2000)
 
   d.once('data', data => {
     const end = process.hrtime(start)
@@ -104,6 +120,27 @@ tap.test('data event', t => {
     t.true(checks.heapTotal(data.memory.heapTotal), `heapTotal check: ${data.memory.heapTotal}`)
     t.true(checks.heapUsed(data.memory.heapUsed), `heapUsed check: ${data.memory.heapUsed}`)
     t.true(checks.external(data.memory.external), `external check: ${data.memory.external}`)
+    t.end()
+  })
+})
+
+// We run this in a separate test so it doesn't interfere with the expect CPU usage stats
+// in the "data event" test
+tap.test('garbage collection stats', t => {
+  const d = doc({ sampleInterval: 10000 })
+
+  preventTestExitingEarly(t, 12000)
+
+  doThingsWithMemory(1e6)
+  doThingsWithMemory(1e6)
+  doThingsWithMemory(1e6)
+
+  d.once('data', data => {
+    // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
+    t.equal('number', typeof data.gc.major)
+    t.equal('number', typeof data.gc.minor)
+    t.equal('number', typeof data.gc.incremental)
+    t.true(checks.gc(data.gc), `gc check: ${JSON.stringify(data.gc)}`)
     t.end()
   })
 })

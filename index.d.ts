@@ -65,6 +65,27 @@ declare namespace Doc {
      */
     cpu: number,
     /**
+     * Object containing garbage collection stats.
+     */
+    gc: {
+      /**
+       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
+       */
+      major: number,
+      /**
+       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
+       */
+      minor: number,
+      /**
+       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
+       */
+      incremental: number,
+      /**
+       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
+       */
+      weakCB: number,
+    },
+    /**
      * Object containing raw values
      */
     raw: {
