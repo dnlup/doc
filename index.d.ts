@@ -71,19 +71,19 @@ declare namespace Doc {
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
        */
-      major: number,
+      major: number | undefined,
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
        */
-      minor: number,
+      minor: number | undefined,
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
        */
-      incremental: number,
+      incremental: number | undefined,
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
        */
-      weakCB: number,
+      weakCB: number | undefined,
     },
     /**
      * Object containing raw values
