@@ -127,9 +127,11 @@ tap.test('data event', t => {
 // We run this in a separate test so it doesn't interfere with the expect CPU usage stats
 // in the "data event" test
 tap.test('garbage collection stats', t => {
-  const d = doc({ sampleInterval: 10000 })
+  // Note that this is set to a large interval so we're sure garbage collection
+  // occurs during the test suite
+  const d = doc({ sampleInterval: 12000 })
 
-  preventTestExitingEarly(t, 12000)
+  preventTestExitingEarly(t, 13000)
 
   doThingsWithMemory(1e6)
   doThingsWithMemory(1e6)
