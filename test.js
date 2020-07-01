@@ -1,10 +1,11 @@
 'use strict'
 
 const tap = require('tap')
-const { monitorEventLoopDelay } = require('perf_hooks')
+const { monitorEventLoopDelay, constants } = require('perf_hooks')
 const isCi = require('is-ci')
 const semver = require('semver')
 const doc = require('./')
+const GCStats = require('./gc')
 
 const performDetailedCheck = process.platform === 'linux' || !isCi
 const isGte12 = semver.gte(process.versions.node, '12.0.0')
@@ -65,14 +66,6 @@ function preventTestExitingEarly (t, ms) {
   t.teardown(() => clearTimeout(timeout))
 }
 
-function doThingsWithMemory (upper) {
-  const pool = []
-  for (let i = 0; i < upper; ++i) {
-    pool.push({ foo: { bar: { baz: i } } })
-    setTimeout(() => pool.pop(), 5)
-  }
-}
-
 tap.test('should throw an error if options are invalid', t => {
   let error = t.throws(() => doc({ sampleInterval: 'skdjfh' }))
   t.equal(error.message, 'sampleInterval must be a number greater than zero')
@@ -127,24 +120,38 @@ tap.test('data event', t => {
 // We run this in a separate test so it doesn't interfere with the expect CPU usage stats
 // in the "data event" test
 tap.test('garbage collection stats', t => {
-  // Note that this is set to a large interval so we're sure garbage collection
-  // occurs during the test suite
-  const d = doc({ sampleInterval: 12000 })
+  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const expectedAverage = data.reduce((acc, x) => acc + x, 0) / data.length
 
-  preventTestExitingEarly(t, 13000)
-
-  doThingsWithMemory(1e6)
-  doThingsWithMemory(1e6)
-  doThingsWithMemory(1e6)
-
-  d.once('data', data => {
-    // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
-    t.equal('number', typeof data.gc.major)
-    t.equal('number', typeof data.gc.minor)
-    t.equal('number', typeof data.gc.incremental)
-    t.true(checks.gc(data.gc), `gc check: ${JSON.stringify(data.gc)}`)
-    t.end()
+  // Creates a fake list that's the same shape as PerformanceObserver
+  const newFakeList = (kind) => ({
+    getEntriesByType: (_unused) => data.map(x => ({ kind, duration: x }))
   })
+
+  const gc = GCStats()
+
+  // Send in some sample data.
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_MAJOR))
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_MINOR))
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_INCREMENTAL))
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_WEAKCB))
+
+  // Check it calculated the average correctly
+  const gcStats = gc.data()
+  t.equal(gcStats.major, expectedAverage)
+  t.equal(gcStats.minor, expectedAverage)
+  t.equal(gcStats.incremental, expectedAverage)
+  t.equal(gcStats.weakCB, expectedAverage)
+
+  // Check it resets correctly
+  gc.reset()
+  const gcStatsAfterReset = gc.data()
+  t.equal(gcStatsAfterReset.major, undefined)
+  t.equal(gcStatsAfterReset.minor, undefined)
+  t.equal(gcStatsAfterReset.incremental, undefined)
+  t.equal(gcStatsAfterReset.weakCB, undefined)
+
+  t.end()
 })
 
 tap.test('custom sample interval', t => {
