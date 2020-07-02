@@ -125,7 +125,7 @@ tap.test('garbage collection stats', t => {
 
   // Creates a fake list that's the same shape as PerformanceObserver
   const newFakeList = (kind) => ({
-    getEntriesByType: (_unused) => data.map(x => ({ kind, duration: x }))
+    getEntries: () => data.map(x => ({ kind, duration: x }))
   })
 
   const gc = GCStats()
@@ -146,10 +146,10 @@ tap.test('garbage collection stats', t => {
   // Check it resets correctly
   gc.reset()
   const gcStatsAfterReset = gc.data()
-  t.equal(gcStatsAfterReset.major, undefined)
-  t.equal(gcStatsAfterReset.minor, undefined)
-  t.equal(gcStatsAfterReset.incremental, undefined)
-  t.equal(gcStatsAfterReset.weakCB, undefined)
+  t.equal(gcStatsAfterReset.major, 0)
+  t.equal(gcStatsAfterReset.minor, 0)
+  t.equal(gcStatsAfterReset.incremental, 0)
+  t.equal(gcStatsAfterReset.weakCB, 0)
 
   t.end()
 })

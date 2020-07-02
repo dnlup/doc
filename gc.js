@@ -31,24 +31,24 @@ class GCStats {
   }
 
   observerCallback (list) {
-    for (const gcEntry of list.getEntriesByType('gc')) {
+    for (const gcEntry of list.getEntries()) {
       this.update(gcEntry)
     }
   }
 
   reset () {
     // These are set as a tuple of [count; rollingAverage]
-    this.major = [0, undefined]
-    this.minor = [0, undefined]
-    this.incremental = [0, undefined]
-    this.weakCB = [0, undefined]
+    this.major = [0, 0]
+    this.minor = [0, 0]
+    this.incremental = [0, 0]
+    this.weakCB = [0, 0]
   }
 
   update (gcEntry) {
     const key = GCStats.entryKindToKey(gcEntry)
     if (key) {
       let [count, average] = this[key]
-      if (average === undefined) {
+      if (count === 0) {
         this[key] = [1, gcEntry.duration]
       } else {
         count++
