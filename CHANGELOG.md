@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-0](https://github.com/dnlup/doc/compare/v1.1.0...v1.2.0-0) (2020-07-03)
+
+
+### Features
+
+* use PerformanceObserver for gc stats ([fae15d2](https://github.com/dnlup/doc/commit/fae15d27ec041173ab709a707c5cce2d7740562d))
+
+
+### Bug Fixes
+
+* gc types are number | undefined ([fae1cf4](https://github.com/dnlup/doc/commit/fae1cf4a4ff6ca32f0cc4771265564156954a65e))
+* split gc into separate file to make testing easier ([fae108f](https://github.com/dnlup/doc/commit/fae108f0a528015efeaf78ab42c60c247a36e0b9))
+
 ## [1.1.0](https://github.com/dnlup/doc/compare/v1.0.4-0...v1.1.0) (2020-06-30)
 
 
