@@ -73,4 +73,4 @@ Properties:
 | `raw.cpu` | Object containing the raw values returned from [`process.cpuUsage()`](https://nodejs.org/docs/latest-v12.x/api/process.html#process_process_cpuusage_previousvalue) |
 | `raw.eventLoopDelay` | Raw representation of the event loop delay, on Node 10 it is the delay in nanoseconds, on Node >= 12 is a [Histogram instance](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_class_histogram) |
 
-- *: the average duration of garbage collection statistics may be `undefined` if no garbage collection occurred within the `sampleInterval`
+- *: the average duration of garbage collection statistics will be `0` if no garbage collection occurred within the `sampleInterval`
