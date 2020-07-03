@@ -1,10 +1,11 @@
 'use strict'
 
 const tap = require('tap')
-const { monitorEventLoopDelay } = require('perf_hooks')
+const { monitorEventLoopDelay, constants } = require('perf_hooks')
 const isCi = require('is-ci')
 const semver = require('semver')
 const doc = require('./')
+const GCStats = require('./gc')
 
 const performDetailedCheck = process.platform === 'linux' || !isCi
 const isGte12 = semver.gte(process.versions.node, '12.0.0')
@@ -50,7 +51,19 @@ const checks = {
       return value > 0 && value < 10 * 1e6
     }
     return value > 0
+  },
+  gc (value) {
+    // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
+    return value.major > 0 && value.minor > 0 && value.incremental > 0
   }
+}
+
+// Since the internal timer of the Doc instance
+// is unref(ed), manually schedule work on the event loop
+// to avoid premature exiting from the test
+function preventTestExitingEarly (t, ms) {
+  const timeout = setTimeout(() => {}, ms)
+  t.teardown(() => clearTimeout(timeout))
 }
 
 tap.test('should throw an error if options are invalid', t => {
@@ -78,11 +91,7 @@ tap.test('data event', t => {
   const start = process.hrtime()
   const d = doc()
 
-  // Since the internal timer of the Doc instance
-  // is unref(ed), manually schedule work on the event loop
-  // to avoid premature exiting from the test
-  const timoeut = setTimeout(() => {}, 2000)
-  t.teardown(() => clearTimeout(timoeut))
+  preventTestExitingEarly(t, 2000)
 
   d.once('data', data => {
     const end = process.hrtime(start)
@@ -106,6 +115,43 @@ tap.test('data event', t => {
     t.true(checks.external(data.memory.external), `external check: ${data.memory.external}`)
     t.end()
   })
+})
+
+// We run this in a separate test so it doesn't interfere with the expect CPU usage stats
+// in the "data event" test
+tap.test('garbage collection stats', t => {
+  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const expectedAverage = data.reduce((acc, x) => acc + x, 0) / data.length
+
+  // Creates a fake list that's the same shape as PerformanceObserver
+  const newFakeList = (kind) => ({
+    getEntries: () => data.map(x => ({ kind, duration: x }))
+  })
+
+  const gc = GCStats()
+
+  // Send in some sample data.
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_MAJOR))
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_MINOR))
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_INCREMENTAL))
+  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_WEAKCB))
+
+  // Check it calculated the average correctly
+  const gcStats = gc.data()
+  t.equal(gcStats.major, expectedAverage)
+  t.equal(gcStats.minor, expectedAverage)
+  t.equal(gcStats.incremental, expectedAverage)
+  t.equal(gcStats.weakCB, expectedAverage)
+
+  // Check it resets correctly
+  gc.reset()
+  const gcStatsAfterReset = gc.data()
+  t.equal(gcStatsAfterReset.major, 0)
+  t.equal(gcStatsAfterReset.minor, 0)
+  t.equal(gcStatsAfterReset.incremental, 0)
+  t.equal(gcStatsAfterReset.weakCB, 0)
+
+  t.end()
 })
 
 tap.test('custom sample interval', t => {

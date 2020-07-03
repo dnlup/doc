@@ -21,6 +21,7 @@
     "url": "https://github.com/dnlup/doc.git"
   },
   "files": [
+    "gc.js",
     "index.js",
     "index.d.ts"
   ],

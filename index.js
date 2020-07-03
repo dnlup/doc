@@ -2,6 +2,7 @@
 
 const EventEmitter = require('events')
 const { monitorEventLoopDelay } = require('perf_hooks')
+const GCStats = require('./gc')
 
 function hrtime2ns (time) {
   return time[0] * 1e9 + time[1]
@@ -23,6 +24,7 @@ function validate ({
       throw new Error('sampleInterval must be greather than eventLoopOptions.resolution')
     }
   }
+
   return {
     sampleInterval,
     eventLoopOptions
@@ -47,6 +49,8 @@ class Doc extends EventEmitter {
       cpu: {},
       memory: {}
     }
+
+    const gcStats = GCStats()
 
     let lastCheck = process.hrtime()
     let cpuUsage = process.cpuUsage()
@@ -75,11 +79,14 @@ class Doc extends EventEmitter {
         eventLoopDelay: Math.max(0, loopDelta),
         cpu: (100 * (raw.cpu.user + raw.cpu.system)) / (elapsedNs / 1e3),
         memory: process.memoryUsage(),
+        gc: gcStats.data(),
         raw
       })
 
       histogram && histogram.reset()
+      gcStats.reset()
     }, sampleInterval)
+
     timer.unref()
   }
 }
