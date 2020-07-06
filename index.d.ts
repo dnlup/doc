@@ -71,19 +71,19 @@ declare namespace Doc {
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
        */
-      major: number | undefined,
+      major: number,
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
        */
-      minor: number | undefined,
+      minor: number,
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
        */
-      incremental: number | undefined,
+      incremental: number,
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
        */
-      weakCB: number | undefined,
+      weakCB: number,
     },
     /**
      * Object containing raw values
@@ -91,7 +91,7 @@ declare namespace Doc {
     raw: {
       /**
        * Raw representation of the event loop delay, on Node 10 it is the delay
-       * in nanoseconds, on Node >= 12 is a Histogram instance
+       * in nanoseconds, on Node >= 11.10.0 is a Histogram instance
        */
       eventLoopDelay: number | EventLoopDelayHistogram,
       /**
