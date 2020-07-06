@@ -5,20 +5,18 @@
 
 # doc
 
-> Get usage and health data about your Node.js process
+> See how many Gigawatts your Node.js process is using.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
+<!-- toc -->
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
-  - [Doc([options])](#docoptions)
-    - [events](#events)
+  * [Doc([options])](#docoptions)
+    + [events](#events)
       - [data](#data)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- tocstop -->
 
 ## Installation
 
