@@ -1,6 +1,6 @@
 # doc
 
-<div style="text-align: center"><img src=./doc.webp style="border-radius: 50%;" alt="Doc Brown"></div>
+<p align="center"><img src="./doc.webp" alt="Doc Brown"></p>
 
 [![npm version](https://badge.fury.io/js/%40dnlup%2Fdoc.svg)](https://badge.fury.io/js/%40dnlup%2Fdoc)
 ![Tests](https://github.com/dnlup/doc/workflows/Tests/badge.svg)
