@@ -5,20 +5,18 @@
 
 # doc
 
-> Get usage and health data about your Node.js process
+> See how many Gigawatts your Node.js process is using.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
+<!-- toc -->
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [API](#api)
-  - [Doc([options])](#docoptions)
-    - [events](#events)
+  * [Doc([options])](#docoptions)
+    + [events](#events)
       - [data](#data)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- tocstop -->
 
 ## Installation
 
@@ -65,12 +63,10 @@ Properties:
 | `memory.external` | Extarnal memory (bytes) |
 | `cpu` | Cpu usage percentage |
 | `gc` | Object containing garbage collection stats |
-| `gc.major` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR* |
-| `gc.minor` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR* |
-| `gc.incremental` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL* |
-| `gc.weakCB` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB* |
+| `gc.major` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR |
+| `gc.minor` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR |
+| `gc.incremental` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL |
+| `gc.weakCB` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB |
 | `raw` | Object containing raw values |
 | `raw.cpu` | Object containing the raw values returned from [`process.cpuUsage()`](https://nodejs.org/docs/latest-v12.x/api/process.html#process_process_cpuusage_previousvalue) |
-| `raw.eventLoopDelay` | Raw representation of the event loop delay, on Node 10 it is the delay in nanoseconds, on Node >= 12 is a [Histogram instance](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_class_histogram) |
-
-- *: the average duration of garbage collection statistics may be `undefined` if no garbage collection occurred within the `sampleInterval`
+| `raw.eventLoopDelay` | Raw representation of the event loop delay, on Node 10 it is the delay in nanoseconds, on Node >= 11.10.0 is a [Histogram instance](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_class_histogram) |
