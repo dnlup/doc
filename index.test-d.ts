@@ -1,5 +1,5 @@
 import { expectType, expectError } from 'tsd'
-import Doc = require('.');
+import Doc = require('.')
 
 let doc: Doc.DocInstance
 

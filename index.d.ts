@@ -9,7 +9,7 @@ declare namespace Doc {
      * sample the event loop and this allows to increase the default sample
      * interval on Node >= 12.
      */
-    sampleInterval?: number,
+    sampleInterval?: number
 
     /**
      * Options to setup `perf_hooks.monitorEventLoopDelay`.
@@ -18,7 +18,7 @@ declare namespace Doc {
       /**
        * The sampling rate in milliseconds. Must be greater than zero. Default: 10.
        */
-      resolution: number,
+      resolution: number
     }
   }
 
@@ -26,19 +26,19 @@ declare namespace Doc {
    * On Node 12 and above this is a Histogram instance from 'perf_hooks'.
    */
   interface EventLoopDelayHistogram {
-    min: number,
-    max: number,
-    mean: number,
-    stddev: number,
-    percentiles: Map<number, number>,
-    exceeds: number,
+    min: number
+    max: number
+    mean: number
+    stddev: number
+    percentiles: Map<number, number>
+    exceeds: number
   }
 
   interface DocData {
     /**
      * Event loop delay (ms).
      */
-    eventLoopDelay: number,
+    eventLoopDelay: number
     /**
      * Object containing memory usage stats.
      */
@@ -46,24 +46,24 @@ declare namespace Doc {
       /**
        * RSS memory (bytes).
        */
-      rss: number,
+      rss: number
       /**
        * Total heap Memory (bytes).
        */
-      heapTotal: number,
+      heapTotal: number
       /**
        * Heap memory used (bytes).
        */
-      heapUsed: number,
+      heapUsed: number
       /**
        * External memory (bytes).
        */
-      external: number,
-    },
+      external: number
+    }
     /**
      * CPU usage percentage.
      */
-    cpu: number,
+    cpu: number
     /**
      * Object containing garbage collection stats.
      */
@@ -71,20 +71,20 @@ declare namespace Doc {
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
        */
-      major: number,
+      major: number
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
        */
-      minor: number,
+      minor: number
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
        */
-      incremental: number,
+      incremental: number
       /**
        * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
        */
-      weakCB: number,
-    },
+      weakCB: number
+    }
     /**
      * Object containing raw values
      */
@@ -93,14 +93,14 @@ declare namespace Doc {
        * Raw representation of the event loop delay, on Node 10 it is the delay
        * in nanoseconds, on Node >= 11.10.0 is a Histogram instance
        */
-      eventLoopDelay: number | EventLoopDelayHistogram,
+      eventLoopDelay: number | EventLoopDelayHistogram
       /**
        * Object containing the raw values returned from `process.cpuUsage()`.
        */
       cpu: {
-        user: number,
-        system: number,
-      },
+        user: number
+        system: number
+      }
     }
   }
 
@@ -109,6 +109,6 @@ declare namespace Doc {
   }
 }
 
-declare function Doc(options?: Doc.DocOptions): Doc.DocInstance
+declare function Doc(options?: Doc.DocOptions): Doc.DocInstance // eslint-disable-line
 
 export = Doc
