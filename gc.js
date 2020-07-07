@@ -1,3 +1,5 @@
+'use strict'
+
 const { PerformanceObserver, constants } = require('perf_hooks')
 const {
   NODE_PERFORMANCE_GC_MAJOR,
