@@ -33,7 +33,7 @@ const checks = {
   },
   heapTotal (value) {
     if (performDetailedCheck) {
-      const level = nodeMajorVersion >= 12 ? 80 : 100
+      const level = nodeMajorVersion >= 12 ? 100 : 120
       return value > 0 && value < level * 1e6
     }
     return value > 0
