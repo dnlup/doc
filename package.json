@@ -62,7 +62,6 @@
     "is-ci": "^2.0.0",
     "lint-staged": "^10.2.10",
     "markdown-toc": "^1.2.0",
-    "semver": "^7.3.2",
     "standard": "^14.3.4",
     "standard-version": "^8.0.0",
     "tap": "^14.10.7",
