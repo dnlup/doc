@@ -3,17 +3,16 @@
 const tap = require('tap')
 const { monitorEventLoopDelay, constants } = require('perf_hooks')
 const isCi = require('is-ci')
-const semver = require('semver')
 const doc = require('./')
 const GCStats = require('./gc')
 
+const nodeMajorVersion = parseInt(process.versions.node.split('.')[0])
 const performDetailedCheck = process.platform === 'linux' || !isCi
-const isGte12 = semver.gte(process.versions.node, '12.0.0')
 
 const checks = {
   eventLoopDelay (value) {
     if (performDetailedCheck) {
-      const level = isGte12 ? 1 : 20
+      const level = nodeMajorVersion >= 12 ? 1 : 20
       return value > 0 && value < level
     }
     return value >= 0
@@ -27,21 +26,21 @@ const checks = {
   },
   rss (value) {
     if (performDetailedCheck) {
-      const level = isGte12 ? 130 : 150
+      const level = nodeMajorVersion >= 12 ? 130 : 150
       return value > 0 && value < level * 1e6
     }
     return value > 0
   },
   heapTotal (value) {
     if (performDetailedCheck) {
-      const level = isGte12 ? 80 : 100
+      const level = nodeMajorVersion >= 12 ? 80 : 100
       return value > 0 && value < level * 1e6
     }
     return value > 0
   },
   heapUsed (value) {
     if (performDetailedCheck) {
-      const level = isGte12 ? 60 : 80
+      const level = nodeMajorVersion >= 12 ? 60 : 80
       return value > 0 && value < level * 1e6
     }
     return value > 0
