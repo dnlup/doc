@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'events' // eslint-disable-line no-unused-vars
 
 declare namespace Doc {
   interface DocOptions {
@@ -109,6 +109,6 @@ declare namespace Doc {
   }
 }
 
-declare function Doc(options?: Doc.DocOptions): Doc.DocInstance
+declare function Doc(options?: Doc.DocOptions): Doc.DocInstance // eslint-disable-line no-redeclare
 
 export = Doc
