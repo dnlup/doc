@@ -5,10 +5,12 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "lint": "standard --fix && npm run lint:typescript",
-    "lint:typescript": "standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin *.ts",
-    "test": "tap test.js && npm run test:typescript",
-    "test:typescript": "tsd",
+    "lint": "npm run lint:js && npm run lint:ts",
+    "lint:js": "standard --fix",
+    "lint:ts": "standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin *.ts",
+    "test": "npm run lint && npm run test:js && npm run test:ts",
+    "test:js": "tap test.js",
+    "test:ts": "tsd",
     "doc": "markdown-toc -i README.md",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
     "postrelease": "npm run push && npm publish",
@@ -48,11 +50,6 @@
   "engines": {
     "node": ">=10",
     "npm": ">=6"
-  },
-  "standard": {
-    "ignore": [
-      "index.d.ts"
-    ]
   },
   "tsd": {
     "directory": "."
