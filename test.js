@@ -40,7 +40,7 @@ const checks = {
   },
   heapUsed (value) {
     if (performDetailedCheck) {
-      const level = nodeMajorVersion >= 12 ? 60 : 80
+      const level = nodeMajorVersion >= 12 ? 80 : 100
       return value > 0 && value < level * 1e6
     }
     return value > 0
