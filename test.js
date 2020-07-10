@@ -137,18 +137,18 @@ tap.test('garbage collection stats', t => {
 
   // Check it calculated the average correctly
   const gcStats = gc.data()
-  t.equal(gcStats.major, expectedAverage)
-  t.equal(gcStats.minor, expectedAverage)
-  t.equal(gcStats.incremental, expectedAverage)
-  t.equal(gcStats.weakCB, expectedAverage)
+  t.equal(gcStats.major, expectedAverage, `gcStats.major | expected: ${expectedAverage}, value: ${gcStats.major}`)
+  t.equal(gcStats.minor, expectedAverage, `gcStats.minor | expected: ${expectedAverage}, value: ${gcStats.minor}`)
+  t.equal(gcStats.incremental, expectedAverage, `gcStats.incremental | expected: ${expectedAverage}, value: ${gcStats.incremental}`)
+  t.equal(gcStats.weakCB, expectedAverage, `gcStats.weakCB | expected: ${expectedAverage}, value: ${gcStats.weakCB}`)
 
   // Check it resets correctly
   gc.reset()
   const gcStatsAfterReset = gc.data()
-  t.equal(gcStatsAfterReset.major, 0)
-  t.equal(gcStatsAfterReset.minor, 0)
-  t.equal(gcStatsAfterReset.incremental, 0)
-  t.equal(gcStatsAfterReset.weakCB, 0)
+  t.equal(gcStatsAfterReset.major, 0, `gcStats.major after reset | expected: 0, value: ${gcStatsAfterReset.major}`)
+  t.equal(gcStatsAfterReset.minor, 0, `gcStats.minor after reset | expected: 0, value: ${gcStatsAfterReset.minor}`)
+  t.equal(gcStatsAfterReset.incremental, 0, `gcStats.incremental after reset | expected: 0, value: ${gcStatsAfterReset.incremental}`)
+  t.equal(gcStatsAfterReset.weakCB, 0, `gcStats.weakCB after reset | expected: 0, value: ${gcStatsAfterReset.weakCB}`)
 
   t.end()
 })
