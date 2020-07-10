@@ -1,6 +1,16 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - current
+      - next
+  pull_request:
+    branches:
+      - '*'
+
+env:
+  CI: true
 
 jobs:
   build:
@@ -17,5 +27,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Run tests
       run: npm cit
-      env:
-        CI: true
+      
