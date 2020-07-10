@@ -19,7 +19,7 @@ const checks = {
   },
   cpu (value) {
     if (performDetailedCheck) {
-      return value > 0 && value < 20
+      return value > 0 && value < 30
     }
     // Apparently, sometimes cpu usage is zero on windows runners.
     return value >= 0
