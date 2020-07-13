@@ -63,7 +63,7 @@
     "lint-staged": "^10.2.10",
     "markdown-toc": "^1.2.0",
     "standard": "^14.3.4",
-    "standard-version": "^8.0.0",
+    "standard-version": "^8.0.1",
     "tap": "^14.10.7",
     "tsd": "^0.12.0"
   }
