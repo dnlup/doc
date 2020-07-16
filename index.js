@@ -3,41 +3,54 @@
 const EventEmitter = require('events')
 const { monitorEventLoopDelay } = require('perf_hooks')
 const GCStats = require('./gc')
+const validate = require('./validate')
 
+/**
+ * Convert `process.hrtime` to nanoseconds
+ * @param {Array} time
+ */
 function hrtime2ns (time) {
   return time[0] * 1e9 + time[1]
 }
 
+/**
+ * Returns the default sample interval for the collection
+ */
 function defaultSampleInterval () {
   return monitorEventLoopDelay ? 1000 : 500
 }
 
-function validate ({
-  sampleInterval = defaultSampleInterval(),
-  eventLoopOptions = { resolution: 10 }
-} = {}) {
-  if (typeof sampleInterval !== 'number' || sampleInterval < 0) {
-    throw new Error('sampleInterval must be a number greater than zero')
+/**
+ * Validate Doc config options
+ * @param {object} options
+ * @returns {object} the validated options
+ */
+function config (options) {
+  options.sampleInterval = options.sampleInterval || defaultSampleInterval()
+  if (!validate(options)) {
+    throw new Error(`${validate.errors[0].dataPath} ${validate.errors[0].message}`)
   }
-  if (monitorEventLoopDelay && eventLoopOptions) {
-    if (sampleInterval < eventLoopOptions.resolution) {
-      throw new Error('sampleInterval must be greather than eventLoopOptions.resolution')
+  if (monitorEventLoopDelay && options.eventLoopOptions) {
+    if (options.sampleInterval < options.eventLoopOptions.resolution) {
+      throw new Error('.sampleInterval should be >= .eventLoopOptions.resolution')
     }
   }
-
-  return {
-    sampleInterval,
-    eventLoopOptions
-  }
+  return options
 }
 
+/**
+ * Doc.
+ * Gahthers usage metrics of a process.
+ * @param {object} options
+ * @param {boolean} options.sampleInterval
+ * @param {object} options.eventLoopOptions
+ * @param {object} options.collect
+ */
 class Doc extends EventEmitter {
   constructor (options) {
     super()
+    const { sampleInterval, eventLoopOptions } = config(options)
 
-    const { sampleInterval, eventLoopOptions } = validate(options)
-
-    // Currently `monitorEventLoopDelay` is available only on Node 12.
     let histogram
     if (monitorEventLoopDelay) {
       histogram = monitorEventLoopDelay(eventLoopOptions)
@@ -91,6 +104,9 @@ class Doc extends EventEmitter {
   }
 }
 
-module.exports = function (options) {
+/**
+ * Create a new Doc instance
+ */
+module.exports = function (options = {}) {
   return new Doc(options)
 }
