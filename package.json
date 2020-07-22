@@ -14,7 +14,7 @@
     "test:js": "tap test.js",
     "test:ts": "tsd",
     "doc": "markdown-toc -i README.md",
-    "prerelease": "npm test",
+    "prerelease": "npm cit",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
     "postrelease": "npm run push && npm publish",
     "next": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
