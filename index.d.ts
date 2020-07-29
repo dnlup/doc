@@ -20,6 +20,12 @@ declare namespace Doc {
        */
       resolution: number,
     }
+    collect?: {
+      cpu?: boolean,
+      eventLoopDelay?: boolean,
+      memory?: boolean,
+      gc?: boolean
+    }
   }
 
   /**

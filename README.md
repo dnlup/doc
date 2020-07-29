@@ -11,6 +11,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
+      - [Enable/disable metrics collection](#enabledisable-metrics-collection)
 - [API](#api)
   * [Doc([options])](#docoptions)
     + [events](#events)
@@ -25,10 +26,23 @@ $ npm i @dnlup/doc
 ```
 
 ## Usage
+
 ```js
 const Doc = require('@dnlup/doc');
 
-const doc = Doc(); // Use the default sample interval
+const doc = Doc(); // Use the default options
+doc.on('data', data => {
+  doStuffWithCpuUsage(data.cpu)
+  doStuffWithMemoryUsage(data.memory)
+  doStuffWithEventLoopDelay(data.eventLoopDelay)
+})
+```
+
+##### Enable/disable metrics collection
+```js
+const Doc = require('@dnlup/doc');
+
+const doc = Doc({ collect: { gc: true } }); // Add garbage collection metric
 doc.on('data', data => {
   doStuffWithCpuUsage(data.cpu)
   doStuffWithMemoryUsage(data.memory)
@@ -46,6 +60,11 @@ doc.on('data', data => {
 * `options`: `Object`. Optional. Configuration object
 * `options.sampleInterval`: `Number`. Optional. Sample interval (ms), each `sampleInterval` ms a [data](#data) event is emitted. On Node 10 the default value is `500` while on Node >= 12 is `1000`. Under the hood the package uses [`monitorEventLoopDelay`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options) where available to sample the event loop and this allows to increase the default sample interval on Node >= 12.
 * `options.eventLoopOptions`: `Object`. Optional. Options to setup [`monitorEventLoopDelay`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options)
+* `options.collect`: `Object`. Optional. Enable/disable the collection of specific metrics.
+* `options.collect.cpu`: `Boolean`. Enable cpu metric. Default: `true`
+* `options.collect.eventLoopDelay`: `Boolean`. Enable eventLoopDelay metric. Default: `true`
+* `options.collect.memory`: `Boolean`. Enable memory metric. Default: `true`
+* `options.collect.gc`: `Boolean`. Enable garbage collection metric. Default: `false`
 
 #### events
 ##### data
@@ -60,7 +79,8 @@ Properties:
 | `memory.rss` | RSS memory (bytes) |
 | `memory.heapTotal` | Total heap Memory (bytes) |
 | `memory.heapUsed` | Heap memory used (bytes) |
-| `memory.external` | Extarnal memory (bytes) |
+| `memory.external` | External memory (bytes) |
+| `memory.arrayBuffers` | ArrayBuffers memory (bytes) |
 | `cpu` | Cpu usage percentage |
 | `gc` | Object containing garbage collection stats |
 | `gc.major` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR |
