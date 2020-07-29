@@ -8,6 +8,7 @@ doc = Doc()
 doc = Doc({})
 doc = Doc({ sampleInterval: 1234 })
 doc = Doc({ eventLoopOptions: { resolution: 5678 } })
+doc = Doc({ collect: { cpu: false, gc: true } })
 doc.on('data', data => {
   expectType<number>(data.cpu)
   expectType<number>(data.eventLoopDelay)

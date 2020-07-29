@@ -5,13 +5,13 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "ajv compile --remove-additional=true --coerce-types --use-defaults -s schema.js -o validate.js",
+    "build": "ajv compile --remove-additional=true --coerce-types --use-defaults -s lib/config/schema.js -o lib/config/validate.js",
     "lint": "npm run lint:js && npm run lint:ts",
     "lint:js": "standard --fix",
     "lint:ts": "standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin *.ts",
     "pretest": "npm run build",
     "test": "npm run lint && npm run test:js && npm run test:ts",
-    "test:js": "tap test.js",
+    "test:js": "tap",
     "test:ts": "tsd",
     "doc": "markdown-toc -i README.md",
     "prerelease": "npm cit",
@@ -26,10 +26,9 @@
     "url": "https://github.com/dnlup/doc.git"
   },
   "files": [
-    "gc.js",
+    "lib",
     "index.js",
-    "index.d.ts",
-    "validate.js"
+    "index.d.ts"
   ],
   "keywords": [
     "process",
