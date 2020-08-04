@@ -67,8 +67,10 @@ doc.on('data', data => {
 * `options.collect.gc`: `Boolean`. Enable garbage collection metric. Default: `false`
 
 #### events
+
 ##### data
-Process data event.
+
+> Process data event. The object passed as an argument will contain the stats of the enabled metrics.
 
 Properties:
 
