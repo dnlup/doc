@@ -26,7 +26,7 @@ function hrtime2ns (time) {
 
 /**
  * Doc.
- * Gahthers usage metrics of a process.
+ * Gathers usage metrics of a process.
  * @param {object} options
  * @param {boolean} options.sampleInterval
  * @param {object} options.eventLoopOptions
