@@ -1,10 +1,9 @@
 'use strict'
 
 const tap = require('tap')
-const { monitorEventLoopDelay, constants } = require('perf_hooks')
+const { monitorEventLoopDelay } = require('perf_hooks')
 const isCi = require('is-ci')
-const doc = require('./')
-const GCStats = require('./gc')
+const doc = require('../')
 
 const nodeMajorVersion = parseInt(process.versions.node.split('.')[0])
 const performDetailedCheck = process.platform === 'linux' || !isCi
@@ -79,7 +78,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = 10 * 1e6
+      const level = 10 * 11e5
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
@@ -128,18 +127,18 @@ function preventTestExitingEarly (t, ms) {
 
 tap.test('should throw an error if options are invalid', t => {
   let error = t.throws(() => doc({ sampleInterval: 'skdjfh' }))
-  t.equal(error.message, 'sampleInterval must be a number greater than zero')
+  t.equal(error.message, '.sampleInterval should be number')
   error = t.throws(() => doc({ sampleInterval: -1 }))
-  t.equal(error.message, 'sampleInterval must be a number greater than zero')
+  t.equal(error.message, '.sampleInterval should be >= 1')
   if (monitorEventLoopDelay) {
     error = t.throws(() => doc({ sampleInterval: 5 }))
-    t.equal('sampleInterval must be greather than eventLoopOptions.resolution',
+    t.equal('.sampleInterval should be >= .eventLoopOptions.resolution',
       error.message)
     error = t.throws(() => doc({
       sampleInterval: 10,
       eventLoopOptions: { resolution: 20 }
     }))
-    t.equal('sampleInterval must be greather than eventLoopOptions.resolution',
+    t.equal('.sampleInterval should be >= .eventLoopOptions.resolution',
       error.message)
   } else {
     t.pass()
@@ -175,43 +174,6 @@ tap.test('data event', t => {
     checks.external(t, data.memory.external)
     t.end()
   })
-})
-
-// We run this in a separate test so it doesn't interfere with the expect CPU usage stats
-// in the "data event" test
-tap.test('garbage collection stats', t => {
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  const expectedAverage = data.reduce((acc, x) => acc + x, 0) / data.length
-
-  // Creates a fake list that's the same shape as PerformanceObserver
-  const newFakeList = (kind) => ({
-    getEntries: () => data.map(x => ({ kind, duration: x }))
-  })
-
-  const gc = GCStats()
-
-  // Send in some sample data.
-  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_MAJOR))
-  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_MINOR))
-  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_INCREMENTAL))
-  gc.observerCallback(newFakeList(constants.NODE_PERFORMANCE_GC_WEAKCB))
-
-  // Check it calculated the average correctly
-  const gcStats = gc.data()
-  t.equal(gcStats.major, expectedAverage, `gcStats.major | expected: ${expectedAverage}, value: ${gcStats.major}`)
-  t.equal(gcStats.minor, expectedAverage, `gcStats.minor | expected: ${expectedAverage}, value: ${gcStats.minor}`)
-  t.equal(gcStats.incremental, expectedAverage, `gcStats.incremental | expected: ${expectedAverage}, value: ${gcStats.incremental}`)
-  t.equal(gcStats.weakCB, expectedAverage, `gcStats.weakCB | expected: ${expectedAverage}, value: ${gcStats.weakCB}`)
-
-  // Check it resets correctly
-  gc.reset()
-  const gcStatsAfterReset = gc.data()
-  t.equal(gcStatsAfterReset.major, 0, `gcStats.major after reset | expected: 0, value: ${gcStatsAfterReset.major}`)
-  t.equal(gcStatsAfterReset.minor, 0, `gcStats.minor after reset | expected: 0, value: ${gcStatsAfterReset.minor}`)
-  t.equal(gcStatsAfterReset.incremental, 0, `gcStats.incremental after reset | expected: 0, value: ${gcStatsAfterReset.incremental}`)
-  t.equal(gcStatsAfterReset.weakCB, 0, `gcStats.weakCB after reset | expected: 0, value: ${gcStatsAfterReset.weakCB}`)
-
-  t.end()
 })
 
 tap.test('custom sample interval', t => {
