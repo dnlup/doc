@@ -65,6 +65,7 @@ doc.on('data', data => {
 * `options.collect.eventLoopDelay`: `Boolean`. Enable eventLoopDelay metric. Default: `true`
 * `options.collect.memory`: `Boolean`. Enable memory metric. Default: `true`
 * `options.collect.gc`: `Boolean`. Enable garbage collection metric. Default: `false`
+* `options.collect.activeHandles`: `Boolean`. Enable active handles collection metric. Default: `false`
 
 #### events
 
@@ -85,10 +86,11 @@ Properties:
 | `memory.arrayBuffers` | ArrayBuffers memory (bytes) |
 | `cpu` | Cpu usage percentage |
 | `gc` | Object containing garbage collection stats |
-| `gc.major` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR |
-| `gc.minor` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR |
-| `gc.incremental` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL |
-| `gc.weakCB` | average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB |
+| `gc.major` | Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR |
+| `gc.minor` | Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR |
+| `gc.incremental` | Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL |
+| `gc.weakCB` | Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB |
+| `activeHandles` | Number of active handles |
 | `raw` | Object containing raw values |
 | `raw.cpu` | Object containing the raw values returned from [`process.cpuUsage()`](https://nodejs.org/docs/latest-v12.x/api/process.html#process_process_cpuusage_previousvalue) |
 | `raw.eventLoopDelay` | Raw representation of the event loop delay, on Node 10 it is the delay in nanoseconds, on Node >= 11.10.0 is a [Histogram instance](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_class_histogram) |
