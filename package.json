@@ -69,7 +69,7 @@
     "ajv-cli": "^3.2.1",
     "husky": "^4.2.5",
     "is-ci": "^2.0.0",
-    "lint-staged": "^10.2.10",
+    "lint-staged": "^10.2.11",
     "markdown-toc": "^1.2.0",
     "standard": "^14.3.4",
     "standard-version": "^8.0.2",
