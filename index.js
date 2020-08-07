@@ -5,6 +5,7 @@ const EventLoopDelayMetric = require('./lib/metrics/eventLoop')
 const CpuMetric = require('./lib/metrics/cpu')
 const MemoryMetric = require('./lib/metrics/memory')
 const GCMetric = require('./lib/metrics/gc')
+const ActiveHandlesMetric = require('./lib/metrics/activeHandles')
 const config = require('./lib/config')
 const {
   kOptions,
@@ -49,6 +50,9 @@ class Doc extends EventEmitter {
     }
     if (this[kOptions].collect.gc) {
       this[kMetrics].push(new GCMetric())
+    }
+    if (this[kOptions].collect.activeHandles) {
+      this[kMetrics].push(new ActiveHandlesMetric())
     }
     this[kData] = {
       raw: {}
