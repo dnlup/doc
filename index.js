@@ -11,6 +11,7 @@ const {
   kLastSampleTime,
   kMetrics,
   kEventLoop,
+  kCpu,
   kData,
   kEmitStats,
   kSample,
@@ -43,7 +44,7 @@ class Doc extends EventEmitter {
       this[kEventLoop] = new EventLoopDelayMetric(options.eventLoopOptions)
     }
     if (this[kOptions].collect.cpu) {
-      this[kMetrics].push(new CpuMetric())
+      this[kCpu] = new CpuMetric()
     }
     if (this[kOptions].collect.memory) {
       this[kMetrics].push(new MemoryMetric())
@@ -77,6 +78,11 @@ class Doc extends EventEmitter {
     if (this[kOptions].collect.activeHandles) {
       this[kData].activeHandles = process._getActiveHandles().length
     }
+
+    if (this[kOptions].collect.cpu) {
+      this[kData].cpu = this[kCpu].sample(elapsedNs, this[kOptions].sampleInterval)
+      this[kData].raw.cpu = this[kCpu].raw
+    }
     for (const metric of this[kMetrics]) {
       this[kData][metric.id] = metric.sample(elapsedNs, this[kOptions].sampleInterval)
       const raw = metric.raw
@@ -89,8 +95,12 @@ class Doc extends EventEmitter {
   }
 
   [kReset] () {
-    if (this[kEventLoop]) {
+    if (this[kOptions].collect.eventLoopDelay) {
       this[kEventLoop].reset()
+    }
+
+    if (this[kOptions].collect.cpu) {
+      this[kCpu].reset()
     }
     for (const metric of this[kMetrics]) {
       metric.reset()
