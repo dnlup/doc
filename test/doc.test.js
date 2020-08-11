@@ -100,9 +100,9 @@ const checks = {
     }
 
     // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
-    const check = value.major >= levels.major &&
-                  value.minor >= levels.minor &&
-                  value.incremental >= levels.incremental
+    const check = value.get('major').average >= levels.major &&
+                  value.get('minor').average >= levels.minor &&
+                  value.get('incremental').average >= levels.incremental
     t.true(check, `gc |
     expected: {
       major: ${expected.major},
@@ -110,9 +110,9 @@ const checks = {
       incremental: ${expected.incremental}
     },
     value: { 
-      major: ${value.major},
-      minor: ${value.minor},
-      incremental: ${value.incremental}
+      major: ${value.get('major').average},
+      minor: ${value.get('minor').average},
+      incremental: ${value.get('incremental').average}
     }`)
   },
   activeHandles (t, value) {
