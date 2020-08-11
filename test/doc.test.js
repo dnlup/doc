@@ -39,7 +39,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = (nodeMajorVersion >= 12 ? 130 : 150) * 1e6
+      const level = (nodeMajorVersion >= 12 ? 150 : 180) * 1e6
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
