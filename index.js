@@ -42,6 +42,7 @@ class Doc extends EventEmitter {
     if (this[kOptions].collect.eventLoopDelay) {
       this[kEventLoop] = new EventLoopDelayMetric(options.eventLoopOptions)
     }
+
     if (this[kOptions].collect.cpu) {
       this[kCpu] = new CpuMetric()
     }
@@ -50,6 +51,7 @@ class Doc extends EventEmitter {
       this[kGC] = new GCMetric()
     }
 
+    // TODO: maybe here is better to use a Map
     this[kData] = {
       raw: {}
     }
