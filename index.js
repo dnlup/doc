@@ -12,6 +12,7 @@ const {
   kMetrics,
   kEventLoop,
   kCpu,
+  kGC,
   kData,
   kEmitStats,
   kSample,
@@ -50,7 +51,7 @@ class Doc extends EventEmitter {
       this[kMetrics].push(new MemoryMetric())
     }
     if (this[kOptions].collect.gc) {
-      this[kMetrics].push(new GCMetric())
+      this[kGC] = new GCMetric()
     }
 
     this[kData] = {
@@ -80,9 +81,14 @@ class Doc extends EventEmitter {
     }
 
     if (this[kOptions].collect.cpu) {
-      this[kData].cpu = this[kCpu].sample(elapsedNs, this[kOptions].sampleInterval)
+      this[kData].cpu = this[kCpu].sample(elapsedNs)
       this[kData].raw.cpu = this[kCpu].raw
     }
+
+    if (this[kOptions].collect.gc) {
+      this[kData].gc = this[kGC].sample()
+    }
+
     for (const metric of this[kMetrics]) {
       this[kData][metric.id] = metric.sample(elapsedNs, this[kOptions].sampleInterval)
       const raw = metric.raw
@@ -101,6 +107,10 @@ class Doc extends EventEmitter {
 
     if (this[kOptions].collect.cpu) {
       this[kCpu].reset()
+    }
+
+    if (this[kOptions].collect.gc) {
+      this[kGC].reset()
     }
     for (const metric of this[kMetrics]) {
       metric.reset()
