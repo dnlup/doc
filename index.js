@@ -3,13 +3,11 @@
 const EventEmitter = require('events')
 const EventLoopDelayMetric = require('./lib/metrics/eventLoop')
 const CpuMetric = require('./lib/metrics/cpu')
-const MemoryMetric = require('./lib/metrics/memory')
 const GCMetric = require('./lib/metrics/gc')
 const config = require('./lib/config')
 const {
   kOptions,
   kLastSampleTime,
-  kMetrics,
   kEventLoop,
   kCpu,
   kGC,
@@ -40,16 +38,14 @@ class Doc extends EventEmitter {
     super()
     this[kOptions] = config(options)
     this[kLastSampleTime] = process.hrtime()
-    this[kMetrics] = []
+
     if (this[kOptions].collect.eventLoopDelay) {
       this[kEventLoop] = new EventLoopDelayMetric(options.eventLoopOptions)
     }
     if (this[kOptions].collect.cpu) {
       this[kCpu] = new CpuMetric()
     }
-    if (this[kOptions].collect.memory) {
-      this[kMetrics].push(new MemoryMetric())
-    }
+
     if (this[kOptions].collect.gc) {
       this[kGC] = new GCMetric()
     }
@@ -89,13 +85,10 @@ class Doc extends EventEmitter {
       this[kData].gc = this[kGC].sample()
     }
 
-    for (const metric of this[kMetrics]) {
-      this[kData][metric.id] = metric.sample(elapsedNs, this[kOptions].sampleInterval)
-      const raw = metric.raw
-      if (raw !== null && raw !== undefined) {
-        this[kData].raw[metric.id] = raw
-      }
+    if (this[kOptions].collect.memory) {
+      this[kData].memory = process.memoryUsage()
     }
+
     this[kLastSampleTime] = nextSampleTime
     return this[kData]
   }
@@ -111,9 +104,6 @@ class Doc extends EventEmitter {
 
     if (this[kOptions].collect.gc) {
       this[kGC].reset()
-    }
-    for (const metric of this[kMetrics]) {
-      metric.reset()
     }
   }
 }
