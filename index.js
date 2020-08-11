@@ -3,13 +3,14 @@
 const EventEmitter = require('events')
 const EventLoopDelayMetric = require('./lib/metrics/eventLoop')
 const CpuMetric = require('./lib/metrics/cpu')
-const MemoryMetric = require('./lib/metrics/memory')
 const GCMetric = require('./lib/metrics/gc')
 const config = require('./lib/config')
 const {
   kOptions,
   kLastSampleTime,
-  kMetrics,
+  kEventLoop,
+  kCpu,
+  kGC,
   kData,
   kEmitStats,
   kSample,
@@ -37,19 +38,20 @@ class Doc extends EventEmitter {
     super()
     this[kOptions] = config(options)
     this[kLastSampleTime] = process.hrtime()
-    this[kMetrics] = []
+
     if (this[kOptions].collect.eventLoopDelay) {
-      this[kMetrics].push(new EventLoopDelayMetric(options.eventLoopOptions))
+      this[kEventLoop] = new EventLoopDelayMetric(options.eventLoopOptions)
     }
+
     if (this[kOptions].collect.cpu) {
-      this[kMetrics].push(new CpuMetric())
+      this[kCpu] = new CpuMetric()
     }
-    if (this[kOptions].collect.memory) {
-      this[kMetrics].push(new MemoryMetric())
-    }
+
     if (this[kOptions].collect.gc) {
-      this[kMetrics].push(new GCMetric())
+      this[kGC] = new GCMetric()
     }
+
+    // TODO: maybe here is better to use a Map
     this[kData] = {
       raw: {}
     }
@@ -66,20 +68,44 @@ class Doc extends EventEmitter {
   [kSample] () {
     const nextSampleTime = process.hrtime()
     const elapsedNs = hrtime2ns(nextSampleTime) - hrtime2ns(this[kLastSampleTime])
-    for (const metric of this[kMetrics]) {
-      this[kData][metric.id] = metric.sample(elapsedNs, this[kOptions].sampleInterval)
-      const raw = metric.raw
-      if (raw !== null && raw !== undefined) {
-        this[kData].raw[metric.id] = raw
-      }
+
+    if (this[kOptions].collect.eventLoopDelay) {
+      this[kData].eventLoopDelay = this[kEventLoop].sample(elapsedNs, this[kOptions].sampleInterval)
+      this[kData].raw.eventLoopDelay = this[kEventLoop].raw
     }
+
+    if (this[kOptions].collect.activeHandles) {
+      this[kData].activeHandles = process._getActiveHandles().length
+    }
+
+    if (this[kOptions].collect.cpu) {
+      this[kData].cpu = this[kCpu].sample(elapsedNs)
+      this[kData].raw.cpu = this[kCpu].raw
+    }
+
+    if (this[kOptions].collect.gc) {
+      this[kData].gc = this[kGC].sample()
+    }
+
+    if (this[kOptions].collect.memory) {
+      this[kData].memory = process.memoryUsage()
+    }
+
     this[kLastSampleTime] = nextSampleTime
     return this[kData]
   }
 
   [kReset] () {
-    for (const metric of this[kMetrics]) {
-      metric.reset()
+    if (this[kOptions].collect.eventLoopDelay) {
+      this[kEventLoop].reset()
+    }
+
+    if (this[kOptions].collect.cpu) {
+      this[kCpu].reset()
+    }
+
+    if (this[kOptions].collect.gc) {
+      this[kGC].reset()
     }
   }
 }

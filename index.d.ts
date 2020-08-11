@@ -24,7 +24,8 @@ declare namespace Doc {
       cpu?: boolean,
       eventLoopDelay?: boolean,
       memory?: boolean,
-      gc?: boolean
+      gc?: boolean,
+      activeHandles?: boolean
     }
   }
 
@@ -91,6 +92,10 @@ declare namespace Doc {
        */
       weakCB: number,
     },
+    /**
+     * Number of active handles
+     */
+    activeHandles: number,
     /**
      * Object containing raw values
      */

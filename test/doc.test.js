@@ -39,7 +39,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = (nodeMajorVersion >= 12 ? 130 : 150) * 1e6
+      const level = (nodeMajorVersion >= 12 ? 150 : 180) * 1e6
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
@@ -94,15 +94,15 @@ const checks = {
       incremental: 0
     }
     const expected = {
-      major: `x > ${levels.major}`,
-      minor: `x > ${levels.minor}`,
-      incremental: `x > ${levels.incremental}`
+      major: `x >= ${levels.major}`,
+      minor: `x >= ${levels.minor}`,
+      incremental: `x >= ${levels.incremental}`
     }
 
     // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
-    const check = value.major > levels.major &&
-                  value.minor > levels.minor &&
-                  value.incremental > levels.incremental
+    const check = value.major >= levels.major &&
+                  value.minor >= levels.minor &&
+                  value.incremental >= levels.incremental
     t.true(check, `gc |
     expected: {
       major: ${expected.major},
@@ -114,6 +114,11 @@ const checks = {
       minor: ${value.minor},
       incremental: ${value.incremental}
     }`)
+  },
+  activeHandles (t, value) {
+    const check = value > 0
+    const expected = 'x > 0'
+    t.true(check, `activeHandles | expected: ${expected}, value: ${value}`)
   }
 }
 
@@ -148,7 +153,12 @@ tap.test('should throw an error if options are invalid', t => {
 
 tap.test('data event', t => {
   const start = process.hrtime()
-  const d = doc()
+  const d = doc({
+    collect: {
+      gc: true,
+      activeHandles: true
+    }
+  })
 
   preventTestExitingEarly(t, 2000)
 
@@ -172,6 +182,8 @@ tap.test('data event', t => {
     checks.heapTotal(t, data.memory.heapTotal)
     checks.heapUsed(t, data.memory.heapUsed)
     checks.external(t, data.memory.external)
+    checks.gc(t, data.gc)
+    checks.activeHandles(t, data.activeHandles)
     t.end()
   })
 })
