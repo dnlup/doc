@@ -1,39 +1,37 @@
 import { expectType, expectError } from 'tsd'
-import {
-  Sampler,
-  createSampler,
-  CPUMetric,
-  EventLoopDelayMetric,
-  GCMetric,
-  MemoryMetric
-} from '.'
+import Doc = require('.');
 
-let sampler: Sampler
+let doc: Doc.DocInstance
 
 // These should work
-sampler = createSampler()
-sampler = createSampler({})
-sampler = createSampler({ sampleInterval: 1234 })
-sampler = createSampler({ eventLoopOptions: { resolution: 5678 } })
-sampler = createSampler({ collect: { cpu: false, gc: true } })
-sampler = createSampler({ collect: { activeHandles: true } })
-sampler = createSampler({ collect: { gc: true, activeHandles: true } })
-
-expectType<() => void>(sampler.start)
-expectType<() => void>(sampler.stop)
-
-sampler.on('sample', () => {
-  expectType<CPUMetric|undefined>(sampler.cpu)
-  expectType<EventLoopDelayMetric|undefined>(sampler.eventLoopDelay)
-  expectType<GCMetric|undefined>(sampler.gc)
-  expectType<MemoryMetric|undefined>(sampler.memory)
-  expectType<number|undefined>(sampler.activeHandles)
+doc = Doc()
+doc = Doc({})
+doc = Doc({ sampleInterval: 1234 })
+doc = Doc({ eventLoopOptions: { resolution: 5678 } })
+doc = Doc({ collect: { cpu: false, gc: true } })
+doc = Doc({ collect: { activeHandles: true } })
+doc = Doc({ collect: { gc: true, activeHandles: true } })
+doc.on('data', data => {
+  expectType<number>(data.cpu)
+  expectType<number>(data.eventLoopDelay)
+  expectType<number>(data.memory.external)
+  expectType<number>(data.memory.heapTotal)
+  expectType<number>(data.memory.heapUsed)
+  expectType<number>(data.memory.rss)
+  expectType<Doc.GCAggregatedEntry|undefined>(data.gc.get(Doc.GCOp.major))
+  expectType<Doc.GCAggregatedEntry|undefined>(data.gc.get(Doc.GCOp.minor))
+  expectType<Doc.GCAggregatedEntry|undefined>(data.gc.get(Doc.GCOp.incremental))
+  expectType<Doc.GCAggregatedEntry|undefined>(data.gc.get(Doc.GCOp.weakCB))
+  expectType<number>(data.activeHandles)
+  expectType<number>(data.raw.cpu.system)
+  expectType<number>(data.raw.cpu.user)
+  expectType<number | Doc.EventLoopDelayHistogram>(data.raw.eventLoopDelay)
 })
 
 // These should not
-expectError(() => { createSampler(1) })
-expectError(() => { createSampler('string') })
-expectError(() => { createSampler(null) })
-expectError(() => { createSampler({ foo: 'bar' }) })
-expectError(() => { createSampler({ sampleInterval: 'bar' }) })
-expectError(() => { createSampler({ eventLoopOptions: 'bar' }) })
+expectError(() => { Doc(1) })
+expectError(() => { Doc('string') })
+expectError(() => { Doc(null) })
+expectError(() => { Doc({ foo: 'bar' }) })
+expectError(() => { Doc({ sampleInterval: 'bar' }) })
+expectError(() => { Doc({ eventLoopOptions: 'bar' }) })
