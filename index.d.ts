@@ -41,6 +41,44 @@ declare namespace Doc {
     exceeds: number,
   }
 
+  enum GCFlag { // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO
+    no = 'no', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED
+    constructRetained = 'constructRetained', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_FORCED
+    forced = 'forced', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING
+    synchronousPhantomProcessing = 'synchronousPhantomProcessing', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE
+    allAvailableGarbage = 'allAvailableGarbage', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY
+    allExternalMemory = 'allExternalMemory', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE
+    scheduleIdle = 'scheduleIdle' // eslint-disable-line no-unused-vars
+  }
+
+  enum GCOp { // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
+    major = 'major', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
+    minor = 'minor', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
+    incremental = 'incremental', // eslint-disable-line no-unused-vars
+    // perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
+    weakCB = 'weakCB' // eslint-disable-line no-unused-vars
+  }
+
+  interface GCOpStats {
+    count: number,
+    total: number,
+    average: number
+  }
+
+  interface GCAggregatedEntry extends GCOpStats {
+    flags?: Map<GCFlag, GCOpStats>
+  }
+
   interface DocData {
     /**
      * Event loop delay (ms).
@@ -72,26 +110,9 @@ declare namespace Doc {
      */
     cpu: number,
     /**
-     * Object containing garbage collection stats.
+     * Map containing garbage collection stats.
      */
-    gc: {
-      /**
-       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
-       */
-      major: number,
-      /**
-       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
-       */
-      minor: number,
-      /**
-       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
-       */
-      incremental: number,
-      /**
-       * Average duration (ms) of perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
-       */
-      weakCB: number,
-    },
+    gc: Map<GCOp, GCAggregatedEntry>
     /**
      * Number of active handles
      */
