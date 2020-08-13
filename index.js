@@ -7,12 +7,13 @@ const GCMetric = require('./lib/metrics/gc')
 const config = require('./lib/config')
 const {
   kOptions,
+  kTimer,
   kLastSampleTime,
   kEventLoop,
   kCpu,
   kGC,
   kData,
-  kEmitStats,
+  kEmitSample,
   kSample,
   kReset
 } = require('./lib/symbols')
@@ -56,14 +57,30 @@ class Doc extends EventEmitter {
       raw: {}
     }
     this[kSample]()
-    const timer = setInterval(this[kEmitStats].bind(this), this[kOptions].sampleInterval)
-    timer.unref()
+    this[kTimer] = setInterval(this[kEmitSample].bind(this), this[kOptions].sampleInterval)
+    this[kTimer].unref()
   }
 
-  [kEmitStats] () {
-    this.emit('data', this[kSample]())
+  start () {}
+
+  stop () {
+    clearTimeout(this[kTimer])
+  }
+
+  get cpu () {
+    return this[kCpu]
+  }
+
+  [kEmitSample] () {
+    this[kSample]()
+    this.emit('sample')
     this[kReset]()
   }
+
+  //   [kEmitStats] () {
+  //     this.emit('data', this[kSample]())
+  //     this[kReset]()
+  //   }
 
   [kSample] () {
     const nextSampleTime = process.hrtime()
@@ -79,8 +96,7 @@ class Doc extends EventEmitter {
     }
 
     if (this[kOptions].collect.cpu) {
-      this[kData].cpu = this[kCpu].sample(elapsedNs)
-      this[kData].raw.cpu = this[kCpu].raw
+      this[kCpu][kSample](elapsedNs)
     }
 
     if (this[kOptions].collect.gc) {
@@ -101,7 +117,7 @@ class Doc extends EventEmitter {
     }
 
     if (this[kOptions].collect.cpu) {
-      this[kCpu].reset()
+      this[kCpu][kReset]()
     }
 
     if (this[kOptions].collect.gc) {
