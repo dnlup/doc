@@ -12,28 +12,17 @@ const {
   kEventLoopDelay,
   kCpu,
   kGC,
-  kData,
+  kActiveHandles,
+  kMemory,
   kEmitSample,
   kSample,
   kReset
 } = require('./lib/symbols')
 
-/**
- * Convert `process.hrtime` to nanoseconds
- * @param {Array} time
- */
 function hrtime2ns (time) {
   return time[0] * 1e9 + time[1]
 }
 
-/**
- * Doc.
- * Gathers usage metrics of a process.
- * @param {object} options
- * @param {boolean} options.sampleInterval
- * @param {object} options.eventLoopOptions
- * @param {object} options.collect
- */
 class Doc extends EventEmitter {
   constructor (options) {
     super()
@@ -52,16 +41,18 @@ class Doc extends EventEmitter {
       this[kGC] = new GCMetric()
     }
 
-    // TODO: maybe here is better to use a Map
-    this[kData] = {
-      raw: {}
-    }
     this[kSample]()
-    this[kTimer] = setInterval(this[kEmitSample].bind(this), this[kOptions].sampleInterval)
-    this[kTimer].unref()
+    if (this[kOptions].autoStart) {
+      this.start()
+    }
   }
 
-  start () {}
+  start () {
+    this[kTimer] = setInterval(this[kEmitSample].bind(this), this[kOptions].sampleInterval)
+    if (this[kOptions].unref) {
+      this[kTimer].unref()
+    }
+  }
 
   stop () {
     clearTimeout(this[kTimer])
@@ -79,6 +70,14 @@ class Doc extends EventEmitter {
     return this[kGC]
   }
 
+  get activeHandles () {
+    return this[kActiveHandles]
+  }
+
+  get memory () {
+    return this[kMemory]
+  }
+
   [kEmitSample] () {
     this[kSample]()
     this.emit('sample')
@@ -94,7 +93,7 @@ class Doc extends EventEmitter {
     }
 
     if (this[kOptions].collect.activeHandles) {
-      this[kData].activeHandles = process._getActiveHandles().length
+      this[kActiveHandles] = process._getActiveHandles().length
     }
 
     if (this[kOptions].collect.cpu) {
@@ -102,11 +101,10 @@ class Doc extends EventEmitter {
     }
 
     if (this[kOptions].collect.memory) {
-      this[kData].memory = process.memoryUsage()
+      this[kMemory] = process.memoryUsage()
     }
 
     this[kLastSampleTime] = nextSampleTime
-    return this[kData]
   }
 
   [kReset] () {
@@ -124,9 +122,10 @@ class Doc extends EventEmitter {
   }
 }
 
-/**
- * Create a new Doc instance
- */
-module.exports = function (options = {}) {
+function doc (options = {}) {
   return new Doc(options)
 }
+
+doc.Doc = Doc
+
+module.exports = doc
