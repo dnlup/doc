@@ -18,9 +18,6 @@ function doc () {
   const doc = Doc({ sampleInterval: 10, collect: { gc: true, activeHandles: true } })
   // const doc = Doc({ sampleInterval: 100 })
   const server = createServer(handle)
-  // doc.on('data', () => console.log(process._getActiveRequests().length))
-  // doc.on('data', () => process._getActiveRequests().length)
-  // doc.on('data', () => {})
   doc.on('sample', () => {
     const cpu = { // eslint-disable-line no-unused-vars
       usage: doc.cpu.usage,
@@ -29,6 +26,12 @@ function doc () {
     const eventLoopDelay = { // eslint-disable-line no-unused-vars
       computed: doc.eventLoopDelay.computed,
       raw: doc.eventLoopDelay.raw
+    }
+    const gc = { // eslint-disable-line no-unused-vars
+      major: doc.gc.major,
+      minor: doc.gc.minor,
+      incremental: doc.gc.incremental,
+      weakCb: doc.gc.weakCb
     }
   })
   server.listen(0)

@@ -75,6 +75,10 @@ class Doc extends EventEmitter {
     return this[kEventLoopDelay]
   }
 
+  get gc () {
+    return this[kGC]
+  }
+
   [kEmitSample] () {
     this[kSample]()
     this.emit('sample')
@@ -97,10 +101,6 @@ class Doc extends EventEmitter {
       this[kCpu][kSample](elapsedNs)
     }
 
-    if (this[kOptions].collect.gc) {
-      this[kData].gc = this[kGC].sample()
-    }
-
     if (this[kOptions].collect.memory) {
       this[kData].memory = process.memoryUsage()
     }
@@ -111,7 +111,7 @@ class Doc extends EventEmitter {
 
   [kReset] () {
     if (this[kOptions].collect.eventLoopDelay) {
-      this[kEventLoopDelay].reset()
+      this[kEventLoopDelay][kReset]()
     }
 
     if (this[kOptions].collect.cpu) {
@@ -119,7 +119,7 @@ class Doc extends EventEmitter {
     }
 
     if (this[kOptions].collect.gc) {
-      this[kGC].reset()
+      this[kGC][kReset]()
     }
   }
 }
