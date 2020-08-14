@@ -33,6 +33,7 @@ function doc () {
       incremental: doc.gc.incremental,
       weakCb: doc.gc.weakCb
     }
+    const activeHandles = gc.activeHandles // eslint-disable-line no-unused-vars
   })
   server.listen(0)
   server.on('listening', () => console.error(`server listening on port ${server.address().port}`))
