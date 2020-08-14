@@ -1,7 +1,7 @@
 'use strict'
 
 const EventEmitter = require('events')
-const EventLoopDelayMetric = require('./lib/metrics/eventLoop')
+const EventLoopDelayMetric = require('./lib/metrics/eventLoopDelay')
 const CpuMetric = require('./lib/metrics/cpu')
 const GCMetric = require('./lib/metrics/gc')
 const config = require('./lib/config')
@@ -9,7 +9,7 @@ const {
   kOptions,
   kTimer,
   kLastSampleTime,
-  kEventLoop,
+  kEventLoopDelay,
   kCpu,
   kGC,
   kData,
@@ -41,7 +41,7 @@ class Doc extends EventEmitter {
     this[kLastSampleTime] = process.hrtime()
 
     if (this[kOptions].collect.eventLoopDelay) {
-      this[kEventLoop] = new EventLoopDelayMetric(options.eventLoopOptions)
+      this[kEventLoopDelay] = new EventLoopDelayMetric(options.eventLoopOptions)
     }
 
     if (this[kOptions].collect.cpu) {
@@ -71,24 +71,22 @@ class Doc extends EventEmitter {
     return this[kCpu]
   }
 
+  get eventLoopDelay () {
+    return this[kEventLoopDelay]
+  }
+
   [kEmitSample] () {
     this[kSample]()
     this.emit('sample')
     this[kReset]()
   }
 
-  //   [kEmitStats] () {
-  //     this.emit('data', this[kSample]())
-  //     this[kReset]()
-  //   }
-
   [kSample] () {
     const nextSampleTime = process.hrtime()
     const elapsedNs = hrtime2ns(nextSampleTime) - hrtime2ns(this[kLastSampleTime])
 
     if (this[kOptions].collect.eventLoopDelay) {
-      this[kData].eventLoopDelay = this[kEventLoop].sample(elapsedNs, this[kOptions].sampleInterval)
-      this[kData].raw.eventLoopDelay = this[kEventLoop].raw
+      this[kEventLoopDelay].sample(elapsedNs, this[kOptions].sampleInterval)
     }
 
     if (this[kOptions].collect.activeHandles) {
@@ -113,7 +111,7 @@ class Doc extends EventEmitter {
 
   [kReset] () {
     if (this[kOptions].collect.eventLoopDelay) {
-      this[kEventLoop].reset()
+      this[kEventLoopDelay].reset()
     }
 
     if (this[kOptions].collect.cpu) {
