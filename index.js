@@ -89,7 +89,7 @@ class Doc extends EventEmitter {
     const elapsedNs = hrtime2ns(nextSampleTime) - hrtime2ns(this[kLastSampleTime])
 
     if (this[kOptions].collect.eventLoopDelay) {
-      this[kEventLoopDelay].sample(elapsedNs, this[kOptions].sampleInterval)
+      this[kEventLoopDelay][kSample](elapsedNs, this[kOptions].sampleInterval)
     }
 
     if (this[kOptions].collect.activeHandles) {
