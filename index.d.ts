@@ -93,7 +93,7 @@ declare interface GCMetric {
   // perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
   incremental: GCAggregatedEntry,
   // perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
-  weakCB: GCAggregatedEntry
+  weakCb: GCAggregatedEntry
 }
 
 declare interface MemoryMetric {
