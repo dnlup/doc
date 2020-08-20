@@ -1,5 +1,7 @@
 'use strict'
 
+// TODO: this tests need some refactoring, it's starting to get a little messy.
+
 const tap = require('tap')
 const { monitorEventLoopDelay } = require('perf_hooks')
 const isCi = require('is-ci')
