@@ -100,9 +100,9 @@ const checks = {
     }
 
     // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
-    const check = value.get('major').average >= levels.major &&
-                  value.get('minor').average >= levels.minor &&
-                  value.get('incremental').average >= levels.incremental
+    const check = value.major.average >= levels.major &&
+                  value.minor.average >= levels.minor &&
+                  value.incremental.average >= levels.incremental
     t.true(check, `gc |
     expected: {
       major: ${expected.major},
@@ -110,9 +110,9 @@ const checks = {
       incremental: ${expected.incremental}
     },
     value: { 
-      major: ${value.get('major').average},
-      minor: ${value.get('minor').average},
-      incremental: ${value.get('incremental').average}
+      major: ${value.major.average},
+      minor: ${value.minor.average},
+      incremental: ${value.incremental.average}
     }`)
   },
   activeHandles (t, value) {
@@ -162,7 +162,7 @@ tap.test('data event', t => {
 
   preventTestExitingEarly(t, 2000)
 
-  d.once('data', data => {
+  d.once('sample', () => {
     const end = process.hrtime(start)
     const elapsed = end[0] * 1e3 + end[1] / 1e6
     if (monitorEventLoopDelay) {
@@ -170,20 +170,26 @@ tap.test('data event', t => {
     } else {
       t.true(elapsed >= 500 && elapsed < 1000)
     }
-    t.equal('number', typeof data.eventLoopDelay)
-    t.equal('number', typeof data.cpu)
-    t.equal('number', typeof data.memory.rss)
-    t.equal('number', typeof data.memory.heapTotal)
-    t.equal('number', typeof data.memory.heapUsed)
-    t.equal('number', typeof data.memory.external)
-    checks.eventLoopDelay(t, data.eventLoopDelay)
-    checks.cpu(t, data.cpu)
-    checks.rss(t, data.memory.rss)
-    checks.heapTotal(t, data.memory.heapTotal)
-    checks.heapUsed(t, data.memory.heapUsed)
-    checks.external(t, data.memory.external)
-    checks.gc(t, data.gc)
-    checks.activeHandles(t, data.activeHandles)
+    t.equal('number', typeof d.eventLoopDelay.computed)
+    if (monitorEventLoopDelay) {
+      t.equal('ELDHistogram', d.eventLoopDelay.raw.constructor.name)
+    } else {
+      t.equal('number', typeof d.eventLoopDelay.raw)
+    }
+    t.equal('number', typeof d.cpu.usage)
+    t.equal('object', typeof d.cpu.raw)
+    t.equal('number', typeof d.memory.rss)
+    t.equal('number', typeof d.memory.heapTotal)
+    t.equal('number', typeof d.memory.heapUsed)
+    t.equal('number', typeof d.memory.external)
+    checks.eventLoopDelay(t, d.eventLoopDelay.computed)
+    checks.cpu(t, d.cpu.usage)
+    checks.rss(t, d.memory.rss)
+    checks.heapTotal(t, d.memory.heapTotal)
+    checks.heapUsed(t, d.memory.heapUsed)
+    checks.external(t, d.memory.external)
+    checks.gc(t, d.gc)
+    checks.activeHandles(t, d.activeHandles)
     t.end()
   })
 })
@@ -192,7 +198,7 @@ tap.test('custom sample interval', t => {
   const start = process.hrtime()
   const d = doc({ sampleInterval: 2000 })
   setTimeout(() => {}, 4000)
-  d.once('data', () => {
+  d.once('sample', () => {
     const end = process.hrtime(start)
     const elapsed = end[0] * 1e3 + end[1] / 1e6
     t.true(elapsed >= 2000 && elapsed < 2200)
