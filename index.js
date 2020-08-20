@@ -1,9 +1,9 @@
 'use strict'
 
 const EventEmitter = require('events')
-const EventLoopDelayMetric = require('./lib/metrics/eventLoopDelay')
-const CpuMetric = require('./lib/metrics/cpu')
-const GCMetric = require('./lib/metrics/gc')
+const EventLoopDelayMetric = require('./lib/eventLoopDelay')
+const CpuMetric = require('./lib/cpu')
+const GCMetric = require('./lib/gc')
 const config = require('./lib/config')
 const {
   kOptions,
