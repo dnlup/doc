@@ -56,7 +56,9 @@
   },
   "standard": {
     "ignore": [
-      "validate.js"
+      "lib/config/validate.js",
+      "index.d.ts",
+      "index.test-d.ts"
     ]
   },
   "tsd": {

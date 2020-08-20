@@ -101,3 +101,5 @@ public
 .tern-port
 
 *.swp
+
+.clinic
