@@ -3,7 +3,10 @@
 const tap = require('tap')
 const { constants } = require('perf_hooks')
 const GCMetric = require('../lib/gc')
-const { kObserverCallback } = require('../lib/symbols')
+const {
+  kReset,
+  kObserverCallback
+} = require('../lib/symbols')
 
 tap.test('garbage collection metric', t => {
   const flagsSupported = constants.NODE_PERFORMANCE_GC_FLAGS_NO !== undefined
@@ -40,13 +43,11 @@ tap.test('garbage collection metric', t => {
   gc[kObserverCallback](newFakeList(constants.NODE_PERFORMANCE_GC_INCREMENTAL))
   gc[kObserverCallback](newFakeList(constants.NODE_PERFORMANCE_GC_WEAKCB))
 
-  const gcStats = gc.sample()
-
   // Check it calculated the average correctly
-  t.deepEquals(gcStats.get('major'), expected)
-  t.deepEquals(gcStats.get('minor'), expected)
-  t.deepEquals(gcStats.get('incremental'), expected)
-  t.deepEquals(gcStats.get('weakCB'), expected)
+  t.deepEquals(gc.major, expected)
+  t.deepEquals(gc.minor, expected)
+  t.deepEquals(gc.incremental, expected)
+  t.deepEquals(gc.weakCb, expected)
 
   // Check it resets correctly
   expected = {
@@ -59,10 +60,10 @@ tap.test('garbage collection metric', t => {
     expected.flags = new Map()
   }
 
-  gc.reset()
-  t.deepEquals(gcStats.get('major'), expected)
-  t.deepEquals(gcStats.get('minor'), expected)
-  t.deepEquals(gcStats.get('incremental'), expected)
-  t.deepEquals(gcStats.get('weakCB'), expected)
+  gc[kReset]()
+  t.deepEquals(gc.major, expected)
+  t.deepEquals(gc.minor, expected)
+  t.deepEquals(gc.incremental, expected)
+  t.deepEquals(gc.weakCb, expected)
   t.end()
 })
