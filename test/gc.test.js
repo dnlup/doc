@@ -2,7 +2,7 @@
 
 const tap = require('tap')
 const { constants } = require('perf_hooks')
-const GCMetric = require('../lib/metrics/gc')
+const GCMetric = require('../lib/gc')
 const { kObserverCallback } = require('../lib/symbols')
 
 tap.test('garbage collection metric', t => {
