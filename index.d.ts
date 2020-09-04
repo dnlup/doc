@@ -61,22 +61,25 @@ declare interface EventLoopDelayMetric {
   raw: number | EventLoopDelayHistogram
 }
 
+/* eslint disable no-unused-vars */
 declare enum GCFlag {
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO
-  no = 'no', // eslint-disable-line no-unused-vars
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED
-  constructRetained = 'constructRetained', // eslint-disable-line no-unused-vars
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_FORCED
-  forced = 'forced', // eslint-disable-line no-unused-vars
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING
-  synchronousPhantomProcessing = 'synchronousPhantomProcessing', // eslint-disable-line no-unused-vars
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE
-  allAvailableGarbage = 'allAvailableGarbage', // eslint-disable-line no-unused-vars
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY
-  allExternalMemory = 'allExternalMemory', // eslint-disable-line no-unused-vars
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE
-  scheduleIdle = 'scheduleIdle' // eslint-disable-line no-unused-vars
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO */
+  No = 'no',
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED */
+  ConstructRetained = 'constructRetained',
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_FORCED */
+  Forced = 'forced',
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING */
+  SynchronousPhantomProcessing = 'synchronousPhantomProcessing',
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE */
+  AllAvailableGarbage = 'allAvailableGarbage',
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY */
+  AllExternalMemory = 'allExternalMemory',
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE */
+  ScheduleIdle = 'scheduleIdle'
 }
+/* eslint enable no-unused-vars */
+
 declare interface GCOpStats {
   count: number,
   total: number,
@@ -86,13 +89,13 @@ declare interface GCAggregatedEntry extends GCOpStats {
   flags?: Map<GCFlag, GCOpStats>
 }
 declare interface GCMetric {
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR */
   major: GCAggregatedEntry,
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR */
   minor: GCAggregatedEntry,
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL */
   incremental: GCAggregatedEntry,
-  // perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB
+  /** perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB */
   weakCb: GCAggregatedEntry
 }
 
@@ -114,7 +117,7 @@ declare interface MemoryMetric {
     */
    external: number,
    /**
-     * arrayBuffers memory (bytes), it's not presetn on Node 10
+     * arrayBuffers memory (bytes). This value is `undefined` on Node <= 10
      */
    arrayBuffers?: number
 }
