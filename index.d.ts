@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events' // eslint-disable-line no-unused-vars
 
-declare interface DocOptions {
+declare interface SamplerOptions {
   /**
    * Sample interval (ms), each sampleInterval ms a data event is emitted.
    * On Node 10 the default value is 500 while on Node >= 12 is 1000.
@@ -122,7 +122,7 @@ declare interface MemoryMetric {
    arrayBuffers?: number
 }
 
-declare class Doc extends EventEmitter {
+declare class Sampler extends EventEmitter {
   cpu: CPUMetric | undefined
   eventLoopDelay?: EventLoopDelayMetric
   gc?: GCMetric
@@ -133,14 +133,14 @@ declare class Doc extends EventEmitter {
   stop(): void
 }
 
-declare function DocFactory(options?: DocOptions): Doc
+declare function createSampler(options?: SamplerOptions): Sampler
 
-export default DocFactory
+export default createSampler
 
 export {
-  Doc,
-  DocOptions,
-  DocFactory,
+  Sampler,
+  SamplerOptions,
+  createSampler,
   CPUMetric,
   EventLoopDelayMetric,
   GCMetric,
