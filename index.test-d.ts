@@ -1,39 +1,39 @@
 import { expectType, expectError } from 'tsd'
 import {
-  Doc,
-  DocFactory,
+  Sampler,
+  createSampler,
   CPUMetric,
   EventLoopDelayMetric,
   GCMetric,
   MemoryMetric
 } from '.'
 
-let doc: Doc
+let sampler: Sampler
 
 // These should work
-doc = DocFactory()
-doc = DocFactory({})
-doc = DocFactory({ sampleInterval: 1234 })
-doc = DocFactory({ eventLoopOptions: { resolution: 5678 } })
-doc = DocFactory({ collect: { cpu: false, gc: true } })
-doc = DocFactory({ collect: { activeHandles: true } })
-doc = DocFactory({ collect: { gc: true, activeHandles: true } })
+sampler = createSampler()
+sampler = createSampler({})
+sampler = createSampler({ sampleInterval: 1234 })
+sampler = createSampler({ eventLoopOptions: { resolution: 5678 } })
+sampler = createSampler({ collect: { cpu: false, gc: true } })
+sampler = createSampler({ collect: { activeHandles: true } })
+sampler = createSampler({ collect: { gc: true, activeHandles: true } })
 
-expectType<() => void>(doc.start)
-expectType<() => void>(doc.stop)
+expectType<() => void>(sampler.start)
+expectType<() => void>(sampler.stop)
 
-doc.on('sample', () => {
-  expectType<CPUMetric|undefined>(doc.cpu)
-  expectType<EventLoopDelayMetric|undefined>(doc.eventLoopDelay)
-  expectType<GCMetric|undefined>(doc.gc)
-  expectType<MemoryMetric|undefined>(doc.memory)
-  expectType<number|undefined>(doc.activeHandles)
+sampler.on('sample', () => {
+  expectType<CPUMetric|undefined>(sampler.cpu)
+  expectType<EventLoopDelayMetric|undefined>(sampler.eventLoopDelay)
+  expectType<GCMetric|undefined>(sampler.gc)
+  expectType<MemoryMetric|undefined>(sampler.memory)
+  expectType<number|undefined>(sampler.activeHandles)
 })
 
 // These should not
-expectError(() => { DocFactory(1) })
-expectError(() => { DocFactory('string') })
-expectError(() => { DocFactory(null) })
-expectError(() => { DocFactory({ foo: 'bar' }) })
-expectError(() => { DocFactory({ sampleInterval: 'bar' }) })
-expectError(() => { DocFactory({ eventLoopOptions: 'bar' }) })
+expectError(() => { createSampler(1) })
+expectError(() => { createSampler('string') })
+expectError(() => { createSampler(null) })
+expectError(() => { createSampler({ foo: 'bar' }) })
+expectError(() => { createSampler({ sampleInterval: 'bar' }) })
+expectError(() => { createSampler({ eventLoopOptions: 'bar' }) })
