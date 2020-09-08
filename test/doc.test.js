@@ -124,8 +124,8 @@ const checks = {
   }
 }
 
-// Since the internal timer of the Doc instance
-// is unref(ed), manually schedule work on the event loop
+// Since the internal timer of the Sampler instance
+// is unref(ed) by default, manually schedule work on the event loop
 // to avoid premature exiting from the test
 function preventTestExitingEarly (t, ms) {
   const timeout = setTimeout(() => {}, ms)
@@ -153,9 +153,9 @@ tap.test('should throw an error if options are invalid', t => {
   t.end()
 })
 
-tap.test('data event', t => {
+tap.test('sample', t => {
   const start = process.hrtime()
-  const d = doc({
+  const sampler = doc({
     collect: {
       gc: true,
       activeHandles: true
@@ -164,7 +164,7 @@ tap.test('data event', t => {
 
   preventTestExitingEarly(t, 2000)
 
-  d.once('sample', () => {
+  sampler.once('sample', () => {
     const end = process.hrtime(start)
     const elapsed = end[0] * 1e3 + end[1] / 1e6
     if (monitorEventLoopDelay) {
@@ -172,35 +172,35 @@ tap.test('data event', t => {
     } else {
       t.true(elapsed >= 500 && elapsed < 1000)
     }
-    t.equal('number', typeof d.eventLoopDelay.computed)
+    t.equal('number', typeof sampler.eventLoopDelay.computed)
     if (monitorEventLoopDelay) {
-      t.equal('ELDHistogram', d.eventLoopDelay.raw.constructor.name)
+      t.equal('ELDHistogram', sampler.eventLoopDelay.raw.constructor.name)
     } else {
-      t.equal('number', typeof d.eventLoopDelay.raw)
+      t.equal('number', typeof sampler.eventLoopDelay.raw)
     }
-    t.equal('number', typeof d.cpu.usage)
-    t.equal('object', typeof d.cpu.raw)
-    t.equal('number', typeof d.memory.rss)
-    t.equal('number', typeof d.memory.heapTotal)
-    t.equal('number', typeof d.memory.heapUsed)
-    t.equal('number', typeof d.memory.external)
-    checks.eventLoopDelay(t, d.eventLoopDelay.computed)
-    checks.cpu(t, d.cpu.usage)
-    checks.rss(t, d.memory.rss)
-    checks.heapTotal(t, d.memory.heapTotal)
-    checks.heapUsed(t, d.memory.heapUsed)
-    checks.external(t, d.memory.external)
-    checks.gc(t, d.gc)
-    checks.activeHandles(t, d.activeHandles)
+    t.equal('number', typeof sampler.cpu.usage)
+    t.equal('object', typeof sampler.cpu.raw)
+    t.equal('number', typeof sampler.memory.rss)
+    t.equal('number', typeof sampler.memory.heapTotal)
+    t.equal('number', typeof sampler.memory.heapUsed)
+    t.equal('number', typeof sampler.memory.external)
+    checks.eventLoopDelay(t, sampler.eventLoopDelay.computed)
+    checks.cpu(t, sampler.cpu.usage)
+    checks.rss(t, sampler.memory.rss)
+    checks.heapTotal(t, sampler.memory.heapTotal)
+    checks.heapUsed(t, sampler.memory.heapUsed)
+    checks.external(t, sampler.memory.external)
+    checks.gc(t, sampler.gc)
+    checks.activeHandles(t, sampler.activeHandles)
     t.end()
   })
 })
 
 tap.test('custom sample interval', t => {
   const start = process.hrtime()
-  const d = doc({ sampleInterval: 2000 })
+  const sampler = doc({ sampleInterval: 2000 })
   setTimeout(() => {}, 4000)
-  d.once('sample', () => {
+  sampler.once('sample', () => {
     const end = process.hrtime(start)
     const elapsed = end[0] * 1e3 + end[1] / 1e6
     t.true(elapsed >= 2000 && elapsed < 2200)
