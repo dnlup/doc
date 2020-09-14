@@ -1,7 +1,7 @@
 {
   "name": "@dnlup/doc",
   "version": "1.2.0-0",
-  "description": "See how many Gigawatts your Node.js process is using",
+  "description": "Get usage and health data about your Node.js process",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
