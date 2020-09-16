@@ -14,36 +14,39 @@ function base () {
   server.on('listening', () => console.log(`server listening on port ${server.address().port}`))
 }
 
-function doc () {
-  const doc = Doc({ sampleInterval: 10, collect: { gc: true, activeHandles: true } })
-  // const doc = Doc({ sampleInterval: 100 })
+function withDoc () {
+  const port = process.env.PORT || 0
+  const sampler = Doc({ sampleInterval: 10, collect: { gc: true, activeHandles: true } })
   const server = createServer(handle)
-  doc.on('sample', () => {
-    const cpu = { // eslint-disable-line no-unused-vars
-      usage: doc.cpu.usage,
-      raw: doc.cpu.raw
+  /* eslint-disable no-unused-vars */
+  sampler.on('sample', () => {
+    const cpu = {
+      usage: sampler.cpu.usage,
+      raw: sampler.cpu.raw
     }
-    const eventLoopDelay = { // eslint-disable-line no-unused-vars
-      computed: doc.eventLoopDelay.computed,
-      raw: doc.eventLoopDelay.raw
+    const eventLoopDelay = {
+      computed: sampler.eventLoopDelay.computed,
+      raw: sampler.eventLoopDelay.raw
     }
-    const gc = { // eslint-disable-line no-unused-vars
-      major: doc.gc.major,
-      minor: doc.gc.minor,
-      incremental: doc.gc.incremental,
-      weakCb: doc.gc.weakCb
+    const memory = sampler.memory
+    const gc = {
+      major: sampler.gc.major,
+      minor: sampler.gc.minor,
+      incremental: sampler.gc.incremental,
+      weakCb: sampler.gc.weakCb
     }
-    const activeHandles = gc.activeHandles // eslint-disable-line no-unused-vars
+    const activeHandles = gc.activeHandles
+    /* eslint-enable no-unused-vars */
   })
-  server.listen(0)
+  server.listen(port)
   server.on('listening', () => console.error(`server listening on port ${server.address().port}`))
 }
 
 module.exports = {
   base,
-  doc
+  withDoc
 }
 
 if (require.main === module) {
-  doc()
+  withDoc()
 }
