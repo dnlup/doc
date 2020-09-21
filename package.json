@@ -7,8 +7,8 @@
   "scripts": {
     "build": "ajv compile --remove-additional=true --coerce-types --use-defaults -s lib/config/schema.js -o lib/config/validate.js",
     "lint": "npm run lint:js && npm run lint:ts",
-    "lint:js": "standard --fix",
-    "lint:ts": "standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin *.ts",
+    "lint:js": "eslint .",
+    "lint:ts": "eslint *.ts",
     "pretest": "npm run build",
     "test": "npm run lint && npm run test:js && npm run test:ts",
     "test:js": "tap",
@@ -38,7 +38,6 @@
   ],
   "keywords": [
     "process",
-    "data",
     "memory",
     "cpu",
     "event",
@@ -59,13 +58,6 @@
   "engines": {
     "node": ">=10",
     "npm": ">=6"
-  },
-  "standard": {
-    "ignore": [
-      "lib/config/validate.js",
-      "index.d.ts",
-      "index.test-d.ts"
-    ]
   },
   "tsd": {
     "directory": "."
