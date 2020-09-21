@@ -61,7 +61,6 @@ declare interface EventLoopDelayMetric {
   raw: number | EventLoopDelayHistogram
 }
 
-/* eslint disable no-unused-vars */
 declare enum GCFlag {
   /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO */
   No = 'no',
@@ -78,7 +77,6 @@ declare enum GCFlag {
   /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE */
   ScheduleIdle = 'scheduleIdle'
 }
-/* eslint enable no-unused-vars */
 
 declare interface GCOpStats {
   count: number,
