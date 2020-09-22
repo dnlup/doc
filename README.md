@@ -13,12 +13,12 @@ Its API are designed to let you access both computed and raw values, where possi
 <!-- toc -->
 
 - [Installation](#installation)
-  * [latest stable version](#latest-stable-version)
-  * [latest development version](#latest-development-version)
+        * [latest stable version](#latest-stable-version)
+        * [latest development version](#latest-development-version)
 - [Usage](#usage)
-  - [Enable/disable metrics collection](#enabledisable-metrics-collection)
-    * [Garbage collection](#garbage-collection)
-    * [Active handles](#active-handles)
+      - [Enable/disable metrics collection](#enabledisable-metrics-collection)
+        * [Garbage collection](#garbage-collection)
+        * [Active handles](#active-handles)
 - [API](#api)
   * [doc([options])](#docoptions)
   * [Class: `doc.Sampler`](#class-docsampler)
@@ -246,7 +246,7 @@ On Node versions that support [`monitorEventLoopDelay`](https://nodejs.org/dist/
 * `raw` `<number>` The raw value taken using the [`Histogram`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_class_histogram) API.
 * Returns `<number>` The computed delay value.
 
-This method is meamt to use only on node versions that supports [`monitorEventLoopDelay`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options). It allows to get computed values of the event loop delay from other values than the `mean` of the [`Histogram`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_class_histogram) instance.
+This method is meant to be used only on node versions that supports [`monitorEventLoopDelay`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options). It allows to get computed values of the event loop delay from other values than the `mean` of the [`Histogram`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_class_histogram) instance.
 
 ### Class: `GCMetric`
 
