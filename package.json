@@ -1,22 +1,28 @@
 {
   "name": "@dnlup/doc",
   "version": "1.2.0-0",
-  "description": "See how many Gigawatts your Node.js process is using",
+  "description": "Get usage and health data about your Node.js process",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "ajv compile --remove-additional=true --coerce-types --use-defaults -s lib/config/schema.js -o lib/config/validate.js",
     "lint": "npm run lint:js && npm run lint:ts",
-    "lint:js": "standard --fix",
-    "lint:ts": "standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin *.ts",
+    "lint:js": "eslint .",
+    "lint:ts": "eslint *.ts",
     "pretest": "npm run build",
     "test": "npm run lint && npm run test:js && npm run test:ts",
     "test:js": "tap",
     "test:ts": "tsd",
+    "deoptigate:server": "PORT=3000 deoptigate benchmarks/doc.js",
+    "deoptigate:load": "autocannon -d 60 -c 100 -p 10 localhost:3000",
+    "bench": "npm run bench:base && npm run bench:doc",
+    "bench:base": "PORT=3000 concurrently -k -s first \"node benchmarks/base.js\" \"node -e 'setTimeout(()=>{}, 1000)' && autocannon -d 60 -c 100 -p 10 localhost:3000\"",
+    "bench:doc": "PORT=3000 concurrently -k -s first \"node benchmarks/doc.js\" \"node -e 'setTimeout(()=>{}, 1000)' && autocannon -d 60 -c 100 -p 10 localhost:3000\"",
     "doc": "markdown-toc -i README.md",
     "prerelease": "npm cit",
     "release": "HUSKY_SKIP_HOOKS=1 standard-version",
     "postrelease": "npm run push && npm publish",
+    "prenext": "npm cit",
     "next": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
     "postnext": "npm run push && npm publish --tag next",
     "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`"
@@ -32,7 +38,6 @@
   ],
   "keywords": [
     "process",
-    "data",
     "memory",
     "cpu",
     "event",
@@ -54,24 +59,27 @@
     "node": ">=10",
     "npm": ">=6"
   },
-  "standard": {
-    "ignore": [
-      "validate.js"
-    ]
-  },
   "tsd": {
     "directory": "."
   },
   "devDependencies": {
     "@types/node": "^14.11.2",
-    "@typescript-eslint/eslint-plugin": "^3.10.1",
-    "@typescript-eslint/parser": "^3.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
     "ajv-cli": "^3.3.0",
+    "autocannon": "^6.4.0",
+    "concurrently": "^5.3.0",
+    "deoptigate": "^0.5.0",
+    "eslint": "^7.9.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.3.0",
     "is-ci": "^2.0.0",
     "lint-staged": "^10.4.0",
     "markdown-toc": "^1.2.0",
-    "standard": "^14.3.4",
     "standard-version": "^9.0.0",
     "tap": "^14.10.8",
     "tsd": "^0.13.1"
