@@ -13,12 +13,12 @@ Its API are designed to let you access both computed and raw values, where possi
 <!-- toc -->
 
 - [Installation](#installation)
-        * [latest stable version](#latest-stable-version)
-        * [latest development version](#latest-development-version)
+  * [latest stable version](#latest-stable-version)
+  * [latest development version](#latest-development-version)
 - [Usage](#usage)
-      - [Enable/disable metrics collection](#enabledisable-metrics-collection)
-        * [Garbage collection](#garbage-collection)
-        * [Active handles](#active-handles)
+  - [Enable/disable metrics collection](#enabledisable-metrics-collection)
+    * [Garbage collection](#garbage-collection)
+    * [Active handles](#active-handles)
 - [API](#api)
   * [doc([options])](#docoptions)
   * [Class: `doc.Sampler`](#class-docsampler)
