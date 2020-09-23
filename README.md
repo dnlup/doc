@@ -8,7 +8,7 @@
 `doc` is a small module that helps you collect health metrics about your Node.js process.
 It does that by using only the API provided by Node itself.
 It is not coupled with any APM platform so you are free to use anything you want for that purpose.
-Its API are designed to let you access both computed and raw values, where possible.
+Its API is designed to let you access both computed and raw values, where possible.
 
 <!-- toc -->
 
@@ -88,7 +88,7 @@ This makes the instance stateful. On every tick a new snapshot will overwrite th
 
 ##### Enable/disable metrics collection
 
-You can disable metrics you don't need.
+You can disable the metrics that you don't need.
 
 ```js
 const doc = require('@dnlup/doc')
