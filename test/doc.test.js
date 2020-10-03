@@ -80,7 +80,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = 10 * 11e5
+      const level = 10 * 15e5
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
