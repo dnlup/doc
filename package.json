@@ -5,11 +5,9 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "ajv compile --remove-additional=true --coerce-types --use-defaults -s lib/config/schema.js -o lib/config/validate.js",
     "lint": "npm run lint:js && npm run lint:ts",
     "lint:js": "eslint .",
     "lint:ts": "eslint *.ts",
-    "pretest": "npm run build",
     "test": "npm run lint && npm run test:js && npm run test:ts",
     "test:js": "tap",
     "test:ts": "tsd",

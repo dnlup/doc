@@ -80,7 +80,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = 10 * 11e5
+      const level = 10 * 15e5
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
@@ -131,27 +131,6 @@ function preventTestExitingEarly (t, ms) {
   const timeout = setTimeout(() => {}, ms)
   t.teardown(() => clearTimeout(timeout))
 }
-
-tap.test('should throw an error if options are invalid', t => {
-  let error = t.throws(() => doc({ sampleInterval: 'skdjfh' }))
-  t.equal(error.message, '.sampleInterval should be number')
-  error = t.throws(() => doc({ sampleInterval: -1 }))
-  t.equal(error.message, '.sampleInterval should be >= 1')
-  if (monitorEventLoopDelay) {
-    error = t.throws(() => doc({ sampleInterval: 5 }))
-    t.equal('.sampleInterval should be >= .eventLoopOptions.resolution',
-      error.message)
-    error = t.throws(() => doc({
-      sampleInterval: 10,
-      eventLoopOptions: { resolution: 20 }
-    }))
-    t.equal('.sampleInterval should be >= .eventLoopOptions.resolution',
-      error.message)
-  } else {
-    t.pass()
-  }
-  t.end()
-})
 
 tap.test('sample', t => {
   const start = process.hrtime()
