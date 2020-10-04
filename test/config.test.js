@@ -76,6 +76,51 @@ tap.test('invalid options', t => {
       },
       instanceOf: TypeError,
       message: 'collect.cpu must be a boolean, received string '
+    },
+    {
+      config: {
+        collect: {
+          memory: ''
+        }
+      },
+      instanceOf: TypeError,
+      message: 'collect.memory must be a boolean, received string '
+    },
+    {
+      config: {
+        collect: {
+          eventLoopDelay: ''
+        }
+      },
+      instanceOf: TypeError,
+      message: 'collect.eventLoopDelay must be a boolean, received string '
+    },
+    {
+      config: {
+        collect: {
+          eventLoopUtilization: ''
+        }
+      },
+      instanceOf: TypeError,
+      message: 'collect.eventLoopUtilization must be a boolean, received string '
+    },
+    {
+      config: {
+        collect: {
+          gc: ''
+        }
+      },
+      instanceOf: TypeError,
+      message: 'collect.gc must be a boolean, received string '
+    },
+    {
+      config: {
+        collect: {
+          activeHandles: ''
+        }
+      },
+      instanceOf: TypeError,
+      message: 'collect.activeHandles must be a boolean, received string '
     }
   ]
 
