@@ -121,7 +121,7 @@ declare interface MemoryMetric {
 }
 
 declare class Sampler extends EventEmitter {
-  cpu: CPUMetric | undefined
+  cpu?: CPUMetric
   eventLoopDelay?: EventLoopDelayMetric
   gc?: GCMetric
   memory?: MemoryMetric
