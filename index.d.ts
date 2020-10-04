@@ -25,6 +25,7 @@ declare interface SamplerOptions {
   collect?: {
     cpu?: boolean,
     eventLoopDelay?: boolean,
+    eventLoopUtilization?: boolean,
     memory?: boolean,
     gc?: boolean,
     activeHandles?: boolean
@@ -59,6 +60,17 @@ declare interface EventLoopDelayMetric {
     */
   computed: number,
   raw: number | EventLoopDelayHistogram
+}
+
+declare interface EventLoopUtilizationMetric {
+  /**
+    * Raw metric value
+    */
+   raw: {
+      idle: number,
+      active: number,
+      utilization: number
+   }
 }
 
 declare enum GCFlag {
@@ -121,8 +133,9 @@ declare interface MemoryMetric {
 }
 
 declare class Sampler extends EventEmitter {
-  cpu: CPUMetric | undefined
+  cpu?: CPUMetric
   eventLoopDelay?: EventLoopDelayMetric
+  eventLoopUtilization?: EventLoopUtilizationMetric
   gc?: GCMetric
   memory?: MemoryMetric
   activeHandles?: number
@@ -141,6 +154,7 @@ export {
   createSampler,
   CPUMetric,
   EventLoopDelayMetric,
+  EventLoopUtilizationMetric,
   GCMetric,
   GCAggregatedEntry,
   GCFlag,

@@ -28,6 +28,7 @@ Its API is designed to let you access both computed and raw values, where possib
     + [`sampler.stop()`](#samplerstop)
     + [`sampler.cpu`](#samplercpu)
     + [`sampler.eventLoopDelay`](#samplereventloopdelay)
+    + [`sampler.eventLoopUtilization`](#samplereventlooputilization)
     + [`sampler.gc`](#samplergc)
     + [`sampler.activeHandles`](#sampleractivehandles)
     + [`sampler.memory`](#samplermemory)
@@ -38,6 +39,8 @@ Its API is designed to let you access both computed and raw values, where possib
     + [`eventLoopDelay.computed`](#eventloopdelaycomputed)
     + [`eventLoopDelay.raw`](#eventloopdelayraw)
     + [`eventLoopDelay.compute(raw)`](#eventloopdelaycomputeraw)
+  * [Class: `EventLoopUtilizationMetric`](#class-eventlooputilizationmetric)
+    + [`eventLoopUtilization.raw`](#eventlooputilizationraw)
   * [Class: `GCMetric`](#class-gcmetric)
     + [`gcMetric.major`](#gcmetricmajor)
     + [`gcMetric.minor`](#gcmetricminor)
@@ -69,7 +72,7 @@ $ npm i @dnlup/doc@next
 ```
 ## Usage
 
-By default `doc` returns a [`Sampler`](#class-docsampler) instance that collects metrics about cpu, memory usage and event loop delay.
+By default `doc` returns a [`Sampler`](#class-docsampler) instance that collects metrics about cpu, memory usage, event loop delay and event loop utilization (only on Node versions that [support it](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2)).
 
 ```js
 const doc = require('@dnlup/doc');
@@ -80,6 +83,7 @@ sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
 })
 ```
 
@@ -163,6 +167,7 @@ event is emited.
   * `collect` `<Object>`: enable/disable the collection of specific metrics.
     * `cpu` `<boolean>`: enable cpu metric. **Default:** `true`.
     * `eventLoopDelay` `<boolean>`: enable eventLoopDelay metric. **Default:** `true`.
+    * `eventLoopUtilization` `<boolean>`: enable [eventLoopUtilization](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) metric. **Default:** `true` on Node versions that support it.
     * `memory` `<boolean>`: enable memory metric. **Default:** `true`.
     * `gc` `<boolean>`: enable garbage collection metric. **Default:** `false`.
     * `activeHandles` `<boolean>`: enable active handles collection metric. **Default:** `false`.
@@ -190,6 +195,12 @@ Cpu metric instance.
 * [`<EventLoopDelayMetric>`](#class-eventloopdelaymetric)
 
 Event loop delay metric instance.
+
+#### `sampler.eventLoopUtilization`
+
+* [`<EventLoopUtilizationMetric>`](#class-eventlooputilizationmetric)
+
+Event loop utilization metric instance.
 
 #### `sampler.gc`
 
@@ -247,6 +258,16 @@ On Node versions that support [`monitorEventLoopDelay`](https://nodejs.org/dist/
 * Returns `<number>` The computed delay value.
 
 This method is meant to be used only on node versions that supports [`monitorEventLoopDelay`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options). It allows to get computed values of the event loop delay from other values than the `mean` of the [`Histogram`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_class_histogram) instance.
+
+### Class: `EventLoopUtilizationMetric`
+
+Exposes raw values about the event loop utilization.
+
+#### `eventLoopUtilization.raw`
+
+* `<object>`
+
+Raw value returned by [`performance.eventLoopUtilization()`](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) during the `sampleInterval` window.
 
 ### Class: `GCMetric`
 
