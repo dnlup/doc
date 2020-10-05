@@ -3,7 +3,8 @@
 // TODO: this tests need some refactoring, it's starting to get a little messy.
 
 const tap = require('tap')
-const { monitorEventLoopDelay } = require('perf_hooks')
+const { monitorEventLoopDelay, performance } = require('perf_hooks')
+const { eventLoopUtilization } = performance
 const isCi = require('is-ci')
 const doc = require('../')
 
@@ -23,6 +24,23 @@ const checks = {
       expected = 'x >= 0'
     }
     t.true(check, `eventLoopDelay | expected: ${expected}, value: ${value}`)
+  },
+  elu (t, value) {
+    const level = 0
+    const check = value.idle > level && value.active > 0 && value.utilization > level
+    const expected = `eventLoopUtilization | {
+      expected: {
+        idle: ${level},
+        active: ${level},
+        utilization: ${level},
+      },
+      value: {
+        idle: ${value.idle},
+        active: ${value.active}
+        utilization: ${value.utilization}
+      }
+    }`
+    t.true(check, expected)
   },
   cpu (t, value) {
     let check
@@ -156,6 +174,13 @@ tap.test('sample', t => {
       t.equal('ELDHistogram', sampler.eventLoopDelay.raw.constructor.name)
     } else {
       t.equal('number', typeof sampler.eventLoopDelay.raw)
+    }
+    if (eventLoopUtilization) {
+      t.equal('object', typeof sampler.eventLoopUtilization.raw)
+      t.equal('number', typeof sampler.eventLoopUtilization.raw.idle)
+      t.equal('number', typeof sampler.eventLoopUtilization.raw.active)
+      t.equal('number', typeof sampler.eventLoopUtilization.raw.utilization)
+      checks.elu(t, sampler.eventLoopUtilization.raw)
     }
     t.equal('number', typeof sampler.cpu.usage)
     t.equal('object', typeof sampler.cpu.raw)
