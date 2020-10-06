@@ -2,7 +2,9 @@
 
 [![npm version](https://badge.fury.io/js/%40dnlup%2Fdoc.svg)](https://badge.fury.io/js/%40dnlup%2Fdoc)
 ![Tests](https://github.com/dnlup/doc/workflows/Tests/badge.svg)
+![Benchmarks](https://github.com/dnlup/doc/workflows/Benchmarks/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/dnlup/doc/badge.svg)](https://coveralls.io/github/dnlup/doc)
+[![Known Vulnerabilities](https://snyk.io/test/github/dnlup/doc/badge.svg?targetFile=package.json)](https://snyk.io/test/github/dnlup/doc?targetFile=package.json)
 
 > Get usage and health data about your Node.js process.
 
