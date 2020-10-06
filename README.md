@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40dnlup%2Fdoc.svg)](https://badge.fury.io/js/%40dnlup%2Fdoc)
 ![Tests](https://github.com/dnlup/doc/workflows/Tests/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/dnlup/doc/badge.svg)](https://coveralls.io/github/dnlup/doc)
 
 > Get usage and health data about your Node.js process.
 
