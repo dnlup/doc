@@ -33,12 +33,12 @@ jobs:
         github-token: ${{ secrets.coveralls_token }}
         parallel: true
 
-    coverage:
-      needs: test
-      runs-on: ubuntu-latest
-      steps:
-        - name: Coveralls Finished
-          uses: coverallsapp/github-action@v1.1.2
-          with:
-            github-token: ${{ secrets.coveralls_token }}
-            parallel-finished: true
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.coveralls_token }}
+          parallel-finished: true
