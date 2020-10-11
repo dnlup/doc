@@ -19,10 +19,10 @@
     "bench:doc": "PORT=3000 concurrently -k -s first \"node benchmarks/doc.js\" \"node -e 'setTimeout(()=>{}, 1000)' && autocannon -d 60 -c 100 -p 10 localhost:3000\"",
     "doc": "markdown-toc -i README.md",
     "prerelease": "npm cit",
-    "release": "standard-version",
+    "release": "standard-version --sign",
     "postrelease": "npm run push && npm publish",
     "prenext": "npm cit",
-    "next": "standard-version --prerelease --skip.changelog",
+    "next": "standard-version --sign --prerelease --skip.changelog",
     "postnext": "npm run push && npm publish --tag next",
     "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`"
   },
