@@ -80,5 +80,8 @@
     "standard-version": "^9.0.0",
     "tap": "^14.10.8",
     "tsd": "^0.13.1"
+  },
+  "dependencies": {
+    "@dnlup/hrtime-utils": "^1.0.0"
   }
 }
