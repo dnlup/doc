@@ -20,7 +20,7 @@ tap.test('should throw an error if is not supported', { skip: !!process.resource
   t.end()
 })
 
-tap.test('raw metric', t => {
+tap.test('raw metric', { skip: !process.resourceUsage }, t => {
   const resourceUsage = new ResourceUsageMetric()
   const start = process.hrtime()
   cpu()
