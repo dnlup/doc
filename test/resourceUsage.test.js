@@ -46,7 +46,7 @@ tap.test('raw metric', t => {
   t.end()
 })
 
-tap.test('computed metric', t => {
+tap.test('computed metric', { skip: !process.resourceUsage }, t => {
   const resourceUsage = new ResourceUsageMetric()
   const start = process.hrtime()
   cpu()
