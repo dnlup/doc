@@ -24,6 +24,7 @@ declare interface SamplerOptions {
     */
   collect?: {
     cpu?: boolean,
+    resourceUsage?: boolean,
     eventLoopDelay?: boolean,
     eventLoopUtilization?: boolean,
     memory?: boolean,
@@ -43,6 +44,16 @@ declare interface CPUMetric {
   raw: number
 }
 
+declare interface ResourceUsageMetric {
+  /**
+    * Cpu usage percentage
+    */
+   cpu: number,
+   /**
+     * Raw vaule returned by `process.resourceUsage()`
+     */
+   raw: NodeJS.ResourceUsage
+}
 /**
  * On Node 12 and above this is a Histogram instance from 'perf_hooks'.
  */
@@ -134,6 +145,7 @@ declare interface MemoryMetric {
 
 declare class Sampler extends EventEmitter {
   cpu?: CPUMetric
+  resourceUsage?: ResourceUsageMetric
   eventLoopDelay?: EventLoopDelayMetric
   eventLoopUtilization?: EventLoopUtilizationMetric
   gc?: GCMetric
@@ -153,6 +165,7 @@ export {
   SamplerOptions,
   createSampler,
   CPUMetric,
+  ResourceUsageMetric,
   EventLoopDelayMetric,
   EventLoopUtilizationMetric,
   GCMetric,
