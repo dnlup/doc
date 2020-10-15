@@ -6,7 +6,9 @@ const tap = require('tap')
 const { monitorEventLoopDelay, performance } = require('perf_hooks')
 const { eventLoopUtilization } = performance
 const isCi = require('is-ci')
+const { hrtime2ms } = require('@dnlup/hrtime-utils')
 const doc = require('../')
+const { kOptions } = require('../lib/symbols')
 
 const nodeMajorVersion = parseInt(process.versions.node.split('.')[0])
 const performDetailedCheck = process.platform === 'linux' || !isCi
@@ -203,11 +205,41 @@ tap.test('sample', t => {
 tap.test('custom sample interval', t => {
   const start = process.hrtime()
   const sampler = doc({ sampleInterval: 2000 })
-  setTimeout(() => {}, 4000)
+  preventTestExitingEarly(t, 4000)
   sampler.once('sample', () => {
     const end = process.hrtime(start)
-    const elapsed = end[0] * 1e3 + end[1] / 1e6
+    const elapsed = hrtime2ms(end)
     t.true(elapsed >= 2000 && elapsed < 2200)
+    t.end()
+  })
+})
+
+tap.test('using resourceUsage', { skip: !process.resourceUsage }, t => {
+  const sampler = doc({ collect: { resourceUsage: true } })
+  preventTestExitingEarly(t, 2000)
+  sampler.once('sample', () => {
+    t.is(sampler.cpu, undefined)
+    t.is(sampler.resourceUsage.constructor.name, 'ResourceUsageMetric')
+    t.is(sampler[kOptions].collect.cpu, false)
+    t.is(sampler[kOptions].collect.resourceUsage, true)
+    t.is(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
+    t.is(typeof sampler.resourceUsage.raw.systemCPUTime, 'number')
+    t.is(typeof sampler.resourceUsage.raw.maxRSS, 'number')
+    t.is(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
+    t.is(typeof sampler.resourceUsage.raw.sharedMemorySize, 'number')
+    t.is(typeof sampler.resourceUsage.raw.unsharedDataSize, 'number')
+    t.is(typeof sampler.resourceUsage.raw.unsharedStackSize, 'number')
+    t.is(typeof sampler.resourceUsage.raw.minorPageFault, 'number')
+    t.is(typeof sampler.resourceUsage.raw.majorPageFault, 'number')
+    t.is(typeof sampler.resourceUsage.raw.swappedOut, 'number')
+    t.is(typeof sampler.resourceUsage.raw.fsRead, 'number')
+    t.is(typeof sampler.resourceUsage.raw.fsWrite, 'number')
+    t.is(typeof sampler.resourceUsage.raw.ipcSent, 'number')
+    t.is(typeof sampler.resourceUsage.raw.ipcReceived, 'number')
+    t.is(typeof sampler.resourceUsage.raw.signalsCount, 'number')
+    t.is(typeof sampler.resourceUsage.raw.voluntaryContextSwitches, 'number')
+    t.is(typeof sampler.resourceUsage.raw.involuntaryContextSwitches, 'number')
+    t.ok(sampler.resourceUsage.cpu >= 0, `value ${sampler.resourceUsage.cpu}`)
     t.end()
   })
 })
