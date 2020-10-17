@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events' // eslint-disable-line no-unused-vars
+import { EventEmitter } from 'events'
 
 declare interface SamplerOptions {
   /**
@@ -41,7 +41,7 @@ declare interface CPUMetric {
   /**
     * Raw value returned by `process.cpuUsage()`
     */
-  raw: number
+  raw: NodeJS.CpuUsage
 }
 
 declare interface ResourceUsageMetric {
@@ -52,8 +52,26 @@ declare interface ResourceUsageMetric {
    /**
      * Raw vaule returned by `process.resourceUsage()`
      */
-   raw: NodeJS.ResourceUsage
+   raw: {
+     fsRead: number;
+     fsWrite: number;
+     involuntaryContextSwitches: number;
+     ipcReceived: number;
+     ipcSent: number;
+     majorPageFault: number;
+     maxRSS: number;
+     minorPageFault: number;
+     sharedMemorySize: number;
+     signalsCount: number;
+     swappedOut: number;
+     systemCPUTime: number;
+     unsharedDataSize: number;
+     unsharedStackSize: number;
+     userCPUTime: number;
+     voluntaryContextSwitches: number;
+   }
 }
+
 /**
  * On Node 12 and above this is a Histogram instance from 'perf_hooks'.
  */
@@ -65,6 +83,7 @@ declare interface EventLoopDelayHistogram {
   percentiles: Map<number, number>,
   exceeds: number,
 }
+
 declare interface EventLoopDelayMetric {
   /**
     * computed delay in milliseconds
@@ -120,28 +139,7 @@ declare interface GCMetric {
   weakCb: GCAggregatedEntry
 }
 
-declare interface MemoryMetric {
-   /**
-    * RSS memory (bytes).
-    */
-   rss: number,
-   /**
-    * Total heap Memory (bytes).
-    */
-   heapTotal: number,
-   /**
-    * Heap memory used (bytes).
-    */
-   heapUsed: number,
-   /**
-    * External memory (bytes).
-    */
-   external: number,
-   /**
-     * arrayBuffers memory (bytes). This value is `undefined` on Node <= 10
-     */
-   arrayBuffers?: number
-}
+declare interface MemoryMetric extends NodeJS.MemoryUsage {}
 
 declare class Sampler extends EventEmitter {
   cpu?: CPUMetric
