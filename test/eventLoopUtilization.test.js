@@ -22,7 +22,6 @@ tap.test('raw metric', { skip: !eventLoopUtilization }, t => {
     eluMetric[kSample]()
     sleep(1000)
     eluMetric[kSample]()
-    console.log(eluMetric.raw)
     t.ok(eluMetric.raw.utilization > 0.7)
     t.end()
   }, 10)
