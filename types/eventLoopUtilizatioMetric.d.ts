@@ -8,4 +8,3 @@ export interface EventLoopUtilizationMetric {
       utilization: number
    }
 }
-
