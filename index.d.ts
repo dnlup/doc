@@ -1,4 +1,9 @@
 import { EventEmitter } from 'events'
+import { CPUMetric } from './types/cpuMetric'
+import { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
+import { ResourceUsageMetric } from './types/resourceUsageMetric'
+import { EventLoopUtilizationMetric } from './types/eventLoopUtilizatioMetric'
+import { GCMetric } from './types/gcMetric'
 
 declare interface SamplerOptions {
   /**
@@ -33,112 +38,6 @@ declare interface SamplerOptions {
   }
 }
 
-declare interface CPUMetric {
-  /**
-    * Usage percentage
-    */
-  usage: number,
-  /**
-    * Raw value returned by `process.cpuUsage()`
-    */
-  raw: NodeJS.CpuUsage
-}
-
-declare interface ResourceUsageMetric {
-  /**
-    * Cpu usage percentage
-    */
-   cpu: number,
-   /**
-     * Raw vaule returned by `process.resourceUsage()`
-     */
-   raw: {
-     fsRead: number;
-     fsWrite: number;
-     involuntaryContextSwitches: number;
-     ipcReceived: number;
-     ipcSent: number;
-     majorPageFault: number;
-     maxRSS: number;
-     minorPageFault: number;
-     sharedMemorySize: number;
-     signalsCount: number;
-     swappedOut: number;
-     systemCPUTime: number;
-     unsharedDataSize: number;
-     unsharedStackSize: number;
-     userCPUTime: number;
-     voluntaryContextSwitches: number;
-   }
-}
-
-/**
- * On Node 12 and above this is a Histogram instance from 'perf_hooks'.
- */
-declare interface EventLoopDelayHistogram {
-  min: number,
-  max: number,
-  mean: number,
-  stddev: number,
-  percentiles: Map<number, number>,
-  exceeds: number,
-}
-
-declare interface EventLoopDelayMetric {
-  /**
-    * computed delay in milliseconds
-    */
-  computed: number,
-  raw: number | EventLoopDelayHistogram
-}
-
-declare interface EventLoopUtilizationMetric {
-  /**
-    * Raw metric value
-    */
-   raw: {
-      idle: number,
-      active: number,
-      utilization: number
-   }
-}
-
-declare enum GCFlag {
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO */
-  No = 'no',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED */
-  ConstructRetained = 'constructRetained',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_FORCED */
-  Forced = 'forced',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING */
-  SynchronousPhantomProcessing = 'synchronousPhantomProcessing',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE */
-  AllAvailableGarbage = 'allAvailableGarbage',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY */
-  AllExternalMemory = 'allExternalMemory',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE */
-  ScheduleIdle = 'scheduleIdle'
-}
-
-declare interface GCOpStats {
-  count: number,
-  total: number,
-  average: number
-}
-declare interface GCAggregatedEntry extends GCOpStats {
-  flags?: Map<GCFlag, GCOpStats>
-}
-declare interface GCMetric {
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR */
-  major: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR */
-  minor: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL */
-  incremental: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB */
-  weakCb: GCAggregatedEntry
-}
-
 declare interface MemoryMetric extends NodeJS.MemoryUsage {}
 
 declare class Sampler extends EventEmitter {
@@ -167,8 +66,5 @@ export {
   EventLoopDelayMetric,
   EventLoopUtilizationMetric,
   GCMetric,
-  GCAggregatedEntry,
-  GCFlag,
-  GCOpStats,
   MemoryMetric
 }
