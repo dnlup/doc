@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import { CPUMetric } from './types/cpuMetric'
 import { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
 import { ResourceUsageMetric } from './types/resourceUsageMetric'
-import { EventLoopUtilizationMetric } from './types/eventLoopUtilizatioMetric'
+import { EventLoopUtilizationMetric } from './types/eventLoopUtilizationMetric'
 import { GCMetric } from './types/gcMetric'
 
 declare interface SamplerOptions {
