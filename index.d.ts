@@ -38,9 +38,9 @@ declare interface SamplerOptions {
   }
 }
 
-declare interface MemoryMetric extends NodeJS.MemoryUsage {}
+export interface MemoryMetric extends NodeJS.MemoryUsage {}
 
-declare class Sampler extends EventEmitter {
+export class Sampler extends EventEmitter {
   cpu?: CPUMetric
   resourceUsage?: ResourceUsageMetric
   eventLoopDelay?: EventLoopDelayMetric
@@ -57,14 +57,10 @@ declare function createSampler(options?: SamplerOptions): Sampler
 
 export default createSampler
 
-export {
-  Sampler,
-  SamplerOptions,
-  createSampler,
-  CPUMetric,
-  ResourceUsageMetric,
-  EventLoopDelayMetric,
-  EventLoopUtilizationMetric,
-  GCMetric,
-  MemoryMetric
-}
+export { createSampler }
+
+export { CPUMetric } from './types/cpuMetric'
+export { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
+export { ResourceUsageMetric } from './types/resourceUsageMetric'
+export { EventLoopUtilizationMetric } from './types/eventLoopUtilizationMetric'
+export { GCMetric } from './types/gcMetric'
