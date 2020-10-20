@@ -3,6 +3,7 @@
   "version": "3.0.0-2",
   "description": "Get usage and health data about your Node.js process",
   "main": "index.js",
+  "type": "commonjs",
   "types": "index.d.ts",
   "scripts": {
     "lint": "npm run lint:js && npm run lint:ts",
