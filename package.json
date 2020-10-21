@@ -1,32 +1,29 @@
 {
   "name": "@dnlup/doc",
-  "version": "3.0.0-2",
+  "version": "2.0.2",
   "description": "Get usage and health data about your Node.js process",
   "main": "index.js",
-  "type": "commonjs",
   "types": "index.d.ts",
   "scripts": {
+    "build": "ajv compile --remove-additional=true --coerce-types --use-defaults -s lib/config/schema.js -o lib/config/validate.js",
     "lint": "npm run lint:js && npm run lint:ts",
     "lint:js": "eslint .",
     "lint:ts": "eslint *.ts",
+    "pretest": "npm run build",
     "test": "npm run lint && npm run test:js && npm run test:ts",
-    "test:ci": "npm run lint && npm run test:js -- --coverage-report=lcovonly && npm run test:ts",
-    "test:js": "tap -J test/**.test.js",
+    "test:js": "tap",
     "test:ts": "tsd",
-    "deoptigate:server": "PORT=3000 deoptigate benchmarks/doc.js",
-    "deoptigate:server:resourceUsage": "PORT=3000 deoptigate benchmarks/docResourceUsage.js",
-    "deoptigate:load": "autocannon -d 60 -c 100 -p 10 localhost:3000",
+    "trace:ic:server": "PORT=3000 deoptigate benchmarks/doc.js",
+    "trace:ic:load": "autocannon -d 60 -c 100 -p 10 localhost:3000",
     "bench": "npm run bench:base && npm run bench:doc",
-    "bench:resourceUsage": "npm run bench:base && npm run bench:doc:resourceUsage",
     "bench:base": "PORT=3000 concurrently -k -s first \"node benchmarks/base.js\" \"node -e 'setTimeout(()=>{}, 1000)' && autocannon -d 60 -c 100 -p 10 localhost:3000\"",
     "bench:doc": "PORT=3000 concurrently -k -s first \"node benchmarks/doc.js\" \"node -e 'setTimeout(()=>{}, 1000)' && autocannon -d 60 -c 100 -p 10 localhost:3000\"",
-    "bench:doc:resourceUsage": "PORT=3000 concurrently -k -s first \"node benchmarks/docResourceUsage.js\" \"node -e 'setTimeout(()=>{}, 1000)' && autocannon -d 60 -c 100 -p 10 localhost:3000\"",
     "doc": "markdown-toc -i README.md",
     "prerelease": "npm cit",
-    "release": "HUSKY_SKIP_HOOKS=1 standard-version --sign",
+    "release": "HUSKY_SKIP_HOOKS=1 standard-version",
     "postrelease": "npm run push && npm publish",
     "prenext": "npm cit",
-    "next": "HUSKY_SKIP_HOOKS=1 standard-version --sign --prerelease --skip.changelog",
+    "next": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease",
     "postnext": "npm run push && npm publish --tag next",
     "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`"
   },
@@ -36,7 +33,6 @@
   },
   "files": [
     "lib",
-    "types",
     "index.js",
     "index.d.ts"
   ],
@@ -67,10 +63,10 @@
     "directory": "."
   },
   "devDependencies": {
-    "@types/node": "^10.17.40",
+    "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
-    "atomic-sleep": "^1.0.0",
+    "ajv-cli": "^3.3.0",
     "autocannon": "^6.4.0",
     "concurrently": "^5.3.0",
     "deoptigate": "^0.5.0",
@@ -82,12 +78,10 @@
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.3.0",
     "is-ci": "^2.0.0",
+    "lint-staged": "^10.4.0",
     "markdown-toc": "^1.2.0",
     "standard-version": "^9.0.0",
     "tap": "^14.10.8",
     "tsd": "^0.13.1"
-  },
-  "dependencies": {
-    "@dnlup/hrtime-utils": "^1.0.0"
   }
 }
