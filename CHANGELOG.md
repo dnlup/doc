@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/dnlup/doc/compare/v2.0.2...v3.0.0) (2020-10-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **config:** message errors and instances are changed.
+* the exported class is named Sampler and not Doc anymore
+* **types:** types are not accessible using `Doc.` notation.
+`DocInstance` has been renamed to `Doc` and declared as a class.
+* **gc:** the metric is not exposed to the event handler anymore,
+but it is attached directly to the Doc instance.
+* **eventLoopDelay:** the eventLoopDelay metric is not exposed anymore to the
+event handler, but it is attached to the Doc instance.
+* **cpu:** the cpu metric is not exposed anymore to the
+event handler, but it is attached to the Doc instance. The event name is
+changed from `data` to `sample`.
+
+### Features
+
+* **cpu:** attach cpu state to doc instance ([2f66fae](https://github.com/dnlup/doc/commit/2f66fae9dd5ad2644fb50492c3bcc366d57f5d0e))
+* **eventLoopDelay:** attach object to doc instance ([5d90062](https://github.com/dnlup/doc/commit/5d90062867d46e2115ebcf0e4bedb9eed91f043b))
+* **eventLoopDelay:** expose compute method ([2f44d63](https://github.com/dnlup/doc/commit/2f44d6324c43d552f07b0587d5d8c19ee86e6fa9))
+* **gc:** attach metric to doc instance ([f628872](https://github.com/dnlup/doc/commit/f628872a6b4b0d48d6a25e99f4435d00afacccb3))
+* **sampler:** add event loop utilization metric ([43243db](https://github.com/dnlup/doc/commit/43243db33b6ee6b1c24da2f51489d3a5f072602f))
+* **sampler:** add resourceUsage metric ([f83c1e8](https://github.com/dnlup/doc/commit/f83c1e885c0be448c1debeb68c4a46deac8b9a86))
+* **types:** add resourceUsage types ([4e1e01c](https://github.com/dnlup/doc/commit/4e1e01ced353d9de0f70a5e58c862e84f38113c1))
+* **types:** use NodeJS types where possible ([b7148f1](https://github.com/dnlup/doc/commit/b7148f1b8f573baa8792603efddfc89f383b8e07))
+* attach remaining metrics and add start options ([01cd4d0](https://github.com/dnlup/doc/commit/01cd4d0247bd64717d13f9cf456bed068dbd3f3a))
+* improve gc metric ([0a4d52b](https://github.com/dnlup/doc/commit/0a4d52b4d522b18747494c8d51aed2c7eebb9e5b))
+
+
+### Bug Fixes
+
+* **config:** drop ajv-cli and build step ([b143d15](https://github.com/dnlup/doc/commit/b143d153b1df55d4e32770696491b2e7b5c31205))
+* **eventLoopDelay:** use Symbol for sample method ([1515760](https://github.com/dnlup/doc/commit/1515760720198bc440b6677131308ac91df4b819))
+* **gc:** use symbols for GCAggregatedEntry methods ([a28359f](https://github.com/dnlup/doc/commit/a28359f99e555b3fd7812190342ac133935ed4ec))
+* **lib:** fix wrong name used for options symbol ([65675d6](https://github.com/dnlup/doc/commit/65675d68cb8efe36327de3bc6ca20e8aed7ca768))
+* **sampler:** exit if timer is initialized on `start` ([b2f406a](https://github.com/dnlup/doc/commit/b2f406a7f0294ae735db368d6c7271972e016367))
+* **types:** add default property to module.exports ([6ceac40](https://github.com/dnlup/doc/commit/6ceac40c8d21e029ae4cf595ea2acbb2a55f01ac))
+* **types:** use camel case for enum and use jsdoc ([4cd976d](https://github.com/dnlup/doc/commit/4cd976d58dbe309cade247b497dae67eee4253fa))
+
+
+* rename Doc to Sampler and move it to lib ([53b0ca0](https://github.com/dnlup/doc/commit/53b0ca04e44fe808c848cd32ad62abc1f3213c6f))
+* **types:** remove Doc namespace ([489d2bd](https://github.com/dnlup/doc/commit/489d2bd6b20aeebed83b81806cfb19823149c548))
+
 ### [2.0.2](https://github.com/dnlup/doc/compare/v2.0.1...v2.0.2) (2020-10-04)
 
 
