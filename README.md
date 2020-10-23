@@ -60,6 +60,7 @@ Its API lets you access both computed and raw values, where possible.
     + [`gcAggregatedEntry.flags`](#gcaggregatedentryflags)
         * [`count`](#count)
         * [`total`](#total)
+- [Contributing](#contributing)
 - [Credits](#credits)
 
 <!-- tocstop -->
@@ -389,6 +390,34 @@ The number of times that it has encountered the flag.
 * `<number>`
 
 The total time (in milliseconds) spent on the operations with this flag.
+
+## Contributing
+
+You found a bug or want to discuss and implement a new feature? Contributions are very much welcomed.
+
+This project follows [standardjs](https://standardjs.com/) style guide.
+
+Every contribution should pass the existing tests or implementing new ones if that's the case.
+
+```bash
+# Run tests locally
+$ npm test
+
+# Run js tests
+$ npm test:js
+
+# Run typescript types tests
+$ npm test:ts
+
+# Lint all the code
+$ npm lint
+
+# Lint only js files
+$ npm lint:js
+
+# Lint only typescript files
+$ npm lint:ts
+```
 
 ## Credits
 
