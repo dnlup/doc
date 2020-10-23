@@ -393,9 +393,9 @@ The total time (in milliseconds) spent on the operations with this flag.
 
 ## Contributing
 
-You found a bug or want to discuss and implement a new feature? Contributions are very much welcomed.
+You found a bug or want to discuss and implement a new feature? This project welcomes contributions.
 
-This project follows [standardjs](https://standardjs.com/) style guide.
+The code follows the [standardjs](https://standardjs.com/) style guide.
 
 Every contribution should pass the existing tests or implementing new ones if that's the case.
 
@@ -417,6 +417,9 @@ $ npm lint:js
 
 # Lint only typescript files
 $ npm lint:ts
+
+# Create the TOC in the README
+$ npm run doc
 ```
 
 ## Credits
