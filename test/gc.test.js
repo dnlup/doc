@@ -26,12 +26,13 @@ tap.test('garbage collection metric', t => {
     getEntries: () => data.map(x => (
       flagsSupported
         ? {
-          kind,
-          duration: x,
-          flags: constants.NODE_PERFORMANCE_GC_FLAGS_NO
-        } : {
-          kind, duration: x
-        })
+            kind,
+            duration: x,
+            flags: constants.NODE_PERFORMANCE_GC_FLAGS_NO
+          }
+        : {
+            kind, duration: x
+          })
     )
   })
 
