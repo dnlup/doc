@@ -1,6 +1,7 @@
 'use strict'
 
 const { createServer } = require('http')
+const { eventLoopUtilization } = require('perf_hooks').performance
 const doc = require('../')
 
 function handle (req, res) {
@@ -20,6 +21,9 @@ sampler.on('sample', () => {
   const eventLoopDelay = {
     computed: sampler.eventLoopDelay.computed,
     raw: sampler.eventLoopDelay.raw
+  }
+  if (eventLoopUtilization) {
+    const eventLoopUtilization = sampler.eventLoopUtilization.raw
   }
   const memory = sampler.memory
   const gc = {
