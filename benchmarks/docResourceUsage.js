@@ -10,13 +10,21 @@ function handle (req, res) {
 }
 
 const port = process.env.PORT || 0
-const sampler = doc({ sampleInterval: 50, collect: { gc: true, activeHandles: true } })
+const sampler = doc({
+  sampleInterval: 50,
+  collect: {
+    resourceUsage: true,
+    gc: true,
+    activeHandles: true
+  }
+})
+
 const server = createServer(handle)
 /* eslint-disable no-unused-vars */
 sampler.on('sample', () => {
   const cpu = {
-    usage: sampler.cpu.usage,
-    raw: sampler.cpu.raw
+    usage: sampler.resourceUsage.cpu,
+    raw: sampler.resourceUsage.raw
   }
   const eventLoopDelay = {
     computed: sampler.eventLoopDelay.computed,
@@ -35,5 +43,7 @@ sampler.on('sample', () => {
   const activeHandles = gc.activeHandles
   /* eslint-enable no-unused-vars */
 })
+
 server.listen(port)
+
 server.on('listening', () => console.error(`server listening on port ${server.address().port}`))

@@ -1,4 +1,9 @@
-import { EventEmitter } from 'events' // eslint-disable-line no-unused-vars
+import { EventEmitter } from 'events'
+import { CPUMetric } from './types/cpuMetric'
+import { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
+import { ResourceUsageMetric } from './types/resourceUsageMetric'
+import { EventLoopUtilizationMetric } from './types/eventLoopUtilizationMetric'
+import { GCMetric } from './types/gcMetric'
 
 declare interface SamplerOptions {
   /**
@@ -24,105 +29,22 @@ declare interface SamplerOptions {
     */
   collect?: {
     cpu?: boolean,
+    resourceUsage?: boolean,
     eventLoopDelay?: boolean,
+    eventLoopUtilization?: boolean,
     memory?: boolean,
     gc?: boolean,
     activeHandles?: boolean
   }
 }
 
-declare interface CPUMetric {
-  /**
-    * Usage percentage
-    */
-  usage: number,
-  /**
-    * Raw value returned by `process.cpuUsage()`
-    */
-  raw: number
-}
+export interface MemoryMetric extends NodeJS.MemoryUsage {}
 
-/**
- * On Node 12 and above this is a Histogram instance from 'perf_hooks'.
- */
-declare interface EventLoopDelayHistogram {
-  min: number,
-  max: number,
-  mean: number,
-  stddev: number,
-  percentiles: Map<number, number>,
-  exceeds: number,
-}
-declare interface EventLoopDelayMetric {
-  /**
-    * computed delay in milliseconds
-    */
-  computed: number,
-  raw: number | EventLoopDelayHistogram
-}
-
-declare enum GCFlag {
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO */
-  No = 'no',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED */
-  ConstructRetained = 'constructRetained',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_FORCED */
-  Forced = 'forced',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING */
-  SynchronousPhantomProcessing = 'synchronousPhantomProcessing',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE */
-  AllAvailableGarbage = 'allAvailableGarbage',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY */
-  AllExternalMemory = 'allExternalMemory',
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE */
-  ScheduleIdle = 'scheduleIdle'
-}
-
-declare interface GCOpStats {
-  count: number,
-  total: number,
-  average: number
-}
-declare interface GCAggregatedEntry extends GCOpStats {
-  flags?: Map<GCFlag, GCOpStats>
-}
-declare interface GCMetric {
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR */
-  major: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR */
-  minor: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL */
-  incremental: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB */
-  weakCb: GCAggregatedEntry
-}
-
-declare interface MemoryMetric {
-   /**
-    * RSS memory (bytes).
-    */
-   rss: number,
-   /**
-    * Total heap Memory (bytes).
-    */
-   heapTotal: number,
-   /**
-    * Heap memory used (bytes).
-    */
-   heapUsed: number,
-   /**
-    * External memory (bytes).
-    */
-   external: number,
-   /**
-     * arrayBuffers memory (bytes). This value is `undefined` on Node <= 10
-     */
-   arrayBuffers?: number
-}
-
-declare class Sampler extends EventEmitter {
+export class Sampler extends EventEmitter {
   cpu?: CPUMetric
+  resourceUsage?: ResourceUsageMetric
   eventLoopDelay?: EventLoopDelayMetric
+  eventLoopUtilization?: EventLoopUtilizationMetric
   gc?: GCMetric
   memory?: MemoryMetric
   activeHandles?: number
@@ -135,15 +57,10 @@ declare function createSampler(options?: SamplerOptions): Sampler
 
 export default createSampler
 
-export {
-  Sampler,
-  SamplerOptions,
-  createSampler,
-  CPUMetric,
-  EventLoopDelayMetric,
-  GCMetric,
-  GCAggregatedEntry,
-  GCFlag,
-  GCOpStats,
-  MemoryMetric
-}
+export { createSampler }
+
+export { CPUMetric } from './types/cpuMetric'
+export { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
+export { ResourceUsageMetric } from './types/resourceUsageMetric'
+export { EventLoopUtilizationMetric } from './types/eventLoopUtilizationMetric'
+export { GCMetric } from './types/gcMetric'

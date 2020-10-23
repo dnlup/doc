@@ -3,9 +3,12 @@
 // TODO: this tests need some refactoring, it's starting to get a little messy.
 
 const tap = require('tap')
-const { monitorEventLoopDelay } = require('perf_hooks')
+const { monitorEventLoopDelay, performance } = require('perf_hooks')
+const { eventLoopUtilization } = performance
 const isCi = require('is-ci')
+const { hrtime2ms } = require('@dnlup/hrtime-utils')
 const doc = require('../')
+const { kOptions } = require('../lib/symbols')
 
 const nodeMajorVersion = parseInt(process.versions.node.split('.')[0])
 const performDetailedCheck = process.platform === 'linux' || !isCi
@@ -23,6 +26,23 @@ const checks = {
       expected = 'x >= 0'
     }
     t.true(check, `eventLoopDelay | expected: ${expected}, value: ${value}`)
+  },
+  elu (t, value) {
+    const level = 0
+    const check = value.idle > level && value.active > 0 && value.utilization > level
+    const expected = `eventLoopUtilization | {
+      expected: {
+        idle: ${level},
+        active: ${level},
+        utilization: ${level},
+      },
+      value: {
+        idle: ${value.idle},
+        active: ${value.active}
+        utilization: ${value.utilization}
+      }
+    }`
+    t.true(check, expected)
   },
   cpu (t, value) {
     let check
@@ -132,27 +152,6 @@ function preventTestExitingEarly (t, ms) {
   t.teardown(() => clearTimeout(timeout))
 }
 
-tap.test('should throw an error if options are invalid', t => {
-  let error = t.throws(() => doc({ sampleInterval: 'skdjfh' }))
-  t.equal(error.message, '.sampleInterval should be number')
-  error = t.throws(() => doc({ sampleInterval: -1 }))
-  t.equal(error.message, '.sampleInterval should be >= 1')
-  if (monitorEventLoopDelay) {
-    error = t.throws(() => doc({ sampleInterval: 5 }))
-    t.equal('.sampleInterval should be >= .eventLoopOptions.resolution',
-      error.message)
-    error = t.throws(() => doc({
-      sampleInterval: 10,
-      eventLoopOptions: { resolution: 20 }
-    }))
-    t.equal('.sampleInterval should be >= .eventLoopOptions.resolution',
-      error.message)
-  } else {
-    t.pass()
-  }
-  t.end()
-})
-
 tap.test('sample', t => {
   const start = process.hrtime()
   const sampler = doc({
@@ -178,6 +177,13 @@ tap.test('sample', t => {
     } else {
       t.equal('number', typeof sampler.eventLoopDelay.raw)
     }
+    if (eventLoopUtilization) {
+      t.equal('object', typeof sampler.eventLoopUtilization.raw)
+      t.equal('number', typeof sampler.eventLoopUtilization.raw.idle)
+      t.equal('number', typeof sampler.eventLoopUtilization.raw.active)
+      t.equal('number', typeof sampler.eventLoopUtilization.raw.utilization)
+      checks.elu(t, sampler.eventLoopUtilization.raw)
+    }
     t.equal('number', typeof sampler.cpu.usage)
     t.equal('object', typeof sampler.cpu.raw)
     t.equal('number', typeof sampler.memory.rss)
@@ -199,11 +205,41 @@ tap.test('sample', t => {
 tap.test('custom sample interval', t => {
   const start = process.hrtime()
   const sampler = doc({ sampleInterval: 2000 })
-  setTimeout(() => {}, 4000)
+  preventTestExitingEarly(t, 4000)
   sampler.once('sample', () => {
     const end = process.hrtime(start)
-    const elapsed = end[0] * 1e3 + end[1] / 1e6
+    const elapsed = hrtime2ms(end)
     t.true(elapsed >= 2000 && elapsed < 2200)
+    t.end()
+  })
+})
+
+tap.test('using resourceUsage', { skip: !process.resourceUsage }, t => {
+  const sampler = doc({ collect: { resourceUsage: true } })
+  preventTestExitingEarly(t, 2000)
+  sampler.once('sample', () => {
+    t.is(sampler.cpu, undefined)
+    t.is(sampler.resourceUsage.constructor.name, 'ResourceUsageMetric')
+    t.is(sampler[kOptions].collect.cpu, false)
+    t.is(sampler[kOptions].collect.resourceUsage, true)
+    t.is(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
+    t.is(typeof sampler.resourceUsage.raw.systemCPUTime, 'number')
+    t.is(typeof sampler.resourceUsage.raw.maxRSS, 'number')
+    t.is(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
+    t.is(typeof sampler.resourceUsage.raw.sharedMemorySize, 'number')
+    t.is(typeof sampler.resourceUsage.raw.unsharedDataSize, 'number')
+    t.is(typeof sampler.resourceUsage.raw.unsharedStackSize, 'number')
+    t.is(typeof sampler.resourceUsage.raw.minorPageFault, 'number')
+    t.is(typeof sampler.resourceUsage.raw.majorPageFault, 'number')
+    t.is(typeof sampler.resourceUsage.raw.swappedOut, 'number')
+    t.is(typeof sampler.resourceUsage.raw.fsRead, 'number')
+    t.is(typeof sampler.resourceUsage.raw.fsWrite, 'number')
+    t.is(typeof sampler.resourceUsage.raw.ipcSent, 'number')
+    t.is(typeof sampler.resourceUsage.raw.ipcReceived, 'number')
+    t.is(typeof sampler.resourceUsage.raw.signalsCount, 'number')
+    t.is(typeof sampler.resourceUsage.raw.voluntaryContextSwitches, 'number')
+    t.is(typeof sampler.resourceUsage.raw.involuntaryContextSwitches, 'number')
+    t.ok(sampler.resourceUsage.cpu >= 0, `value ${sampler.resourceUsage.cpu}`)
     t.end()
   })
 })

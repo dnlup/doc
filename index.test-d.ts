@@ -3,7 +3,9 @@ import {
   Sampler,
   createSampler,
   CPUMetric,
+  ResourceUsageMetric,
   EventLoopDelayMetric,
+  EventLoopUtilizationMetric,
   GCMetric,
   MemoryMetric
 } from '.'
@@ -24,7 +26,9 @@ expectType<() => void>(sampler.stop)
 
 sampler.on('sample', () => {
   expectType<CPUMetric|undefined>(sampler.cpu)
+  expectType<ResourceUsageMetric|undefined>(sampler.resourceUsage)
   expectType<EventLoopDelayMetric|undefined>(sampler.eventLoopDelay)
+  expectType<EventLoopUtilizationMetric|undefined>(sampler.eventLoopUtilization)
   expectType<GCMetric|undefined>(sampler.gc)
   expectType<MemoryMetric|undefined>(sampler.memory)
   expectType<number|undefined>(sampler.activeHandles)

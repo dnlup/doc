@@ -6,32 +6,55 @@ on:
 jobs:
   benchmark_current:
     name: benchmark current
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.base_ref }}
+
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: ${{ matrix.node-version }}
+
       - name: Install Modules
         run: npm ci
       - name: Run Benchmark
         run: npm run bench
 
+      - name: Run Benchmark Resource Usage
+        run: npm run bench:resourceUsage
+
   benchmark_branch:
     name: benchmark branch
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: ${{ matrix.node-version }}
+
       - name: Install Modules
         run: npm ci
+
       - name: Run Benchmark
         run: npm run bench
+
+      - name: Run Benchmark Resource Usage
+        run: npm run bench:resourceUsage

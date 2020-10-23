@@ -7,4 +7,7 @@ function createSampler (options = {}) {
 }
 
 module.exports = createSampler
+module.exports.doc = createSampler
+module.exports.default = createSampler
+
 module.exports.Sampler = Sampler
