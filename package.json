@@ -26,7 +26,7 @@
     "release": "HUSKY_SKIP_HOOKS=1 standard-version --sign",
     "postrelease": "npm run push && npm publish",
     "prenext": "npm cit",
-    "next": "HUSKY_SKIP_HOOKS=1 standard-version --sign --prerelease --skip.changelog",
+    "next": "HUSKY_SKIP_HOOKS=1 standard-version --sign --prerelease",
     "postnext": "npm run push && npm publish --tag next",
     "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`"
   },
