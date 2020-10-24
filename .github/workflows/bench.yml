@@ -4,8 +4,8 @@ on:
   - pull_request
 
 jobs:
-  benchmark_current:
-    name: benchmark current
+  benchmark_next:
+    name: benchmark next
 
     strategy:
       matrix:
