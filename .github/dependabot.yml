@@ -7,6 +7,9 @@ version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/" # Location of package manifests
+    ignore_updates:
+      - match: "@types/node"
+        version_requirement: "10.x"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 100
