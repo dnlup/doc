@@ -124,9 +124,9 @@ tap.test('invalid options', t => {
     }
   ]
 
-  for (const item of list) {
+  for (const [index, item] of list.entries()) {
     const error = t.throws(() => config(item.config), item.instanceOf)
-    t.is(error.message, item.message)
+    t.is(error.message, item.message, `list item ${index}`)
   }
   t.end()
 })
