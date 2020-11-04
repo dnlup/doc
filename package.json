@@ -88,6 +88,6 @@
     "tsd": "^0.13.1"
   },
   "dependencies": {
-    "@dnlup/hrtime-utils": "^1.0.0"
+    "@dnlup/hrtime-utils": "^1.0.1"
   }
 }
