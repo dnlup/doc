@@ -3,7 +3,6 @@ name: Tests
 on:
   push:
     branches:
-      - current
       - next
   pull_request:
     branches:
