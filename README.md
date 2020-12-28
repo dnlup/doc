@@ -9,7 +9,7 @@
 > Get usage and health data about your Node.js process.
 
 `doc` is a small module that helps you collect health metrics about your Node.js process.
-It does that by using only the API provided available on Node itself.
+It does that by using only the API available on Node itself (i.e. no native dependencies).
 It doesn't have any ties with an APM platform, so you are free to use anything you want for that purpose.
 Its API lets you access both computed and raw values, where possible.
 
@@ -112,6 +112,7 @@ sampler.on('sample', () => {
   // `sampler.cpu` will be `undefined`
   // `sampler.memory` will be `undefined`
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
 })
 ```
 
@@ -127,6 +128,7 @@ sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
   doStuffWithGarbageCollectionDuration(sampler.gc)
 })
 ```
@@ -142,6 +144,7 @@ sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
   doStuffWithActiveHandles(sampler.activeHandles)
 })
 ```
