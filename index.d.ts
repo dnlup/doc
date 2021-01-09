@@ -54,11 +54,12 @@ export class Sampler extends EventEmitter {
 }
 
 declare function createSampler(options?: SamplerOptions): Sampler
-
 export default createSampler
 
 export { createSampler }
-
+export const eventLoopUtilizationSupported: Boolean
+export const resourceUsageSupported: Boolean
+export const gcFlagsSupported: Boolean
 export { CPUMetric } from './types/cpuMetric'
 export { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
 export { ResourceUsageMetric } from './types/resourceUsageMetric'

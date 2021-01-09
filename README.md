@@ -23,7 +23,7 @@ Its API lets you access both computed and raw values, where possible.
         * [Garbage collection](#garbage-collection)
         * [Active handles](#active-handles)
 - [API](#api)
-  * [doc([options])](#docoptions)
+  * [`doc([options])`](#docoptions)
   * [Class: `doc.Sampler`](#class-docsampler)
     + [new `doc.Sampler([options])`](#new-docsampleroptions)
     + [Event: '`sample`'](#event-sample)
@@ -60,7 +60,9 @@ Its API lets you access both computed and raw values, where possible.
     + [`gcAggregatedEntry.flags`](#gcaggregatedentryflags)
         * [`count`](#count)
         * [`total`](#total)
-- [Contributing](#contributing)
+  * [`doc.eventLoopUtilizationSupported`](#doceventlooputilizationsupported)
+  * [`doc.resourceUsageSupported`](#docresourceusagesupported)
+  * [`doc.gcFlagsSupported`](#docgcflagssupported)
 - [Credits](#credits)
 
 <!-- tocstop -->
@@ -83,9 +85,9 @@ $ npm i @dnlup/doc@next
 By default `doc` returns a [`Sampler`](#class-docsampler) instance that collects metrics about cpu, memory usage, event loop delay and event loop utilization (only on Node versions that [support it](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2)).
 
 ```js
-const doc = require('@dnlup/doc');
+const doc = require('@dnlup/doc')
 
-const sampler = doc(); // Use the default options
+const sampler = doc() // Use the default options
 
 sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
@@ -121,7 +123,7 @@ You can enable more metrics if you need them.
 ###### Garbage collection
 
 ```js
-const doc = require('@dnlup/doc');
+const doc = require('@dnlup/doc')
 
 const sampler = doc({ collect: { gc: true } })
 sampler.on('sample', () => {
@@ -151,7 +153,7 @@ sampler.on('sample', () => {
 
 ## API
 
-### doc([options])
+### `doc([options])`
 
 It creates a metrics [`Sampler`](#class-docsampler) instance with the given options.
 
@@ -393,6 +395,24 @@ The number of times that it has encountered the flag.
 * `<number>`
 
 The total time (in milliseconds) spent on the operations with this flag.
+
+### `doc.eventLoopUtilizationSupported`
+
+* `<boolean>`
+
+Whether the Node.js version in use supports the [eventLoopUtilization metric](https://nodejs.org/dist/latest-v14.x/docs/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2).
+
+### `doc.resourceUsageSupported`
+
+* `<boolean>`
+
+Whether the Node.js version in use supports the [resourceUsage metric](https://nodejs.org/dist/latest-v14.x/docs/api/process.html#process_process_resourceusage).
+
+### `doc.gcFlagsSupported`
+
+* `<boolean>`
+
+Whether the Node.js version in use supports [GC flags](https://nodejs.org/dist/latest-v14.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_flags).
 
 ## Credits
 

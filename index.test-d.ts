@@ -7,8 +7,15 @@ import {
   EventLoopDelayMetric,
   EventLoopUtilizationMetric,
   GCMetric,
-  MemoryMetric
+  MemoryMetric,
+  eventLoopUtilizationSupported,
+  resourceUsageSupported,
+  gcFlagsSupported
 } from '.'
+
+expectType<Boolean>(eventLoopUtilizationSupported)
+expectType<Boolean>(resourceUsageSupported)
+expectType<Boolean>(gcFlagsSupported)
 
 let sampler: Sampler
 
