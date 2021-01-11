@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/dnlup/doc/compare/v3.0.3...v3.1.0) (2021-01-11)
+
+
+### Features
+
+* add support flags ([3d0fd39](https://github.com/dnlup/doc/commit/3d0fd396817fa1f06ddcfc161d2ac37dc0327121))
+
 ### [3.0.3](https://github.com/dnlup/doc/compare/v3.0.2...v3.0.3) (2020-11-10)
 
 ### [3.0.2](https://github.com/dnlup/doc/compare/v4.0.0...v3.0.2) (2020-10-28)
