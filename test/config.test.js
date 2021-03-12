@@ -219,7 +219,7 @@ test('default options', t => {
   t.true(opts.autoStart)
   t.true(opts.unref)
   t.deepEquals(opts.eventLoopOptions, { resolution: 10 })
-  t.true(opts.gcOptions.aggregate)
+  t.false(opts.gcOptions.aggregate)
   t.equals(opts.gcOptions.flags, gcFlagsSupported)
   t.true(opts.collect.cpu)
   t.true(opts.collect.memory)

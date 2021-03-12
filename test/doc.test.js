@@ -135,6 +135,9 @@ function preventTestExitingEarly (t, ms) {
 tap.test('sample', t => {
   const start = process.hrtime()
   const sampler = doc({
+    gcOptions: {
+      aggregate: true
+    },
     collect: {
       gc: true,
       activeHandles: true
