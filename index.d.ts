@@ -3,7 +3,7 @@ import { CPUMetric } from './types/cpuMetric'
 import { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
 import { ResourceUsageMetric } from './types/resourceUsageMetric'
 import { EventLoopUtilizationMetric } from './types/eventLoopUtilizationMetric'
-import { GCMetric } from './types/gcMetric'
+import { GCMetric, GCMetricOptions } from './types/gcMetric'
 
 declare interface SamplerOptions {
   /**
@@ -14,6 +14,11 @@ declare interface SamplerOptions {
    * interval on Node >= 12.
    */
   sampleInterval?: number,
+
+  /**
+   * Garbage collection metric options
+   */
+  gcOptions?: GCMetricOptions,
 
   /**
    * Options to setup `perf_hooks.monitorEventLoopDelay`.
@@ -41,6 +46,7 @@ declare interface SamplerOptions {
 export interface MemoryMetric extends NodeJS.MemoryUsage {}
 
 export class Sampler extends EventEmitter {
+  constructor(options?: SamplerOptions)
   cpu?: CPUMetric
   resourceUsage?: ResourceUsageMetric
   eventLoopDelay?: EventLoopDelayMetric
