@@ -18,18 +18,41 @@ declare enum GCFlag {
 }
 
 export class GCEntry {
+  /**
+   * Total time of the entry in nanoseconds
+   */
   totalDuration: number;
+  /**
+   * Total number of operations counted
+   */
   totalCount: WasmHistogram['totalCount'];
+  /**
+   * Mean value in nanoseconds
+   */
   mean: WasmHistogram['mean'];
+  /**
+   * Max value in nanoseconds
+   */
   max: WasmHistogram['maxValue'];
+  /**
+   * Min value in nanoseconds
+   */
   min: WasmHistogram['minNonZeroValue'];
+  /**
+   * Standard deviation in nanoseconds
+   */
   stdDeviation: WasmHistogram['stdDeviation'];
+  /**
+   * Histogram summary
+   */
   summary: HistogramSummary;
+  /**
+   * Get a percentile
+   */
   getValueAtPercentile: WasmHistogram['getValueAtPercentile'];
 }
 
 export class GCAggregatedEntry extends GCEntry {
-  constructor(flags: boolean);
   flags: {
     no: GCEntry,
     constructRetained: GCEntry,
@@ -55,8 +78,8 @@ declare interface GCMetricOptions {
 export class GCMetric {
   constructor(options: GCMetricOptions);
   pause: GCEntry;
-  major: GCAggregatedEntry|undefined;
-  minor: GCAggregatedEntry|undefined;
-  incremental: GCAggregatedEntry|undefined;
-  weakCb: GCAggregatedEntry|undefined;
+  major: GCEntry|GCAggregatedEntry|undefined;
+  minor: GCEntry|GCAggregatedEntry|undefined;
+  incremental: GCEntry|GCAggregatedEntry|undefined;
+  weakCb: GCEntry|GCAggregatedEntry|undefined;
 }

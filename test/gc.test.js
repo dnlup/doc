@@ -86,10 +86,10 @@ test('garbage collection metric with aggregation', t => {
   gc[kObserverCallback](newFakeList(constants.NODE_PERFORMANCE_GC_INCREMENTAL))
   gc[kObserverCallback](newFakeList(constants.NODE_PERFORMANCE_GC_WEAKCB))
 
-  t.true(gc.major instanceof GCAggregatedEntry)
-  t.true(gc.minor instanceof GCAggregatedEntry)
-  t.true(gc.incremental instanceof GCAggregatedEntry)
-  t.true(gc.weakCb instanceof GCAggregatedEntry)
+  t.true(gc.major instanceof GCEntry)
+  t.true(gc.minor instanceof GCEntry)
+  t.true(gc.incremental instanceof GCEntry)
+  t.true(gc.weakCb instanceof GCEntry)
 
   const entryDurationSum = data.reduce((prev, curr) => prev + curr, 0)
   const approxMean = 5 * 1e6
@@ -111,7 +111,7 @@ test('garbage collection metric with aggregation', t => {
     'weakCb'
   ]) {
     const errorMessage = `Failed check for entry ${entry}`
-    t.true(gc[entry] instanceof GCAggregatedEntry, errorMessage)
+    t.true(gc[entry] instanceof GCEntry, errorMessage)
     t.true(gc[entry].mean > approxMean, errorMessage)
     t.equals(gc[entry].totalCount, data.length, errorMessage)
   }
@@ -136,19 +136,7 @@ test('garbage collection metric with aggregation', t => {
     const errorMessage = `Failed check for entry ${entry}`
     t.equals(gc[entry].mean, 0, errorMessage)
     t.equals(gc[entry].totalCount, 0, errorMessage)
-
-    for (const flag of [
-      'no',
-      'constructRetained',
-      'forced',
-      'synchronousPhantomProcessing',
-      'allAvailableGarbage',
-      'allExternalMemory',
-      'scheduleIdle'
-    ]) {
-      const errorMessage = `Failed check for ${flag}`
-      t.true(gc.major.flags[flag] === undefined, errorMessage)
-    }
+    t.true(gc[entry].flags === undefined)
   }
 
   t.end()
