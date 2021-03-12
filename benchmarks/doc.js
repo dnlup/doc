@@ -10,7 +10,16 @@ function handle (req, res) {
 }
 
 const port = process.env.PORT || 0
-const sampler = doc({ sampleInterval: 50, collect: { gc: true, activeHandles: true } })
+const sampler = doc({
+  sampleInterval: 50,
+  gcOptions: {
+    aggregate: true
+  },
+  collect: {
+    gc: true,
+    activeHandles: true
+  }
+})
 const server = createServer(handle)
 
 /* eslint-disable no-unused-vars */
