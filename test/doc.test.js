@@ -100,7 +100,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = 10 * 15e5
+      const level = 10 * 30e5
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
@@ -110,32 +110,12 @@ const checks = {
     t.true(check, `external | expected: ${expected}, value: ${value}`)
   },
   gc (t, value) {
-    const levels = {
-      major: 0,
-      minor: 0,
-      incremental: 0
+    for (const key of ['pause', 'major', 'minor', 'incremental', 'weakCb']) {
+      for (const subkey of ['mean', 'totalDuration', 'totalCount', 'max', 'stdDeviation']) {
+        const message = `gc.${key} | expected: number, value: ${typeof value[subkey]}`
+        t.true(typeof value[key][subkey] === 'number', message)
+      }
     }
-    const expected = {
-      major: `x >= ${levels.major}`,
-      minor: `x >= ${levels.minor}`,
-      incremental: `x >= ${levels.incremental}`
-    }
-
-    // Not sure how to deterministically trigger a WeakCB GC cycle, so we don't check it here
-    const check = value.major.average >= levels.major &&
-                  value.minor.average >= levels.minor &&
-                  value.incremental.average >= levels.incremental
-    t.true(check, `gc |
-    expected: {
-      major: ${expected.major},
-      minor: ${expected.minor},
-      incremental: ${expected.incremental}
-    },
-    value: { 
-      major: ${value.major.average},
-      minor: ${value.minor.average},
-      incremental: ${value.incremental.average}
-    }`)
   },
   activeHandles (t, value) {
     const check = value > 0
@@ -155,6 +135,9 @@ function preventTestExitingEarly (t, ms) {
 tap.test('sample', t => {
   const start = process.hrtime()
   const sampler = doc({
+    gcOptions: {
+      aggregate: true
+    },
     collect: {
       gc: true,
       activeHandles: true
@@ -165,7 +148,7 @@ tap.test('sample', t => {
 
   sampler.once('sample', () => {
     const end = process.hrtime(start)
-    const elapsed = end[0] * 1e3 + end[1] / 1e6
+    const elapsed = hrtime2ms(end)
     if (monitorEventLoopDelay) {
       t.true(elapsed >= 1000 && elapsed < 2000)
     } else {

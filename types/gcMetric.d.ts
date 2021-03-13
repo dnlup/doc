@@ -1,3 +1,5 @@
+import { HistogramSummary, WasmHistogram } from 'hdr-histogram-js'
+
 declare enum GCFlag {
   /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO */
   No = 'no',
@@ -15,23 +17,69 @@ declare enum GCFlag {
   ScheduleIdle = 'scheduleIdle'
 }
 
-declare interface GCOpStats {
-  count: number,
-  total: number,
-  average: number
+export class GCEntry {
+  /**
+   * Total time of the entry in nanoseconds
+   */
+  totalDuration: number;
+  /**
+   * Total number of operations counted
+   */
+  totalCount: WasmHistogram['totalCount'];
+  /**
+   * Mean value in nanoseconds
+   */
+  mean: WasmHistogram['mean'];
+  /**
+   * Max value in nanoseconds
+   */
+  max: WasmHistogram['maxValue'];
+  /**
+   * Min value in nanoseconds
+   */
+  min: WasmHistogram['minNonZeroValue'];
+  /**
+   * Standard deviation in nanoseconds
+   */
+  stdDeviation: WasmHistogram['stdDeviation'];
+  /**
+   * Histogram summary
+   */
+  summary: HistogramSummary;
+  /**
+   * Get a percentile
+   */
+  getValueAtPercentile: WasmHistogram['getValueAtPercentile'];
 }
 
-declare interface GCAggregatedEntry extends GCOpStats {
-  flags?: Map<GCFlag, GCOpStats>
+export class GCAggregatedEntry extends GCEntry {
+  flags: {
+    no: GCEntry,
+    constructRetained: GCEntry,
+    forced: GCEntry,
+    synchronousPhantomProcessing: GCEntry,
+    allAvailableGarbage: GCEntry,
+    allExternalMemory: GCEntry,
+    scheduleIdle: GCEntry
+  }
 }
 
-export interface GCMetric {
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MAJOR */
-  major: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_MINOR */
-  minor: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_INCREMENTAL */
-  incremental: GCAggregatedEntry,
-  /** perf_hooks.constants.NODE_PERFORMANCE_GC_WEAKCB */
-  weakCb: GCAggregatedEntry
+declare interface GCMetricOptions {
+  /**
+   * Aggregate statistic by the type of GC operation.
+   */
+  aggregate: boolean,
+  /**
+   * Enable tracking of GC flags in aggregated metric
+   */
+  flags: boolean
+}
+
+export class GCMetric {
+  constructor(options: GCMetricOptions);
+  pause: GCEntry;
+  major: GCEntry|GCAggregatedEntry|undefined;
+  minor: GCEntry|GCAggregatedEntry|undefined;
+  incremental: GCEntry|GCAggregatedEntry|undefined;
+  weakCb: GCEntry|GCAggregatedEntry|undefined;
 }

@@ -7,7 +7,6 @@ import {
   EventLoopDelayMetric,
   EventLoopUtilizationMetric,
   GCMetric,
-  MemoryMetric,
   eventLoopUtilizationSupported,
   resourceUsageSupported,
   gcFlagsSupported
@@ -37,7 +36,7 @@ sampler.on('sample', () => {
   expectType<EventLoopDelayMetric|undefined>(sampler.eventLoopDelay)
   expectType<EventLoopUtilizationMetric|undefined>(sampler.eventLoopUtilization)
   expectType<GCMetric|undefined>(sampler.gc)
-  expectType<MemoryMetric|undefined>(sampler.memory)
+  expectType<NodeJS.MemoryUsage|undefined>(sampler.memory)
   expectType<number|undefined>(sampler.activeHandles)
 })
 

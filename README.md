@@ -9,7 +9,7 @@
 > Get usage and health data about your Node.js process.
 
 `doc` is a small module that helps you collect health metrics about your Node.js process.
-It does that by using only the API available on Node itself (i.e. no native dependencies).
+It does that by using only the API available on Node itself (no native dependencies).
 It doesn't have any ties with an APM platform, so you are free to use anything you want for that purpose.
 Its API lets you access both computed and raw values, where possible.
 
@@ -49,21 +49,35 @@ Its API lets you access both computed and raw values, where possible.
   * [Class: `EventLoopUtilizationMetric`](#class-eventlooputilizationmetric)
     + [`eventLoopUtilization.raw`](#eventlooputilizationraw)
   * [Class: `GCMetric`](#class-gcmetric)
+    + [`new GCMetric(options)`](#new-gcmetricoptions)
+  * [`gcMetric.pause`](#gcmetricpause)
     + [`gcMetric.major`](#gcmetricmajor)
     + [`gcMetric.minor`](#gcmetricminor)
     + [`gcMetric.incremental`](#gcmetricincremental)
     + [`gcMetric.weakCb`](#gcmetricweakcb)
+  * [Class: `GCEntry`](#class-gcentry)
+    + [`new GCEntry()`](#new-gcentry)
+    + [`gcEntry.totalDuration`](#gcentrytotalduration)
+    + [`gcEntry.totalCount`](#gcentrytotalcount)
+    + [`gcEntry.mean`](#gcentrymean)
+    + [`gcEntry.max`](#gcentrymax)
+    + [`gcEntry.min`](#gcentrymin)
+    + [`gcEntry.stdDeviation`](#gcentrystddeviation)
+    + [`gcEntry.summary`](#gcentrysummary)
+    + [`gcEntry.getValueAtPercentile(percentile)`](#gcentrygetvalueatpercentilepercentile)
   * [Class: `GCAggregatedEntry`](#class-gcaggregatedentry)
-    + [`gcAggregatedEntry.count`](#gcaggregatedentrycount)
-    + [`gcAggregatedEntry.total`](#gcaggregatedentrytotal)
-    + [`gcAggregatedEntry.average`](#gcaggregatedentryaverage)
+    + [`new GCAggregatedEntry()`](#new-gcaggregatedentry)
     + [`gcAggregatedEntry.flags`](#gcaggregatedentryflags)
-        * [`count`](#count)
-        * [`total`](#total)
+    + [`gcAggregatedEntry.flags.no`](#gcaggregatedentryflagsno)
+    + [`gcAggregatedEntry.flags.constructRetained`](#gcaggregatedentryflagsconstructretained)
+    + [`gcAggregatedEntry.flags.forced`](#gcaggregatedentryflagsforced)
+    + [`gcAggregatedEntry.flags.synchronousPhantomProcessing`](#gcaggregatedentryflagssynchronousphantomprocessing)
+    + [`gcAggregatedEntry.flags.allAvailableGarbage`](#gcaggregatedentryflagsallavailablegarbage)
+    + [`gcAggregatedEntry.flags.allExternalMemory`](#gcaggregatedentryflagsallexternalmemory)
+    + [`gcAggregatedEntry.flags.scheduleIdle`](#gcaggregatedentryflagsscheduleidle)
   * [`doc.eventLoopUtilizationSupported`](#doceventlooputilizationsupported)
   * [`doc.resourceUsageSupported`](#docresourceusagesupported)
   * [`doc.gcFlagsSupported`](#docgcflagssupported)
-- [Credits](#credits)
 
 <!-- tocstop -->
 
@@ -82,7 +96,7 @@ $ npm i @dnlup/doc@next
 ```
 ## Usage
 
-By default `doc` returns a [`Sampler`](#class-docsampler) instance that collects metrics about cpu, memory usage, event loop delay and event loop utilization (only on Node versions that [support it](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2)).
+By default `doc` returns a [`Sampler`](#class-docsampler) instance that collects metrics about cpu, memory usage, event loop delay and event loop utilization (only on Node versions that [support it](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2)).
 
 ```js
 const doc = require('@dnlup/doc')
@@ -131,7 +145,7 @@ sampler.on('sample', () => {
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
   doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
-  doStuffWithGarbageCollectionDuration(sampler.gc)
+  doStuffWithGarbageCollectionDuration(sampler.gc.pause)
 })
 ```
 
@@ -175,12 +189,15 @@ only the values of the last sample are available. Each time the sampler emits th
   * `sampleInterval` `<number>`: sample interval (ms) to get a sample. On each `sampleInterval` ms a [`sample`](#event-sample) event is emitted. **Default:** `500` on Node < 11.10.0, `1000` otherwise. Under the hood the package uses [`monitorEventLoopDelay`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options) when available to track the event loop delay and this allows to increase the default `sampleInterval`.
   * `autoStart` `<boolean>`: start automatically to collect metrics. **Default:** `true`.
   * `unref` `<boolean>`: [unref](https://nodejs.org/dist/latest-v12.x/docs/api/timers.html#timers_timeout_unref) the timer used to schedule the sampling interval. **Default:** `true`.
+  * `gcOptions` `<Object>`: Garbage collection options
+    * `aggregate` `<boolean>`: Track and aggregate statistics about each garbage collection operation (see https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performanceentry_kind). **Default:** `false`
+    * `flags` `<boolean>`: , Track statistics about the flags of each (aggregated) garbage collection operation (see https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performanceentry_flags). `aggregate` has to be `true` to enable this option. **Default:** `true` on Node version `12.17.0` and newer.
   * `eventLoopOptions` `<Object>`: Options to setup [`monitorEventLoopDelay`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options). **Default:** `{ resolution: 10 }`
   * `collect` `<Object>`: enable/disable the collection of specific metrics.
     * `cpu` `<boolean>`: enable cpu metric. **Default:** `true`.
     * `resourceUsage` `<boolean>`: enable [resourceUsage](https://nodejs.org/docs/latest-v12.x/api/process.html#process_process_resourceusage) metric. **Default:** `false`.
     * `eventLoopDelay` `<boolean>`: enable eventLoopDelay metric. **Default:** `true`.
-    * `eventLoopUtilization` `<boolean>`: enable [eventLoopUtilization](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) metric. **Default:** `true` on Node versions that support it.
+    * `eventLoopUtilization` `<boolean>`: enable [eventLoopUtilization](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) metric. **Default:** `true` on Node version `12.19.0` and newer.
     * `memory` `<boolean>`: enable memory metric. **Default:** `true`.
     * `gc` `<boolean>`: enable garbage collection metric. **Default:** `false`.
     * `activeHandles` `<boolean>`: enable active handles collection metric. **Default:** `false`.
@@ -285,7 +302,7 @@ Event loop delay in milliseconds. On Node versions that support [`monitorEventLo
 
 #### `eventLoopDelay.raw`
 
-* `<Histogram|number>`
+* `<Histogram>` | `<number>`
 
 On Node versions that support [`monitorEventLoopDelay`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options) this exposes the [`Histogram`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_class_histogram) instance. Otherwise, it exposes the raw delay value in nanoseconds.
 
@@ -304,116 +321,170 @@ It exposes raw values about the event loop utilization.
 
 * `<object>`
 
-Raw value returned by [`performance.eventLoopUtilization()`](https://nodejs.org/docs/latest-v14.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) during the `sampleInterval` window.
+Raw value returned by [`performance.eventLoopUtilization()`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) during the `sampleInterval` window.
 
 ### Class: `GCMetric`
 
-It exposes the garbage collector activity only with computed values. It calculates the rolling average of each type of operation during the specified `sampleInterval`.
+It exposes the garbage collector activity statistics in the specified `sampleInterval` using hdr histograms.
+
+#### `new GCMetric(options)`
+
+* `options` `<object>`: Configuration options
+  * `aggregate` `<boolean>`: See `gcOptions.aggregate` in the [Sampler options](#new-docsampleroptions).
+  * `flags` `<boolean>`: See `gcOptions.flags` in the [Sampler options](#new-docsampleroptions).
+
+### `gcMetric.pause`
+
+* [`<GCEntry>`](#class-gcentry)
+
+It tracks the global activity of the garbage collector.
 
 #### `gcMetric.major`
 
-* [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
+* [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `major`.
+The activity of the operation of type `major`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
 #### `gcMetric.minor`
 
-* [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
+* [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `minor`.
+The activity of the operation of type `minor`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
 #### `gcMetric.incremental`
 
-* [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
+* [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `incremental`.
+The activity of the operation of type `incremental`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
 #### `gcMetric.weakCb`
 
-* [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
+* [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `weakCb`.
+The activity of the operation of type `weakCb`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
+### Class: `GCEntry`
+
+It contains garbage collection data, represented with an [hdr histogram](https://github.com/HdrHistogram/HdrHistogramJS). All timing values are expressed in nanoseconds.
+
+#### `new GCEntry()`
+
+The initialization doesn't require options. It is created internally by a [`GCMEtric`](#class-gcmetric).
+
+#### `gcEntry.totalDuration`
+
+* `<number>`
+
+It is the total time of the entry in nanoseconds.
+
+#### `gcEntry.totalCount`
+
+* `<number>`
+
+It is the total number of operations counted.
+
+#### `gcEntry.mean`
+
+* `<number>`
+
+It is the mean value of the entry in nanoseconds.
+#### `gcEntry.max`
+
+* `<number>`
+
+It is the maximum value of the entry in nanoseconds.
+#### `gcEntry.min`
+
+* `<number>`
+
+It is the minimum value of the entry in nanoseconds.
+
+#### `gcEntry.stdDeviation`
+
+* `<number>`
+
+It is the standard deviation of the entry in nanoseconds.
+
+#### `gcEntry.summary`
+
+* `<object>`
+
+The hdr histogram summary. See https://github.com/HdrHistogram/HdrHistogramJS#record-values-and-retrieve-metrics.
+
+#### `gcEntry.getValueAtPercentile(percentile)`
+
+* `percentile` `<number>`: Get a percentile from the histogram.
+* Returns `<number>` The percentile
+
+See https://github.com/HdrHistogram/HdrHistogramJS#record-values-and-retrieve-metrics.
+
 ### Class: `GCAggregatedEntry`
 
-It contains aggregated data about a specific garbage collector operation.
+It extends [`GCEntry`](#class-gcentry) and contains garbage collection data plus the flags associated with it (see https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performanceentry_flags).
 
-#### `gcAggregatedEntry.count`
+#### `new GCAggregatedEntry()`
 
-* `<number>`
-
-The number of times the operation occurred.
-
-#### `gcAggregatedEntry.total`
-
-* `<number>`
-
-The total time (in milliseconds) spent on the operation.
-
-#### `gcAggregatedEntry.average`
-
-* `<number>`
-
-The average time (in milliseconds) spent each time in the operation.
+The initialization doesn't require options. It is created internally by a [`GCMEtric`](#class-gcmetric).
 
 #### `gcAggregatedEntry.flags`
 
-* `<Map>`
+* `<object>`
 
-On Node versions that support [`flags`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_flags) this `Map` is populated with additional metrics about the number of times it encounters a specific flag and the total time (in milliseconds) spent on the operation with this flag.
+This object contains the various hdr histograms of each flag.
+#### `gcAggregatedEntry.flags.no`
 
-Each key of the `Map` is one of these strings:
+* [`<GCEntry>`](#class-gcentry)
 
-* `'no'`
-* `'constructRetained'`
-* `'forced'`
-* `'synchronousPhantomProcessing'`
-* `'allAvailableGarbage'`
-* `'allExternalMemory'`
-* `'scheduleIdle'`
+#### `gcAggregatedEntry.flags.constructRetained`
 
-See [`performanceEntry.flags`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_flags).
+* [`<GCEntry>`](#class-gcentry)
 
-Each value of the `Map` is an `<object>` with the following properties:
 
-###### `count`
+#### `gcAggregatedEntry.flags.forced`
 
-* `<number>`
+* [`<GCEntry>`](#class-gcentry)
 
-The number of times that it has encountered the flag.
 
-###### `total`
+#### `gcAggregatedEntry.flags.synchronousPhantomProcessing`
 
-* `<number>`
+* [`<GCEntry>`](#class-gcentry)
 
-The total time (in milliseconds) spent on the operations with this flag.
+
+#### `gcAggregatedEntry.flags.allAvailableGarbage`
+
+* [`<GCEntry>`](#class-gcentry)
+
+
+#### `gcAggregatedEntry.flags.allExternalMemory`
+
+* [`<GCEntry>`](#class-gcentry)
+
+#### `gcAggregatedEntry.flags.scheduleIdle`
+
+* [`<GCEntry>`](#class-gcentry)
 
 ### `doc.eventLoopUtilizationSupported`
 
 * `<boolean>`
 
-Whether the Node.js version in use supports the [eventLoopUtilization metric](https://nodejs.org/dist/latest-v14.x/docs/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2).
+It tells if the Node.js version in use supports the [eventLoopUtilization metric](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2).
 
 ### `doc.resourceUsageSupported`
 
 * `<boolean>`
 
-Whether the Node.js version in use supports the [resourceUsage metric](https://nodejs.org/dist/latest-v14.x/docs/api/process.html#process_process_resourceusage).
+It tells if the Node.js version in use supports the [resourceUsage metric](https://nodejs.org/dist/latest-v12.x/docs/api/process.html#process_process_resourceusage).
 
 ### `doc.gcFlagsSupported`
 
 * `<boolean>`
 
-Whether the Node.js version in use supports [GC flags](https://nodejs.org/dist/latest-v14.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_flags).
-
-## Credits
-
-When writing this module, I took a lot of inspiration from the fantastic [Node Clinic Doctor](https://github.com/clinicjs/node-clinic-doctor) package.
+It tells if the Node.js version in use supports [GC flags](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_flags).

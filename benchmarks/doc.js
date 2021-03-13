@@ -10,8 +10,18 @@ function handle (req, res) {
 }
 
 const port = process.env.PORT || 0
-const sampler = doc({ sampleInterval: 50, collect: { gc: true, activeHandles: true } })
+const sampler = doc({
+  sampleInterval: 50,
+  gcOptions: {
+    aggregate: true
+  },
+  collect: {
+    gc: true,
+    activeHandles: true
+  }
+})
 const server = createServer(handle)
+
 /* eslint-disable no-unused-vars */
 sampler.on('sample', () => {
   const cpu = {
@@ -32,8 +42,13 @@ sampler.on('sample', () => {
     incremental: sampler.gc.incremental,
     weakCb: sampler.gc.weakCb
   }
-  const activeHandles = gc.activeHandles
+  const flags = gc.minor.flags
+  if (flags) {
+    const no = flags.no
+  }
+  const activeHandles = sampler.activeHandles
   /* eslint-enable no-unused-vars */
 })
+
 server.listen(port)
 server.on('listening', () => console.error(`server listening on port ${server.address().port}`))

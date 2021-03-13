@@ -12,6 +12,9 @@ function handle (req, res) {
 const port = process.env.PORT || 0
 const sampler = doc({
   sampleInterval: 50,
+  gcOptions: {
+    aggregate: true
+  },
   collect: {
     resourceUsage: true,
     gc: true,
