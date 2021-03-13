@@ -49,31 +49,31 @@ test('validation', t => {
     },
     {
       config: {
-        eventLoopOptions: {
+        eventLoopDelayOptions: {
           resolution: '0'
         }
       },
       instanceOf: InvalidArgumentError,
-      message: 'eventLoopOptions.resolution must be a number, received string 0'
+      message: 'eventLoopDelayOptions.resolution must be a number, received string 0'
     },
     {
       config: {
         sampleInterval: 100,
-        eventLoopOptions: {
+        eventLoopDelayOptions: {
           resolution: 200
         }
       },
       instanceOf: InvalidArgumentError,
-      message: 'eventLoopOptions.resolution must be < sampleInterval, received 200'
+      message: 'eventLoopDelayOptions.resolution must be < sampleInterval, received 200'
     },
     {
       config: {
-        eventLoopOptions: {
+        eventLoopDelayOptions: {
           resolution: -200
         }
       },
       instanceOf: InvalidArgumentError,
-      message: 'eventLoopOptions.resolution must be > 1, received -200'
+      message: 'eventLoopDelayOptions.resolution must be > 1, received -200'
     },
     {
       config: {
@@ -154,10 +154,10 @@ test('validation', t => {
     t.is(error.message, item.message, `list item ${index}`)
   }
 
-  let opts = config({ eventLoopOptions: {} })
-  t.is(opts.eventLoopOptions.resolution, 10)
-  opts = config({ eventLoopOptions: { resolution: null } })
-  t.is(opts.eventLoopOptions.resolution, 10)
+  let opts = config({ eventLoopDelayOptions: {} })
+  t.is(opts.eventLoopDelayOptions.resolution, 10)
+  opts = config({ eventLoopDelayOptions: { resolution: null } })
+  t.is(opts.eventLoopDelayOptions.resolution, 10)
 
   opts = config({ sampleInterval: null })
   t.is(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
@@ -218,7 +218,7 @@ test('default options', t => {
   t.equals(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
   t.true(opts.autoStart)
   t.true(opts.unref)
-  t.deepEquals(opts.eventLoopOptions, { resolution: 10 })
+  t.deepEquals(opts.eventLoopDelayOptions, { resolution: 10 })
   t.false(opts.gcOptions.aggregate)
   t.equals(opts.gcOptions.flags, gcFlagsSupported)
   t.true(opts.collect.cpu)

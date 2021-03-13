@@ -23,7 +23,7 @@ declare interface SamplerOptions {
   /**
    * Options to setup `perf_hooks.monitorEventLoopDelay`.
    */
-  eventLoopOptions?: {
+  eventLoopDelayOptions?: {
     /**
      * The sampling rate in milliseconds. Must be greater than zero and than the sampleInterval. Default: 10.
      */
