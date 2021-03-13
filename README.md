@@ -192,7 +192,7 @@ only the values of the last sample are available. Each time the sampler emits th
   * `gcOptions` `<Object>`: Garbage collection options
     * `aggregate` `<boolean>`: Track and aggregate statistics about each garbage collection operation (see https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performanceentry_kind). **Default:** `false`
     * `flags` `<boolean>`: , Track statistics about the flags of each (aggregated) garbage collection operation (see https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performanceentry_flags). `aggregate` has to be `true` to enable this option. **Default:** `true` on Node version `12.17.0` and newer.
-  * `eventLoopOptions` `<Object>`: Options to setup [`monitorEventLoopDelay`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options). **Default:** `{ resolution: 10 }`
+  * `eventLoopDelayOptions` `<Object>`: Options to setup [`monitorEventLoopDelay`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_perf_hooks_monitoreventloopdelay_options). **Default:** `{ resolution: 10 }`
   * `collect` `<Object>`: enable/disable the collection of specific metrics.
     * `cpu` `<boolean>`: enable cpu metric. **Default:** `true`.
     * `resourceUsage` `<boolean>`: enable [resourceUsage](https://nodejs.org/docs/latest-v12.x/api/process.html#process_process_resourceusage) metric. **Default:** `false`.
