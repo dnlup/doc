@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-1](https://github.com/dnlup/doc/compare/v4.0.0-0...v4.0.0-1) (2021-03-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **config:** the option `eventLoopOptions` has been replaced by
+`eventLoopDelayOptions`.
+
+### Bug Fixes
+
+* **config:** rename eventLoopOptions ([289b10d](https://github.com/dnlup/doc/commit/289b10d666b0a00b3dac97aac8489134cbf9e7de))
+
 ## [4.0.0-0](https://github.com/dnlup/doc/compare/v3.1.0...v4.0.0-0) (2021-03-13)
 
 
