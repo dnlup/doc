@@ -1,6 +1,6 @@
 {
   "name": "@dnlup/doc",
-  "version": "3.1.0",
+  "version": "4.0.0-0",
   "description": "Get usage and health data about your Node.js process",
   "main": "index.js",
   "type": "commonjs",

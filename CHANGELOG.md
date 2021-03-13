@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-0](https://github.com/dnlup/doc/compare/v3.1.0...v4.0.0-0) (2021-03-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **gc:** the gc stats are completely different now and there are 2 new options for its initialization. The types definitions changes reflect this too.
+
+### Features
+
+* **gc:** use histogramjs ([fe7731a](https://github.com/dnlup/doc/commit/fe7731a3c4e545bbf204aea857a3cbb19d6711d1))
+
 ## [3.1.0](https://github.com/dnlup/doc/compare/v3.0.3...v3.1.0) (2021-01-11)
 
 
