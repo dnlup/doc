@@ -226,3 +226,45 @@ tap.test('using resourceUsage', { skip: !process.resourceUsage }, t => {
     t.end()
   })
 })
+
+tap.test('stop', t => {
+  t.plan(4)
+  const sampler = doc({ collect: { gc: true } })
+  preventTestExitingEarly(t, 3000)
+
+  sampler.on('sample', () => {
+    // On Windows CI runners the cpu is zero, smh.
+    t.true(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
+    t.true(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
+    t.true(sampler.eventLoopDelay.computed > 0, `delay value: ${sampler.eventLoopDelay.computed}`)
+    t.true(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
+    sampler.stop()
+  })
+})
+
+tap.test('start and stop', t => {
+  t.plan(9)
+  const sampler = doc({ collect: { gc: true } })
+  preventTestExitingEarly(t, 6000)
+
+  let c = 0
+  const start = process.hrtime()
+  sampler.on('sample', () => {
+    c++
+    const delta = hrtime2ms(process.hrtime(start))
+    // On Windows CI runners the cpu is zero, smh.
+    t.true(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
+    t.true(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
+    t.true(sampler.eventLoopDelay.computed > 0, `delay value: ${sampler.eventLoopDelay.computed}`)
+    t.true(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
+    if (c === 2) {
+      // On Node 10 this is near 2500, while on Node > 14
+      // it is near 3500. There must be some differences
+      // in rescheduling the timers there.
+      t.true(delta > 2500, `delta value: ${delta}`)
+      return
+    }
+    sampler.stop()
+    setTimeout(() => sampler.start(), 1500)
+  })
+})
