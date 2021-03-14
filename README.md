@@ -64,7 +64,7 @@ Its API lets you access both computed and raw values, where possible.
     + [`gcEntry.min`](#gcentrymin)
     + [`gcEntry.stdDeviation`](#gcentrystddeviation)
     + [`gcEntry.summary`](#gcentrysummary)
-    + [`gcEntry.getValueAtPercentile(percentile)`](#gcentrygetvalueatpercentilepercentile)
+    + [`gcEntry.getPercentile(percentile)`](#gcentrygetpercentilepercentile)
   * [Class: `GCAggregatedEntry`](#class-gcaggregatedentry)
     + [`new GCAggregatedEntry()`](#new-gcaggregatedentry)
     + [`gcAggregatedEntry.flags`](#gcaggregatedentryflags)
@@ -419,7 +419,7 @@ It is the standard deviation of the entry in nanoseconds.
 
 The hdr histogram summary. See https://github.com/HdrHistogram/HdrHistogramJS#record-values-and-retrieve-metrics.
 
-#### `gcEntry.getValueAtPercentile(percentile)`
+#### `gcEntry.getPercentile(percentile)`
 
 * `percentile` `<number>`: Get a percentile from the histogram.
 * Returns `<number>` The percentile
