@@ -23,7 +23,7 @@ const onSample = () => {
     cpu: sampler.cpu.usage,
     ...sampler.memory,
     eventLoopDelay: sampler.eventLoopDelay.computed,
-    eventLoopUtilization: doc.eventLoopUtilizationSupported ? sampler.eventLoopUtilization.raw.utilization : 'Not Supported',
+    eventLoopUtilization: doc.eventLoopUtilizationSupported ? sampler.eventLoopUtilization.utilization : 'Not Supported',
     gc: sampler.gc.pause.mean,
     'gc(99)': sampler.gc.pause.getPercentile(99),
     'gc.minor': sampler.gc.minor.mean,
