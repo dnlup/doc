@@ -48,6 +48,9 @@ Its API lets you access both computed and raw values, where possible.
     + [`eventLoopDelay.raw`](#eventloopdelayraw)
     + [`eventLoopDelay.compute(raw)`](#eventloopdelaycomputeraw)
   * [Class: `EventLoopUtilizationMetric`](#class-eventlooputilizationmetric)
+    + [`eventLoopUtilization.idle`](#eventlooputilizationidle)
+    + [`eventLoopUtilization.active`](#eventlooputilizationactive)
+    + [`eventLoopUtilization.utilization`](#eventlooputilizationutilization)
     + [`eventLoopUtilization.raw`](#eventlooputilizationraw)
   * [Class: `GCMetric`](#class-gcmetric)
     + [`new GCMetric(options)`](#new-gcmetricoptions)
@@ -108,7 +111,7 @@ sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
-  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.utilization) // Available only on Node versions that support it
 })
 ```
 
@@ -129,7 +132,7 @@ sampler.on('sample', () => {
   // `sampler.cpu` will be `undefined`
   // `sampler.memory` will be `undefined`
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
-  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.utilization) // Available only on Node versions that support it
 })
 ```
 
@@ -145,7 +148,7 @@ sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
-  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.utilization) // Available only on Node versions that support it
   doStuffWithGarbageCollectionDuration(sampler.gc.pause)
 })
 ```
@@ -161,7 +164,7 @@ sampler.on('sample', () => {
   doStuffWithCpuUsage(sampler.cpu.usage)
   doStuffWithMemoryUsage(sampler.memory)
   doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
-  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.raw) // Available only on Node versions that support it
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.utilization) // Available only on Node versions that support it
   doStuffWithActiveHandles(sampler.activeHandles)
 })
 ```
@@ -320,7 +323,24 @@ This function works only on node versions that support [`monitorEventLoopDelay`]
 
 ### Class: `EventLoopUtilizationMetric`
 
-It exposes raw values about the event loop utilization.
+It exposes statistics about the event loop utilization.
+
+#### `eventLoopUtilization.idle`
+
+* `<number>`
+
+The `idle` value in the object returned by [`performance.eventLoopUtilization()`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) during the `sampleInterval` window.
+
+#### `eventLoopUtilization.active`
+
+* `<number>`
+
+The `active` value in the object returned by [`performance.eventLoopUtilization()`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) during the `sampleInterval` window.
+#### `eventLoopUtilization.utilization`
+
+* `<number>`
+
+The `utilization` value in the object returned by [`performance.eventLoopUtilization()`](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2) during the `sampleInterval` window.
 
 #### `eventLoopUtilization.raw`
 

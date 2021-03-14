@@ -13,7 +13,7 @@ const onSample = () => {
     cpu: sampler.cpu.usage,
     ...sampler.memory,
     eventLoopDelay: sampler.eventLoopDelay.computed,
-    eventLoopUtilization: doc.eventLoopUtilizationSupported ? sampler.eventLoopUtilization.raw.utilization : 'Not Supported'
+    eventLoopUtilization: doc.eventLoopUtilizationSupported ? sampler.eventLoopUtilization.utilization : 'Not Supported'
   })
 }
 

@@ -3,8 +3,7 @@
 // TODO: this tests need some refactoring, it's starting to get a little messy.
 
 const tap = require('tap')
-const { monitorEventLoopDelay, performance } = require('perf_hooks')
-const { eventLoopUtilization } = performance
+const { monitorEventLoopDelay } = require('perf_hooks')
 const isCi = require('is-ci')
 const { hrtime2ms } = require('@dnlup/hrtime-utils')
 const doc = require('../')
@@ -100,7 +99,7 @@ const checks = {
     let check
     let expected
     if (performDetailedCheck) {
-      const level = 10 * 30e5
+      const level = 10 * 35e5
       check = value > 0 && value < level
       expected = `0 < x < ${level}`
     } else {
@@ -160,12 +159,15 @@ tap.test('sample', t => {
     } else {
       t.equal('number', typeof sampler.eventLoopDelay.raw)
     }
-    if (eventLoopUtilization) {
+    if (doc.eventLoopUtilizationSupported) {
+      t.equal('number', typeof sampler.eventLoopUtilization.idle)
+      t.equal('number', typeof sampler.eventLoopUtilization.active)
+      t.equal('number', typeof sampler.eventLoopUtilization.utilization)
       t.equal('object', typeof sampler.eventLoopUtilization.raw)
       t.equal('number', typeof sampler.eventLoopUtilization.raw.idle)
       t.equal('number', typeof sampler.eventLoopUtilization.raw.active)
       t.equal('number', typeof sampler.eventLoopUtilization.raw.utilization)
-      checks.elu(t, sampler.eventLoopUtilization.raw)
+      checks.elu(t, sampler.eventLoopUtilization)
     }
     t.equal('number', typeof sampler.cpu.usage)
     t.equal('object', typeof sampler.cpu.raw)

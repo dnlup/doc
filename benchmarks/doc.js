@@ -33,7 +33,7 @@ sampler.on('sample', () => {
     raw: sampler.eventLoopDelay.raw
   }
   if (eventLoopUtilization) {
-    const eventLoopUtilization = sampler.eventLoopUtilization.raw
+    const eventLoopUtilization = sampler.eventLoopUtilization.utilization
   }
   const memory = sampler.memory
   const gc = {
