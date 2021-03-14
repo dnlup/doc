@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-2](https://github.com/dnlup/doc/compare/v4.0.0-1...v4.0.0-2) (2021-03-14)
+
+
+### Bug Fixes
+
+* **gc:** add start and stop ([300737d](https://github.com/dnlup/doc/commit/300737deca0036de6b4d566767241bae8c49e202))
+
 ## [4.0.0-1](https://github.com/dnlup/doc/compare/v4.0.0-0...v4.0.0-1) (2021-03-13)
 
 
