@@ -22,6 +22,7 @@ Its API lets you access both computed and raw values, where possible.
       - [Enable/disable metrics collection](#enabledisable-metrics-collection)
         * [Garbage collection](#garbage-collection)
         * [Active handles](#active-handles)
+  * [Examples](#examples)
 - [API](#api)
   * [`doc([options])`](#docoptions)
   * [Class: `doc.Sampler`](#class-docsampler)
@@ -164,6 +165,10 @@ sampler.on('sample', () => {
   doStuffWithActiveHandles(sampler.activeHandles)
 })
 ```
+
+### Examples
+
+You can find more examples in the [`examples`](./examples) folder.
 
 ## API
 
