@@ -236,7 +236,8 @@ tap.test('stop', t => {
     // On Windows CI runners the cpu is zero, smh.
     t.true(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
     t.true(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
-    t.true(sampler.eventLoopDelay.computed > 0, `delay value: ${sampler.eventLoopDelay.computed}`)
+    // On Windows CI runners the delay is zero, smh.
+    t.true(sampler.eventLoopDelay.computed >= 0, `delay value: ${sampler.eventLoopDelay.computed}`)
     t.true(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
     sampler.stop()
   })
@@ -255,7 +256,8 @@ tap.test('start and stop', t => {
     // On Windows CI runners the cpu is zero, smh.
     t.true(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
     t.true(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
-    t.true(sampler.eventLoopDelay.computed > 0, `delay value: ${sampler.eventLoopDelay.computed}`)
+    // On Windows CI runners the delay is zero, smh.
+    t.true(sampler.eventLoopDelay.computed >= 0, `delay value: ${sampler.eventLoopDelay.computed}`)
     t.true(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
     if (c === 2) {
       // On Node 10 this is near 2500, while on Node > 14
