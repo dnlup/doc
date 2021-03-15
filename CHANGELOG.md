@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0-3](https://github.com/dnlup/doc/compare/v4.0.0-2...v4.0.0-3) (2021-03-15)
+
+
+### Features
+
+* add esm support ([e965b97](https://github.com/dnlup/doc/commit/e965b975052a23f0d473f470ea020f131a8861d7))
+* **eventlooputilization:** expose single metrics ([3fca137](https://github.com/dnlup/doc/commit/3fca137d0e1af89d15cc0eaf37e93fadb96a1a2f))
+
 ## [4.0.0-2](https://github.com/dnlup/doc/compare/v4.0.0-1...v4.0.0-2) (2021-03-14)
 
 
