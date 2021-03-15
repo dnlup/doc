@@ -19,9 +19,12 @@ Its API lets you access both computed and raw values, where possible.
         * [latest stable version](#latest-stable-version)
         * [latest development version](#latest-development-version)
 - [Usage](#usage)
+        * [Importing with CommonJS](#importing-with-commonjs)
+        * [Importing with ESM](#importing-with-esm)
+        * [Note](#note)
       - [Enable/disable metrics collection](#enabledisable-metrics-collection)
-        * [Garbage collection](#garbage-collection)
-        * [Active handles](#active-handles)
+      - [Garbage collection](#garbage-collection)
+      - [Active handles](#active-handles)
   * [Examples](#examples)
 - [API](#api)
   * [`doc([options])`](#docoptions)
@@ -98,9 +101,14 @@ $ npm i @dnlup/doc
 ```bash
 $ npm i @dnlup/doc@next
 ```
+
 ## Usage
 
+You can import the module by using either CommonJS or ESM.
+
 By default `doc` returns a [`Sampler`](#class-docsampler) instance that collects metrics about cpu, memory usage, event loop delay and event loop utilization (only on Node versions that [support it](https://nodejs.org/docs/latest-v12.x/api/perf_hooks.html#perf_hooks_performance_eventlooputilization_utilization1_utilization2)).
+
+###### Importing with CommonJS
 
 ```js
 const doc = require('@dnlup/doc')
@@ -114,6 +122,23 @@ sampler.on('sample', () => {
   doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.utilization) // Available only on Node versions that support it
 })
 ```
+
+###### Importing with ESM
+
+```js
+import doc from '@dnlup/doc'
+
+const sampler = doc()
+
+sampler.on('sample', () => {
+  doStuffWithCpuUsage(sampler.cpu.usage)
+  doStuffWithMemoryUsage(sampler.memory)
+  doStuffWithEventLoopDelay(sampler.eventLoopDelay.computed)
+  doStuffWithEventLoopUtilization(sampler.eventLoopUtilization.utilization) // Available only on Node versions that support it
+})
+```
+
+###### Note
 
 A `Sampler` holds a snapshot of the metrics taken at the specified sample interval.
 This behavior makes the instance stateful. On every tick, a new snapshot will overwrite the previous one.
@@ -138,7 +163,7 @@ sampler.on('sample', () => {
 
 You can enable more metrics if you need them.
 
-###### Garbage collection
+##### Garbage collection
 
 ```js
 const doc = require('@dnlup/doc')
@@ -153,7 +178,7 @@ sampler.on('sample', () => {
 })
 ```
 
-###### Active handles
+##### Active handles
 
 ```js
 const doc = require('@dnlup/doc')
