@@ -204,7 +204,7 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
       'totalCount',
       'totalDuration'
     ]) {
-      const errorMessage = `Failed check for ${value}`
+      const errorMessage = `Failed check for ${entry}.flags.no.${value}`
       t.true(gc.major.flags.no[value] > 0, errorMessage)
     }
 
@@ -227,7 +227,7 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
         'totalCount',
         'totalDuration'
       ]) {
-        const errorMessage = `Failed check for ${value}`
+        const errorMessage = `Failed check for ${entry}.flags.${flag}.${value}`
         t.true(gc.major.flags[flag][value] === 0, errorMessage)
       }
     }
@@ -276,7 +276,7 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
         'totalCount',
         'totalDuration'
       ]) {
-        const errorMessage = `Failed check for ${value}`
+        const errorMessage = `Failed check for ${entry}.flags.${flag}.${value}`
         t.true(gc.major.flags[flag][value] === 0, errorMessage)
       }
     }
