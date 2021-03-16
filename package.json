@@ -14,7 +14,7 @@
     "test:ci": "npm run test:js -- --coverage-report=lcovonly && npm run test:ts && npm run test:esm",
     "test:js": "tap -J test/*.test.js",
     "test:ts": "tsd",
-    "test:esm": "tap --no-coverage test/esm/esm.test.js",
+    "test:esm": "tap --no-coverage test/esm/*.test.js",
     "trace:ic:server": "PORT=3000 deoptigate benchmarks/doc.js",
     "trace:ic:resourceUsage": "PORT=3000 deoptigate benchmarks/docResourceUsage.js",
     "trace:ic:load": "autocannon -d 60 -c 100 -p 10 localhost:3000",
