@@ -284,7 +284,8 @@ test('custom sample interval', t => {
   sampler.once('sample', () => {
     const end = process.hrtime(start)
     const elapsed = hrtime2ms(end)
-    t.true(elapsed >= 2000 && elapsed < 2200)
+    const message = `expected: value >= 2000, value: ${elapsed}`
+    t.true(elapsed >= 2000, message)
     t.end()
   })
 })
