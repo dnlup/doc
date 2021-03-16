@@ -2,6 +2,7 @@
 
 const Sampler = require('./lib/sampler')
 const util = require('./lib/util')
+const errors = require('./lib/errors')
 
 function createSampler (options = {}) {
   return new Sampler(options)
@@ -12,6 +13,7 @@ module.exports.doc = createSampler
 module.exports.default = createSampler
 
 module.exports.Sampler = Sampler
+module.exports.errors = errors
 
 Object.defineProperty(module.exports, 'eventLoopUtilizationSupported', {
   value: util.eventLoopUtilizationSupported,
