@@ -1,20 +1,27 @@
-import { expectType, expectError } from 'tsd'
+import { expectType, expectError, expectAssignable } from 'tsd'
 import {
-  Sampler,
   createSampler,
+  eventLoopUtilizationSupported,
+  resourceUsageSupported,
+  gcFlagsSupported,
+  Sampler,
+  errors,
   CPUMetric,
   ResourceUsageMetric,
   EventLoopDelayMetric,
   EventLoopUtilizationMetric,
-  GCMetric,
-  eventLoopUtilizationSupported,
-  resourceUsageSupported,
-  gcFlagsSupported
+  GCMetric
 } from '.'
 
 expectType<Boolean>(eventLoopUtilizationSupported)
 expectType<Boolean>(resourceUsageSupported)
 expectType<Boolean>(gcFlagsSupported)
+expectAssignable<errors.NotSupportedError>(new errors.NotSupportedError())
+expectAssignable<'NotSupportedError'>(new errors.NotSupportedError().name)
+expectAssignable<'DOC_ERR_NOT_SUPPORTED'>(new errors.NotSupportedError().code)
+expectAssignable<errors.InvalidArgumentError>(new errors.InvalidArgumentError())
+expectAssignable<'InvalidArgumentError'>(new errors.InvalidArgumentError().name)
+expectAssignable<'DOC_ERR_INVALID_ARG'>(new errors.InvalidArgumentError().code)
 
 let sampler: Sampler
 

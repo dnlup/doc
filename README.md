@@ -85,6 +85,7 @@ Its API lets you access both computed and raw values, where possible.
   * [`doc.eventLoopUtilizationSupported`](#doceventlooputilizationsupported)
   * [`doc.resourceUsageSupported`](#docresourceusagesupported)
   * [`doc.gcFlagsSupported`](#docgcflagssupported)
+  * [`doc.errors`](#docerrors)
 
 <!-- tocstop -->
 
@@ -393,7 +394,7 @@ It tracks the global activity of the garbage collector.
 
 * [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `major`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
+The activity of the operation of type `major`. It's present only if `GCMetric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
@@ -401,7 +402,7 @@ See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf
 
 * [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `minor`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
+The activity of the operation of type `minor`. It's present only if `GCMetric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
@@ -409,7 +410,7 @@ See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf
 
 * [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `incremental`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
+The activity of the operation of type `incremental`. It's present only if `GCMetric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
@@ -417,7 +418,7 @@ See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf
 
 * [`<GCEntry>`](#class-gcentry) | [`<GCAggregatedEntry>`](#class-gcaggregatedentry)
 
-The activity of the operation of type `weakCb`. It's present only if `GCMEtric` has been created with the option `aggregate` equal to `true`.
+The activity of the operation of type `weakCb`. It's present only if `GCMetric` has been created with the option `aggregate` equal to `true`.
 
 See [`performanceEntry.kind`](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_kind).
 
@@ -427,7 +428,7 @@ It contains garbage collection data, represented with an [hdr histogram](https:/
 
 #### `new GCEntry()`
 
-The initialization doesn't require options. It is created internally by a [`GCMEtric`](#class-gcmetric).
+The initialization doesn't require options. It is created internally by a [`GCMetric`](#class-gcmetric).
 
 #### `gcEntry.totalDuration`
 
@@ -482,7 +483,7 @@ It extends [`GCEntry`](#class-gcentry) and contains garbage collection data plus
 
 #### `new GCAggregatedEntry()`
 
-The initialization doesn't require options. It is created internally by a [`GCMEtric`](#class-gcmetric).
+The initialization doesn't require options. It is created internally by a [`GCMetric`](#class-gcmetric).
 
 #### `gcAggregatedEntry.flags`
 
@@ -538,3 +539,12 @@ It tells if the Node.js version in use supports the [resourceUsage metric](https
 * `<boolean>`
 
 It tells if the Node.js version in use supports [GC flags](https://nodejs.org/dist/latest-v12.x/docs/api/perf_hooks.html#perf_hooks_performanceentry_flags).
+
+### `doc.errors`
+
+In the `errors` object are exported all the custom errors used by the module.
+
+| Error | Error Code | Description |
+|-------|------------|-------------|
+| `InvalidArgumentError` | `DOC_ERR_INVALID_ARG` | An invalid option or argument was used |
+| `NotSupportedError` | `DOC_ERR_NOT_SUPPORTED` | A metric is not supported on the Node.js version used |
