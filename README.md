@@ -86,6 +86,7 @@ Its API lets you access both computed and raw values, where possible.
   * [`doc.resourceUsageSupported`](#docresourceusagesupported)
   * [`doc.gcFlagsSupported`](#docgcflagssupported)
   * [`doc.errors`](#docerrors)
+- [License](#license)
 
 <!-- tocstop -->
 
@@ -548,3 +549,7 @@ In the `errors` object are exported all the custom errors used by the module.
 |-------|------------|-------------|
 | `InvalidArgumentError` | `DOC_ERR_INVALID_ARG` | An invalid option or argument was used |
 | `NotSupportedError` | `DOC_ERR_NOT_SUPPORTED` | A metric is not supported on the Node.js version used |
+
+## License
+
+[ISC](./LICENSE)
