@@ -30,7 +30,8 @@
     "prenext": "npm cit",
     "next": "HUSKY=0 standard-version --sign --prerelease",
     "postnext": "npm run push && npm publish --tag next",
-    "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`"
+    "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
