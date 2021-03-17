@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/dnlup/doc/compare/v4.0.0...v4.0.1) (2021-03-17)
+
+
+### Bug Fixes
+
+* export errors ([e0d49a2](https://github.com/dnlup/doc/commit/e0d49a210beb5e493ba49d9a787b02dbf1cceedd))
+
 ## [4.0.0](https://github.com/dnlup/doc/compare/v4.0.0-3...v4.0.0) (2021-03-16)
 
 ## [4.0.0-3](https://github.com/dnlup/doc/compare/v4.0.0-2...v4.0.0-3) (2021-03-15)
