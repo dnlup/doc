@@ -89,7 +89,7 @@
     "markdown-toc": "^1.2.0",
     "semver": "^7.3.4",
     "standard-version": "^9.0.0",
-    "tap": "^14.10.8",
+    "tap": "^15.0.0",
     "tsd": "^0.14.0"
   },
   "dependencies": {
