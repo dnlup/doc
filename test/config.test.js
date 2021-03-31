@@ -151,16 +151,16 @@ test('validation', t => {
 
   for (const [index, item] of list.entries()) {
     const error = t.throws(() => config(item.config), item.instanceOf)
-    t.is(error.message, item.message, `list item ${index}`)
+    t.equal(error.message, item.message, `list item ${index}`)
   }
 
   let opts = config({ eventLoopDelayOptions: {} })
-  t.is(opts.eventLoopDelayOptions.resolution, 10)
+  t.ok(opts.eventLoopDelayOptions.resolution, 10)
   opts = config({ eventLoopDelayOptions: { resolution: null } })
-  t.is(opts.eventLoopDelayOptions.resolution, 10)
+  t.ok(opts.eventLoopDelayOptions.resolution, 10)
 
   opts = config({ sampleInterval: null })
-  t.is(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
+  t.ok(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
   t.end()
 })
 
@@ -185,7 +185,7 @@ test('shuold throw if GC flags are not supported', { skip: gcFlagsSupported }, t
       }
     })
   }, NotSupportedError)
-  t.is(error.message, 'GC flags are not supported on the Node.js version used')
+  t.ok(error.message, 'GC flags are not supported on the Node.js version used')
   t.end()
 })
 
@@ -208,25 +208,25 @@ test('should disable cpu if resourceUsage is enabled', { skip: !resourceUsageSup
       resourceUsage: true
     }
   })
-  t.false(opts.collect.cpu)
-  t.true(opts.collect.resourceUsage)
+  t.notOk(opts.collect.cpu)
+  t.ok(opts.collect.resourceUsage)
   t.end()
 })
 
 test('default options', t => {
   const opts = config()
-  t.equals(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
-  t.true(opts.autoStart)
-  t.true(opts.unref)
-  t.deepEquals(opts.eventLoopDelayOptions, { resolution: 10 })
-  t.false(opts.gcOptions.aggregate)
-  t.equals(opts.gcOptions.flags, gcFlagsSupported)
-  t.true(opts.collect.cpu)
-  t.true(opts.collect.memory)
-  t.false(opts.collect.resourceUsage)
-  t.true(opts.collect.eventLoopDelay)
-  t.equals(opts.collect.eventLoopUtilization, eventLoopUtilizationSupported)
-  t.false(opts.collect.gc)
-  t.false(opts.collect.activeHandles)
+  t.equal(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
+  t.ok(opts.autoStart)
+  t.ok(opts.unref)
+  t.same(opts.eventLoopDelayOptions, { resolution: 10 })
+  t.notOk(opts.gcOptions.aggregate)
+  t.equal(opts.gcOptions.flags, gcFlagsSupported)
+  t.ok(opts.collect.cpu)
+  t.ok(opts.collect.memory)
+  t.notOk(opts.collect.resourceUsage)
+  t.ok(opts.collect.eventLoopDelay)
+  t.equal(opts.collect.eventLoopUtilization, eventLoopUtilizationSupported)
+  t.notOk(opts.collect.gc)
+  t.notOk(opts.collect.activeHandles)
   t.end()
 })

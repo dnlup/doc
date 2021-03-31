@@ -29,9 +29,9 @@ test('sample', t => {
     const end = process.hrtime(start)
     const elapsed = hrtime2ms(end)
     if (monitorEventLoopDelay) {
-      t.true(elapsed >= 1000 && elapsed < 2000)
+      t.ok(elapsed >= 1000 && elapsed < 2000)
     } else {
-      t.true(elapsed >= 500 && elapsed < 1000)
+      t.ok(elapsed >= 500 && elapsed < 1000)
     }
   })
 })
@@ -56,7 +56,7 @@ test('cpu', t => {
       check = value >= 0
       expected = 'value >= 0'
     }
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
   })
 })
 
@@ -83,7 +83,7 @@ test('memory', t => {
       check = value > 0
       expected = 'value > 0'
     }
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
 
     value = sampler.memory.heapTotal
     if (performDetailedCheck) {
@@ -94,7 +94,7 @@ test('memory', t => {
       check = value > 0
       expected = 'value > 0'
     }
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
 
     value = sampler.memory.heapUsed
     if (performDetailedCheck) {
@@ -105,7 +105,7 @@ test('memory', t => {
       check = value > 0
       expected = 'value > 0'
     }
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
 
     value = sampler.memory.external
     if (performDetailedCheck) {
@@ -116,7 +116,7 @@ test('memory', t => {
       check = sampler.memory.external > 0
       expected = 'value > 0'
     }
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
   })
 })
 
@@ -145,7 +145,7 @@ test('eventLoopDelay', t => {
       check = value >= 0
       expected = 'value >= 0'
     }
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
   })
 })
 
@@ -184,7 +184,7 @@ test('gc', t => {
     for (const key of ['pause', 'major', 'minor', 'incremental', 'weakCb']) {
       for (const subkey of ['mean', 'totalDuration', 'totalCount', 'max', 'stdDeviation']) {
         const message = `${key}.${subkey} expected: number, value: ${typeof value[key][subkey]}`
-        t.true(typeof value[key][subkey] === 'number', message)
+        t.ok(typeof value[key][subkey] === 'number', message)
       }
     }
   })
@@ -205,11 +205,11 @@ test('gc aggregation with flags', { skip: !doc.gcFlagsSupported }, t => {
 
   const value = sampler.gc
   sampler.once('sample', () => {
-    t.true(typeof value.pause.mean === 'number')
-    t.true(typeof value.pause.totalDuration === 'number')
-    t.true(typeof value.pause.totalCount === 'number')
-    t.true(typeof value.pause.max === 'number')
-    t.true(typeof value.pause.stdDeviation === 'number')
+    t.ok(typeof value.pause.mean === 'number')
+    t.ok(typeof value.pause.totalDuration === 'number')
+    t.ok(typeof value.pause.totalCount === 'number')
+    t.ok(typeof value.pause.max === 'number')
+    t.ok(typeof value.pause.stdDeviation === 'number')
     for (const key of ['major', 'minor', 'incremental', 'weakCb']) {
       for (const flag of [
         'no',
@@ -222,7 +222,7 @@ test('gc aggregation with flags', { skip: !doc.gcFlagsSupported }, t => {
       ]) {
         for (const subkey of ['mean', 'totalDuration', 'totalCount', 'max', 'stdDeviation']) {
           const message = `${key}.flags.${flag}.${subkey} expected: number, value: ${typeof value[key].flags[flag][subkey]}`
-          t.true(typeof value[key].flags[flag][subkey] === 'number', message)
+          t.ok(typeof value[key].flags[flag][subkey] === 'number', message)
         }
       }
     }
@@ -233,27 +233,27 @@ test('resourceUsage', { skip: !doc.resourceUsageSupported }, t => {
   const sampler = doc({ collect: { resourceUsage: true } })
   preventTestExitingEarly(t, 2000)
   sampler.once('sample', () => {
-    t.is(sampler.cpu, undefined)
-    t.is(sampler.resourceUsage.constructor.name, 'ResourceUsageMetric')
-    t.is(sampler[kOptions].collect.cpu, false)
-    t.is(sampler[kOptions].collect.resourceUsage, true)
-    t.is(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
-    t.is(typeof sampler.resourceUsage.raw.systemCPUTime, 'number')
-    t.is(typeof sampler.resourceUsage.raw.maxRSS, 'number')
-    t.is(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
-    t.is(typeof sampler.resourceUsage.raw.sharedMemorySize, 'number')
-    t.is(typeof sampler.resourceUsage.raw.unsharedDataSize, 'number')
-    t.is(typeof sampler.resourceUsage.raw.unsharedStackSize, 'number')
-    t.is(typeof sampler.resourceUsage.raw.minorPageFault, 'number')
-    t.is(typeof sampler.resourceUsage.raw.majorPageFault, 'number')
-    t.is(typeof sampler.resourceUsage.raw.swappedOut, 'number')
-    t.is(typeof sampler.resourceUsage.raw.fsRead, 'number')
-    t.is(typeof sampler.resourceUsage.raw.fsWrite, 'number')
-    t.is(typeof sampler.resourceUsage.raw.ipcSent, 'number')
-    t.is(typeof sampler.resourceUsage.raw.ipcReceived, 'number')
-    t.is(typeof sampler.resourceUsage.raw.signalsCount, 'number')
-    t.is(typeof sampler.resourceUsage.raw.voluntaryContextSwitches, 'number')
-    t.is(typeof sampler.resourceUsage.raw.involuntaryContextSwitches, 'number')
+    t.equal(sampler.cpu, undefined)
+    t.equal(sampler.resourceUsage.constructor.name, 'ResourceUsageMetric')
+    t.equal(sampler[kOptions].collect.cpu, false)
+    t.equal(sampler[kOptions].collect.resourceUsage, true)
+    t.equal(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.systemCPUTime, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.maxRSS, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.userCPUTime, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.sharedMemorySize, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.unsharedDataSize, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.unsharedStackSize, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.minorPageFault, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.majorPageFault, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.swappedOut, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.fsRead, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.fsWrite, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.ipcSent, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.ipcReceived, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.signalsCount, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.voluntaryContextSwitches, 'number')
+    t.equal(typeof sampler.resourceUsage.raw.involuntaryContextSwitches, 'number')
     t.ok(sampler.resourceUsage.cpu >= 0, `value ${sampler.resourceUsage.cpu}`)
     t.end()
   })
@@ -273,7 +273,7 @@ test('activeHandles', t => {
     const value = sampler.activeHandles
     const check = value > 0
     const expected = 'value > 0'
-    t.true(check, `expected: ${expected}, value: ${value}`)
+    t.ok(check, `expected: ${expected}, value: ${value}`)
   })
 })
 
@@ -285,7 +285,7 @@ test('custom sample interval', t => {
     const end = process.hrtime(start)
     const elapsed = hrtime2ms(end)
     const message = `expected: value >= 2000, value: ${elapsed}`
-    t.true(elapsed >= 2000, message)
+    t.ok(elapsed >= 2000, message)
     t.end()
   })
 })
@@ -297,11 +297,11 @@ test('stop', t => {
 
   sampler.on('sample', () => {
     // On Windows CI runners the cpu is zero, smh.
-    t.true(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
-    t.true(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
+    t.ok(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
+    t.ok(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
     // On Windows CI runners the delay is zero, smh.
-    t.true(sampler.eventLoopDelay.computed >= 0, `delay value: ${sampler.eventLoopDelay.computed}`)
-    t.true(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
+    t.ok(sampler.eventLoopDelay.computed >= 0, `delay value: ${sampler.eventLoopDelay.computed}`)
+    t.ok(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
     sampler.stop()
   })
 })
@@ -317,16 +317,16 @@ test('start and stop', t => {
     c++
     const delta = hrtime2ms(process.hrtime(start))
     // On Windows CI runners the cpu is zero, smh.
-    t.true(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
-    t.true(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
+    t.ok(sampler.cpu.usage >= 0, `cpu value: ${sampler.cpu.usage}`)
+    t.ok(sampler.memory.heapTotal > 0, `memory value: ${sampler.memory.heapTotal}`)
     // On Windows CI runners the delay is zero, smh.
-    t.true(sampler.eventLoopDelay.computed >= 0, `delay value: ${sampler.eventLoopDelay.computed}`)
-    t.true(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
+    t.ok(sampler.eventLoopDelay.computed >= 0, `delay value: ${sampler.eventLoopDelay.computed}`)
+    t.ok(sampler.gc.pause.max >= 0, `gc value: ${sampler.gc.pause.max}`)
     if (c === 2) {
       // On Node 10 this is near 2500, while on Node > 14
       // it is near 3500. There must be some differences
       // in rescheduling the timers there.
-      t.true(delta > 2500, `delta value: ${delta}`)
+      t.ok(delta > 2500, `delta value: ${delta}`)
       return
     }
     sampler.stop()
