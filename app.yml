@@ -1,0 +1,11 @@
+runtime: nodejs14
+service: default
+instance_class: F1
+handlers:
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
+automatic_scaling:
+  max_instances: 1
+  max_concurrent_requests: 80

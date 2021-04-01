@@ -31,7 +31,8 @@
     "next": "HUSKY=0 standard-version --sign --prerelease",
     "postnext": "npm run push && npm publish --tag next",
     "push": "git push origin --follow-tags `git rev-parse --abbrev-ref HEAD`",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "start": "docsify start docs -c ssr.config.js -p 8080"
   },
   "repository": {
     "type": "git",
@@ -77,7 +78,6 @@
     "autocannon": "^7.0.0",
     "concurrently": "^6.0.0",
     "deoptigate": "^0.5.0",
-    "docsify-cli": "^4.4.3",
     "eslint": "^7.9.0",
     "eslint-config-standard": "^16.0.0",
     "eslint-plugin-import": "^2.22.0",
@@ -95,6 +95,7 @@
   },
   "dependencies": {
     "@dnlup/hrtime-utils": "^1.0.0",
+    "docsify-cli": "^4.4.3",
     "hdr-histogram-js": "^2.0.1"
   }
 }
