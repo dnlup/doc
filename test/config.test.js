@@ -172,7 +172,7 @@ test('should throw if eventLoopUtilization is not supported', { skip: eventLoopU
       }
     })
   }, NotSupportedError)
-  t.is(error.message, 'eventLoopUtilization is not supported on the Node.js version used')
+  t.equal(error.message, 'eventLoopUtilization is not supported on the Node.js version used')
   t.end()
 })
 
@@ -197,7 +197,7 @@ test('should throw if resourceUsage is not supported', { skip: resourceUsageSupp
       }
     })
   }, NotSupportedError)
-  t.is(error.message, 'resourceUsage is not supported on the Node.js version used')
+  t.equal(error.message, 'resourceUsage is not supported on the Node.js version used')
   t.end()
 })
 

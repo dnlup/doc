@@ -13,7 +13,7 @@ const cpu = function (iterations = 1e6) {
   }
 }
 tap.test('should throw an error if is not supported', { skip: !!process.resourceUsage }, t => {
-  const error = t.throw(() => {
+  const error = t.throws(() => {
     const resourceUsage = new ResourceUsageMetric() // eslint-disable-line no-unused-vars
   })
   t.ok(error.message, 'resourceUsage is not supported on this Node.js version')
