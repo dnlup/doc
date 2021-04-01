@@ -9,10 +9,10 @@ const {
 } = require('../lib/symbols')
 
 tap.test('should throw an error if not supported', { skip: !!eventLoopUtilization }, t => {
-  const error = t.throw(() => {
+  const error = t.throws(() => {
     const eluMetric = new EventLoopUtilizationMetric() // eslint-disable-line no-unused-vars
   }, Error)
-  t.is(error.message, 'eventLoopUtilization is not supported on this Node.js version')
+  t.equal(error.message, 'eventLoopUtilization is not supported on this Node.js version')
   t.end()
 })
 
