@@ -91,7 +91,8 @@
     "semver": "^7.3.4",
     "standard-version": "^9.0.0",
     "tap": "^14.10.8",
-    "tsd": "^0.14.0"
+    "tsd": "^0.14.0",
+    "vuepress": "^1.8.2"
   },
   "dependencies": {
     "@dnlup/hrtime-utils": "^1.0.0",
