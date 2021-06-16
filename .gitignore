@@ -101,5 +101,5 @@ public
 .tern-port
 
 *.swp
-
 .clinic
+.DS_Store
