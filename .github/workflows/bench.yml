@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.6.0
         with:
           ref: ${{ github.base_ref }}
 
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3.3.0
+        uses: actions/checkout@v3.6.0
 
       - name: Setup Node
         uses: actions/setup-node@v3.6.0
