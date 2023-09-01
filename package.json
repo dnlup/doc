@@ -75,7 +75,7 @@
     "@typescript-eslint/parser": "^6.5.0",
     "atomic-sleep": "^1.0.0",
     "autocannon": "^7.12.0",
-    "concurrently": "^7.6.0",
+    "concurrently": "^8.2.1",
     "deoptigate": "^0.6.0",
     "eslint": "^8.48.0",
     "eslint-config-standard": "^17.1.0",
