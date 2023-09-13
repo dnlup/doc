@@ -4,26 +4,12 @@ module.exports = {
     es2021: true,
     node: true
   },
-  extends: [
-    'standard'
-  ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 12
-  },
-  plugins: [
-    '@typescript-eslint'
-  ],
+  extends: 'standard',
   overrides: [
-    {
-      files: ['*.d.ts', '*.test-d.ts'],
-      rules: {
-        'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': 'error'
-      },
-      globals: {
-        NodeJS: 'readonly'
-      }
-    }
-  ]
+  ],
+  parserOptions: {
+    ecmaVersion: 'latest'
+  },
+  rules: {
+  }
 }
