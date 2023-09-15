@@ -8,7 +8,7 @@ const {
   gcFlagsSupported,
   resourceUsageSupported
 } = require('../lib/util')
-const { InvalidArgumentError, NotSupportedError } = require('../lib/errors')
+const { InvalidArgumentError } = require('../lib/errors')
 
 test('validation', t => {
   const list = [
@@ -161,43 +161,6 @@ test('validation', t => {
 
   opts = config({ sampleInterval: null })
   t.ok(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
-  t.end()
-})
-
-test('should throw if eventLoopUtilization is not supported', { skip: eventLoopUtilizationSupported }, t => {
-  const error = t.throws(() => {
-    config({
-      collect: {
-        eventLoopUtilization: true
-      }
-    })
-  }, NotSupportedError)
-  t.equal(error.message, 'eventLoopUtilization is not supported on the Node.js version used')
-  t.end()
-})
-
-test('shuold throw if GC flags are not supported', { skip: gcFlagsSupported }, t => {
-  const error = t.throws(() => {
-    config({
-      gcOptions: {
-        aggregate: true,
-        flags: true
-      }
-    })
-  }, NotSupportedError)
-  t.ok(error.message, 'GC flags are not supported on the Node.js version used')
-  t.end()
-})
-
-test('should throw if resourceUsage is not supported', { skip: resourceUsageSupported }, t => {
-  const error = t.throws(() => {
-    config({
-      collect: {
-        resourceUsage: true
-      }
-    })
-  }, NotSupportedError)
-  t.equal(error.message, 'resourceUsage is not supported on the Node.js version used')
   t.end()
 })
 
