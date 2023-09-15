@@ -12,15 +12,8 @@ const cpu = function (iterations = 1e6) {
     new Date(Date.now()) // eslint-disable-line no-new
   }
 }
-tap.test('should throw an error if is not supported', { skip: !!process.resourceUsage }, t => {
-  const error = t.throws(() => {
-    const resourceUsage = new ResourceUsageMetric() // eslint-disable-line no-unused-vars
-  })
-  t.ok(error.message, 'resourceUsage is not supported on this Node.js version')
-  t.end()
-})
 
-tap.test('raw metric', { skip: !process.resourceUsage }, t => {
+tap.test('raw metric', t => {
   const resourceUsage = new ResourceUsageMetric()
   const start = process.hrtime()
   cpu()
@@ -46,7 +39,7 @@ tap.test('raw metric', { skip: !process.resourceUsage }, t => {
   t.end()
 })
 
-tap.test('computed metric', { skip: !process.resourceUsage }, t => {
+tap.test('computed metric', t => {
   const resourceUsage = new ResourceUsageMetric()
   const start = process.hrtime()
   cpu()

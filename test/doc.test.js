@@ -4,7 +4,6 @@ const { test } = require('tap')
 const { monitorEventLoopDelay } = require('perf_hooks')
 const isCi = require('is-ci')
 const { hrtime2ms } = require('@dnlup/hrtime-utils')
-const { satisfies } = require('semver')
 const doc = require('../')
 const { kOptions } = require('../lib/symbols')
 
@@ -76,7 +75,7 @@ test('memory', t => {
     let expected
     let value = sampler.memory.rss
     if (performDetailedCheck) {
-      const level = (satisfies(process.version, '>= 12') ? 150 : 180) * 1e6
+      const level = 150 * 1e6
       check = value > 0 && value < level
       expected = `0 < value < ${level}`
     } else {
@@ -87,7 +86,7 @@ test('memory', t => {
 
     value = sampler.memory.heapTotal
     if (performDetailedCheck) {
-      const level = (satisfies(process.version, '>= 12') ? 100 : 120) * 1e6
+      const level = 100 * 1e6
       check = value > 0 && value < level
       expected = `0 < value < ${level}`
     } else {
@@ -98,7 +97,7 @@ test('memory', t => {
 
     value = sampler.memory.heapUsed
     if (performDetailedCheck) {
-      const level = (satisfies(process.version, '>= 12') ? 80 : 100) * 1e6
+      const level = 80 * 1e6
       check = value > 0 && value < level
       expected = `0 < value < ${level}`
     } else {
@@ -128,17 +127,12 @@ test('eventLoopDelay', t => {
 
   sampler.once('sample', () => {
     t.equal('number', typeof sampler.eventLoopDelay.computed)
-    if (monitorEventLoopDelay) {
-      t.equal('ELDHistogram', sampler.eventLoopDelay.raw.constructor.name)
-    } else {
-      t.equal('number', typeof sampler.eventLoopDelay.raw)
-    }
-
+    t.equal('ELDHistogram', sampler.eventLoopDelay.raw.constructor.name)
     let check
     let expected
     const value = sampler.eventLoopDelay.computed
     if (performDetailedCheck) {
-      const level = satisfies(process.version, '>= 12') ? 1 : 20
+      const level = 2
       check = value > 0 && value < level
       expected = `0 < value < ${level}`
     } else {
