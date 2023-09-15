@@ -19,8 +19,10 @@ test('garbage collection metric without aggregation', t => {
   // Creates a fake list that's the same shape as PerformanceObserver
   const newFakeList = (kind) => ({
     getEntries: () => data.map(x => ({
-      kind,
-      duration: x
+      duration: x,
+      detail: {
+        kind
+      }
     })
     )
   })
@@ -70,8 +72,10 @@ test('garbage collection metric with aggregation', t => {
   // Creates a fake list that's the same shape as PerformanceObserver
   const newFakeList = (kind) => ({
     getEntries: () => data.map(x => ({
-      kind,
-      duration: x
+      duration: x,
+      detail: {
+        kind
+      }
     })
     )
   })
@@ -148,9 +152,11 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
   // Creates a fake list that's the same shape as PerformanceObserver
   const newFakeList = (kind) => ({
     getEntries: () => data.map(x => ({
-      kind,
       duration: x,
-      flags: constants.NODE_PERFORMANCE_GC_FLAGS_NO
+      detail: {
+        kind,
+        flags: constants.NODE_PERFORMANCE_GC_FLAGS_NO
+      }
     })
     )
   })
