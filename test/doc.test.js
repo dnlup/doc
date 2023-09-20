@@ -160,7 +160,7 @@ test('eventLoopUtilization', { skip: !doc.eventLoopUtilizationSupported }, t => 
   })
 })
 
-test('gc', t => {
+test('gc', { only: true }, t => {
   t.plan(25)
   const sampler = doc({
     gcOptions: {
@@ -184,7 +184,7 @@ test('gc', t => {
   })
 })
 
-test('gc aggregation with flags', { skip: !doc.gcFlagsSupported }, t => {
+test('gc aggregation with flags', t => {
   t.plan(145)
   const sampler = doc({
     gcOptions: {
@@ -223,7 +223,7 @@ test('gc aggregation with flags', { skip: !doc.gcFlagsSupported }, t => {
   })
 })
 
-test('resourceUsage', { skip: !doc.resourceUsageSupported }, t => {
+test('resourceUsage', t => {
   const sampler = doc({ collect: { resourceUsage: true } })
   preventTestExitingEarly(t, 2000)
   sampler.once('sample', () => {
