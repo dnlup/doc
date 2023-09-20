@@ -5,9 +5,6 @@ declare function createSampler(options?: SamplerOptions): Sampler
 export default createSampler
 
 export { createSampler }
-export const eventLoopUtilizationSupported: Boolean
-export const resourceUsageSupported: Boolean
-export const gcFlagsSupported: Boolean
 export { Sampler, SamplerOptions }
 export { errors }
 export * from './types/cpuMetric'

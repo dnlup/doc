@@ -3,5 +3,5 @@ module.exports = {
     const list = filenames.map(filename => `'markdown-toc -i ${filename}`)
     return list
   },
-  '*.{js,ts}': ['eslint']
+  '*.{js}': ['eslint']
 }
