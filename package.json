@@ -91,7 +91,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@dnlup/hrtime-utils": "^1.1.0",
-    "hdr-histogram-js": "^3.0.0"
+    "@dnlup/hrtime-utils": "^1.1.0"
   }
 }

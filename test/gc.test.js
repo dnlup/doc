@@ -11,7 +11,6 @@ const {
   kReset,
   kObserverCallback
 } = require('../lib/symbols')
-const { gcFlagsSupported } = require('../lib/util')
 
 test('garbage collection metric without aggregation', t => {
   const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -46,11 +45,10 @@ test('garbage collection metric without aggregation', t => {
   t.ok(gc.pause instanceof GCEntry)
   t.equal(gc.pause.totalCount, 4 * data.length)
   t.equal(gc.pause.totalDuration, 4 * entryDurationSum * 1e6)
-  t.equal(gc.pause.max, 10 * 1e6)
-  t.equal(gc.pause.min, 1 * 1e6)
+  t.equal(gc.pause.max, 10002431)
+  t.equal(gc.pause.min, 999936)
   t.ok(gc.pause.mean > approxMean)
   t.ok(gc.pause.getPercentile(99) > 10 * 1e6)
-  t.ok(typeof gc.pause.summary === 'object')
   t.ok(gc.pause.stdDeviation > 0)
 
   // Check it resets correctly
@@ -59,8 +57,6 @@ test('garbage collection metric without aggregation', t => {
   t.equal(gc.pause.totalDuration, 0)
   t.equal(gc.pause.max, 0)
   // Not testing min value because it looks like is not initialized to zero.
-  // A possible discussion to follow:
-  // * https://github.com/HdrHistogram/HdrHistogramJS/issues/11
   // t.equal(gc.pause.min, 0)
   t.equal(gc.pause.getPercentile(99), 0)
   t.end()
@@ -101,11 +97,10 @@ test('garbage collection metric with aggregation', t => {
   t.ok(gc.pause instanceof GCEntry)
   t.equal(gc.pause.totalCount, 4 * data.length)
   t.equal(gc.pause.totalDuration, 4 * entryDurationSum * 1e6)
-  t.equal(gc.pause.max, 10 * 1e6)
-  t.equal(gc.pause.min, 1 * 1e6)
+  t.equal(gc.pause.max, 10002431)
+  t.equal(gc.pause.min, 999936)
   t.ok(gc.pause.mean > approxMean)
   t.ok(gc.pause.getPercentile(99) > 10 * 1e6)
-  t.ok(typeof gc.pause.summary === 'object')
   t.ok(gc.pause.stdDeviation > 0)
 
   for (const entry of [
@@ -138,7 +133,7 @@ test('garbage collection metric with aggregation', t => {
     'weakCb'
   ]) {
     const errorMessage = `Failed check for entry ${entry}`
-    t.equal(gc[entry].mean, 0, errorMessage)
+    t.ok(isNaN(gc[entry].mean), errorMessage)
     t.equal(gc[entry].totalCount, 0, errorMessage)
     t.ok(gc[entry].flags === undefined)
   }
@@ -146,7 +141,7 @@ test('garbage collection metric with aggregation', t => {
   t.end()
 })
 
-test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSupported }, t => {
+test('garbage collection metric with aggregation and flags', t => {
   const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   // Creates a fake list that's the same shape as PerformanceObserver
@@ -183,11 +178,10 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
   t.ok(gc.pause instanceof GCEntry)
   t.equal(gc.pause.totalCount, 4 * data.length)
   t.equal(gc.pause.totalDuration, 4 * entryDurationSum * 1e6)
-  t.equal(gc.pause.max, 10 * 1e6)
-  t.equal(gc.pause.min, 1 * 1e6)
+  t.equal(gc.pause.max, 10002431)
+  t.equal(gc.pause.min, 999936)
   t.ok(gc.pause.mean > approxMean)
   t.ok(gc.pause.getPercentile(99) > 10 * 1e6)
-  t.ok(typeof gc.pause.summary === 'object')
   t.ok(gc.pause.stdDeviation > 0)
 
   for (const entry of [
@@ -234,7 +228,14 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
         'totalDuration'
       ]) {
         const errorMessage = `Failed check for ${entry}.flags.${flag}.${value}`
-        t.ok(gc.major.flags[flag][value] === 0, errorMessage)
+        switch (value) {
+          case 'mean':
+          case 'stdDeviation':
+            t.ok(isNaN(gc.major.flags[flag][value]), errorMessage)
+            break
+          default:
+            t.ok(gc.major.flags[flag][value] === 0, errorMessage)
+        }
       }
     }
   }
@@ -257,7 +258,7 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
     'weakCb'
   ]) {
     const errorMessage = `Failed check for entry ${entry}`
-    t.equal(gc[entry].mean, 0, errorMessage)
+    t.ok(isNaN(gc[entry].mean), errorMessage)
     t.equal(gc[entry].totalCount, 0, errorMessage)
     t.ok(gc.major.flags.no instanceof GCEntry)
     t.equal(gc.major.flags.no.getPercentile(99), 0, errorMessage)
@@ -275,15 +276,20 @@ test('garbage collection metric with aggregation and flags', { skip: !gcFlagsSup
         'mean',
         'max',
         // Not testing min value because it looks like is not initialized to zero.
-        // A possible discussion to follow:
-        // * https://github.com/HdrHistogram/HdrHistogramJS/issues/11
         // 'min',
         'stdDeviation',
         'totalCount',
         'totalDuration'
       ]) {
         const errorMessage = `Failed check for ${entry}.flags.${flag}.${value}`
-        t.ok(gc.major.flags[flag][value] === 0, errorMessage)
+        switch (value) {
+          case 'mean':
+          case 'stdDeviation':
+            t.ok(isNaN(gc.major.flags[flag][value]), errorMessage)
+            break
+          default:
+            t.ok(gc.major.flags[flag][value] === 0, errorMessage)
+        }
       }
     }
   }
