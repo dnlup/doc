@@ -1,9 +1,6 @@
 import { expectType, expectError, expectAssignable } from 'tsd'
 import {
   createSampler,
-  eventLoopUtilizationSupported,
-  resourceUsageSupported,
-  gcFlagsSupported,
   Sampler,
   errors,
   CPUMetric,
@@ -13,9 +10,6 @@ import {
   GCMetric
 } from '.'
 
-expectType<Boolean>(eventLoopUtilizationSupported)
-expectType<Boolean>(resourceUsageSupported)
-expectType<Boolean>(gcFlagsSupported)
 expectAssignable<errors.NotSupportedError>(new errors.NotSupportedError())
 expectAssignable<'NotSupportedError'>(new errors.NotSupportedError().name)
 expectAssignable<'DOC_ERR_NOT_SUPPORTED'>(new errors.NotSupportedError().code)

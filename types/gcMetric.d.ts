@@ -1,4 +1,4 @@
-import { HistogramSummary, WasmHistogram } from 'hdr-histogram-js'
+import { RecordableHistogram } from 'perf_hooks';
 
 declare enum GCFlag {
   /** perf_hooks.constants.NODE_PERFORMANCE_GC_FLAGS_NO */
@@ -25,31 +25,29 @@ export class GCEntry {
   /**
    * Total number of operations counted
    */
-  totalCount: WasmHistogram['totalCount'];
+  // @types/node is not aligned with Node implementation. Let's wait for a fix.
+  // @ts-ignore
+  totalCount: RecordableHistogram['count'];
   /**
    * Mean value in nanoseconds
    */
-  mean: WasmHistogram['mean'];
+  mean: RecordableHistogram['mean'];
   /**
    * Max value in nanoseconds
    */
-  max: WasmHistogram['maxValue'];
+  max: RecordableHistogram['max'];
   /**
    * Min value in nanoseconds
    */
-  min: WasmHistogram['minNonZeroValue'];
+  min: RecordableHistogram['min'];
   /**
    * Standard deviation in nanoseconds
    */
-  stdDeviation: WasmHistogram['stdDeviation'];
-  /**
-   * Histogram summary
-   */
-  summary: HistogramSummary;
+  stdDeviation: RecordableHistogram['stddev'];
   /**
    * Get a percentile
    */
-  getValueAtPercentile: WasmHistogram['getValueAtPercentile'];
+  getValueAtPercentile: RecordableHistogram['percentile'];
 }
 
 export class GCAggregatedEntry extends GCEntry {

@@ -2,12 +2,6 @@
 
 const { test } = require('tap')
 const config = require('../lib/config')
-const {
-  monitorEventLoopDelaySupported,
-  eventLoopUtilizationSupported,
-  gcFlagsSupported,
-  resourceUsageSupported
-} = require('../lib/util')
 const { InvalidArgumentError } = require('../lib/errors')
 
 test('validation', t => {
@@ -160,11 +154,11 @@ test('validation', t => {
   t.ok(opts.eventLoopDelayOptions.resolution, 10)
 
   opts = config({ sampleInterval: null })
-  t.ok(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
+  t.equal(opts.sampleInterval, 1000)
   t.end()
 })
 
-test('should disable cpu if resourceUsage is enabled', { skip: !resourceUsageSupported }, t => {
+test('should disable cpu if resourceUsage is enabled', t => {
   const opts = config({
     collect: {
       cpu: true,
@@ -178,17 +172,17 @@ test('should disable cpu if resourceUsage is enabled', { skip: !resourceUsageSup
 
 test('default options', t => {
   const opts = config()
-  t.equal(opts.sampleInterval, monitorEventLoopDelaySupported ? 1000 : 500)
+  t.equal(opts.sampleInterval, 1000)
   t.ok(opts.autoStart)
   t.ok(opts.unref)
   t.same(opts.eventLoopDelayOptions, { resolution: 10 })
   t.notOk(opts.gcOptions.aggregate)
-  t.equal(opts.gcOptions.flags, gcFlagsSupported)
+  t.equal(opts.gcOptions.flags, true)
   t.ok(opts.collect.cpu)
   t.ok(opts.collect.memory)
   t.notOk(opts.collect.resourceUsage)
   t.ok(opts.collect.eventLoopDelay)
-  t.equal(opts.collect.eventLoopUtilization, eventLoopUtilizationSupported)
+  t.equal(opts.collect.eventLoopUtilization, true)
   t.notOk(opts.collect.gc)
   t.notOk(opts.collect.activeHandles)
   t.end()
