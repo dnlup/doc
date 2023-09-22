@@ -11,7 +11,7 @@
     "pretest:ci": "npm run lint",
     "test:ci": "npm run test:js -- --coverage-report=lcovonly && npm run test:ts && npm run test:esm",
     "test:js": "tap -J test/*.test.js",
-    "test:ts": "tsd",
+    "test:ts": "attw --pack && tsd",
     "test:esm": "tap --no-coverage test/esm/*.test.js",
     "trace:ic:server": "PORT=3000 deoptigate benchmarks/doc.js",
     "trace:ic:resourceUsage": "PORT=3000 deoptigate benchmarks/docResourceUsage.js",
@@ -68,6 +68,7 @@
     "directory": "."
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.10.2",
     "@types/node": "^20.6.3",
     "atomic-sleep": "^1.0.0",
     "autocannon": "^7.12.0",
