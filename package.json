@@ -51,7 +51,7 @@
     "health",
     "metrics"
   ],
-  "author": "Daniele Belardi <dwon.dnl@gmail.com>",
+  "author": "dnlup <dnlup.dev@gmail.com>",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
