@@ -1,14 +1,26 @@
 import { Sampler, SamplerOptions } from './types/sampler'
-import errors = require('./types/errors')
+import errors from './types/errors'
+import { CPUMetric } from './types/cpuMetric'
+import { EventLoopDelayMetric } from './types/eventLoopDelayMetric'
+import { ResourceUsageMetric } from './types/resourceUsageMetric'
+import { EventLoopUtilizationMetric } from './types/eventLoopUtilizationMetric'
+import { GCEntry, GCAggregatedEntry, GCMetric } from './types/gcMetric'
 
-declare function createSampler(options?: SamplerOptions): Sampler
-export default createSampler
+declare module 'doc' {
 
-export { createSampler }
-export { Sampler, SamplerOptions }
-export { errors }
-export * from './types/cpuMetric'
-export * from './types/eventLoopDelayMetric'
-export * from './types/resourceUsageMetric'
-export * from './types/eventLoopUtilizationMetric'
-export * from './types/gcMetric'
+}
+declare namespace doc {
+  export { errors }
+  export type {
+    Sampler, SamplerOptions,
+    CPUMetric,
+    EventLoopDelayMetric,
+    ResourceUsageMetric,
+    EventLoopUtilizationMetric,
+    GCEntry, GCAggregatedEntry, GCMetric
+  }
+  export const createSampler: (options?: SamplerOptions) => Sampler
+  export { createSampler as default }
+}
+declare function doc(options?: doc.SamplerOptions): doc.Sampler
+export = doc

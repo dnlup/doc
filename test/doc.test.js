@@ -143,7 +143,7 @@ test('eventLoopDelay', t => {
   })
 })
 
-test('eventLoopUtilization', { skip: !doc.eventLoopUtilizationSupported }, t => {
+test('eventLoopUtilization', t => {
   t.plan(7)
   const sampler = doc()
 
@@ -160,7 +160,7 @@ test('eventLoopUtilization', { skip: !doc.eventLoopUtilizationSupported }, t => 
   })
 })
 
-test('gc', { only: true }, t => {
+test('gc', t => {
   t.plan(25)
   const sampler = doc({
     gcOptions: {

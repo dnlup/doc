@@ -1,10 +1,8 @@
+import { EventLoopUtilization } from "perf_hooks"
+
 export interface EventLoopUtilizationMetric {
   /**
     * Raw metric value
     */
-   raw: {
-      idle: number,
-      active: number,
-      utilization: number
-   }
+   raw: EventLoopUtilization
 }
