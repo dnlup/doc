@@ -133,7 +133,7 @@ test('garbage collection metric with aggregation', t => {
     'weakCb'
   ]) {
     const errorMessage = `Failed check for entry ${entry}`
-    t.ok(isNaN(gc[entry].mean), errorMessage)
+    t.equal(gc[entry].mean, 0, errorMessage)
     t.equal(gc[entry].totalCount, 0, errorMessage)
     t.ok(gc[entry].flags === undefined)
   }
@@ -228,14 +228,7 @@ test('garbage collection metric with aggregation and flags', t => {
         'totalDuration'
       ]) {
         const errorMessage = `Failed check for ${entry}.flags.${flag}.${value}`
-        switch (value) {
-          case 'mean':
-          case 'stdDeviation':
-            t.ok(isNaN(gc.major.flags[flag][value]), errorMessage)
-            break
-          default:
-            t.ok(gc.major.flags[flag][value] === 0, errorMessage)
-        }
+        t.ok(gc.major.flags[flag][value] === 0, errorMessage)
       }
     }
   }
@@ -258,7 +251,7 @@ test('garbage collection metric with aggregation and flags', t => {
     'weakCb'
   ]) {
     const errorMessage = `Failed check for entry ${entry}`
-    t.ok(isNaN(gc[entry].mean), errorMessage)
+    t.equal(gc[entry].mean, 0, errorMessage)
     t.equal(gc[entry].totalCount, 0, errorMessage)
     t.ok(gc.major.flags.no instanceof GCEntry)
     t.equal(gc.major.flags.no.getPercentile(99), 0, errorMessage)
@@ -282,14 +275,7 @@ test('garbage collection metric with aggregation and flags', t => {
         'totalDuration'
       ]) {
         const errorMessage = `Failed check for ${entry}.flags.${flag}.${value}`
-        switch (value) {
-          case 'mean':
-          case 'stdDeviation':
-            t.ok(isNaN(gc.major.flags[flag][value]), errorMessage)
-            break
-          default:
-            t.ok(gc.major.flags[flag][value] === 0, errorMessage)
-        }
+        t.ok(gc.major.flags[flag][value] === 0, errorMessage)
       }
     }
   }
