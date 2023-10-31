@@ -7,11 +7,7 @@ import { GCMetric, GCMetricOptions } from './gcMetric'
 
 declare interface SamplerOptions {
   /**
-   * Sample interval (ms), each sampleInterval ms a data event is emitted.
-   * On Node 10 the default value is 500 while on Node >= 12 is 1000.
-   * Under the hood the package uses monitorEventLoopDelay where available to
-   * sample the event loop and this allows to increase the default sample
-   * interval on Node >= 12.
+   * Sample interval (ms), each `sampleInterval` ms a data event is emitted.
    */
   sampleInterval?: number,
 
@@ -56,3 +52,6 @@ export class Sampler extends EventEmitter {
   start(): void
   stop(): void
 }
+
+export type InstancesDiagnosticChannelHookData = Sampler
+export type SamplesDiagnosticChannelHookData = Sampler
