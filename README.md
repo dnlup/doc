@@ -82,6 +82,7 @@ Its API lets you access both computed and raw values, where possible.
     + [`gcAggregatedEntry.flags.allExternalMemory`](#gcaggregatedentryflagsallexternalmemory)
     + [`gcAggregatedEntry.flags.scheduleIdle`](#gcaggregatedentryflagsscheduleidle)
   * [`doc.errors`](#docerrors)
+  * [Diagnostics Channel support](#diagnostics-channel-support)
 - [License](#license)
 
 <!-- tocstop -->
@@ -518,6 +519,25 @@ In the `errors` object are exported all the custom errors used by the module.
 |-------|------------|-------------|
 | `InvalidArgumentError` | `DOC_ERR_INVALID_ARG` | An invalid option or argument was used |
 | `NotSupportedError` | `DOC_ERR_NOT_SUPPORTED` | A metric is not supported on the Node.js version used |
+
+### Diagnostics Channel support
+
+Node [diagnostics channel](https://nodejs.org/dist/latest-v20.x/docs/api/diagnostics_channel.html) are supported.
+
+```js
+const diagnosticsChannel = require('diagnostics_channel')
+const doc = require('@dnlup/doc)
+
+diagnostics_channel.subscribe(doc.constants.DOC_CHANNEL, s => {
+  console.log('A new instance', s)
+})
+
+diagnostics_channel.subscribe(doc.constants.DOC_SAMPLES_CHANNEL, s => {
+  console.log('A new sample', s)
+})
+
+doc()
+```
 
 ## License
 
