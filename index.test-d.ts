@@ -9,9 +9,6 @@ import doc, {
   GCMetric
  } from '.'
  
-expectAssignable<errors.NotSupportedError>(new errors.NotSupportedError())
-expectAssignable<'NotSupportedError'>(new errors.NotSupportedError().name)
-expectAssignable<'DOC_ERR_NOT_SUPPORTED'>(new errors.NotSupportedError().code)
 expectAssignable<errors.InvalidArgumentError>(new errors.InvalidArgumentError())
 expectAssignable<'InvalidArgumentError'>(new errors.InvalidArgumentError().name)
 expectAssignable<'DOC_ERR_INVALID_ARG'>(new errors.InvalidArgumentError().code)
