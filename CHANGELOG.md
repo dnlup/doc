@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/dnlup/doc/compare/v5.0.0...v5.0.1) (2023-11-02)
+
+
+### Bug Fixes
+
+* **types:** fix exports ([a62f988](https://github.com/dnlup/doc/commit/a62f9886285cbe2fbb8fe383a2467d18c5c7005a))
+
 ## [5.0.0](https://github.com/dnlup/doc/compare/v4.0.1...v5.0.0) (2023-11-02)
 
 
