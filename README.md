@@ -528,11 +528,11 @@ Node [diagnostics channel](https://nodejs.org/dist/latest-v20.x/docs/api/diagnos
 const diagnosticsChannel = require('diagnostics_channel')
 const doc = require('@dnlup/doc)
 
-diagnostics_channel.subscribe(doc.constants.DOC_CHANNEL, s => {
+diagnosticsChannel.subscribe(doc.constants.DOC_CHANNEL, s => {
   console.log('A new instance', s)
 })
 
-diagnostics_channel.subscribe(doc.constants.DOC_SAMPLES_CHANNEL, s => {
+diagnosticsChannel.subscribe(doc.constants.DOC_SAMPLES_CHANNEL, s => {
   console.log('A new sample', s)
 })
 
