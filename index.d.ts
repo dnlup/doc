@@ -14,7 +14,7 @@ import * as constants from './types/constants'
 
 declare namespace doc {
   export { errors }
-  export type {
+  export {
     Sampler,
     SamplerOptions,
     InstancesDiagnosticChannelHookData,
