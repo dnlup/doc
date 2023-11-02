@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/dnlup/doc/compare/v4.0.1...v5.0.0) (2023-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* minimum Node.js version supported is 18
+
+### Features
+
+* add diagnostics channel support ([97ca4b4](https://github.com/dnlup/doc/commit/97ca4b4233934ecc90d9a06ae17102c44b474d4e)), closes [#579](https://github.com/dnlup/doc/issues/579)
+* use node histogram ([eb20316](https://github.com/dnlup/doc/commit/eb20316d1e58e3cd4818b15756d6477ee0efb72a)), closes [#442](https://github.com/dnlup/doc/issues/442)
+
+
+### Bug Fixes
+
+* fix types and remove dead code ([abdfbee](https://github.com/dnlup/doc/commit/abdfbee551bc3cb8f16d7579275a2ce22741984d))
+* **gc:** compute to zero nan values ([ebd33a0](https://github.com/dnlup/doc/commit/ebd33a00c164ef15b17af97e728ade48ca845274))
+* remove deprecation notice ([60d6f09](https://github.com/dnlup/doc/commit/60d6f09eac7fb8002e285012f16ca329303f9265))
+* **types:** fix exported types ([410bbf0](https://github.com/dnlup/doc/commit/410bbf0c19634a971316586e4ab460d9e9717125))
+
+
+* drop older node versions ([70fa43d](https://github.com/dnlup/doc/commit/70fa43dc7fcaf84532a88f7b41403252ee3186c0))
+
 ### [4.0.1](https://github.com/dnlup/doc/compare/v4.0.0...v4.0.1) (2021-03-17)
 
 
