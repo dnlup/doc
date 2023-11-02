@@ -83,7 +83,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
-    "lint-staged": "^14.0.1",
+    "lint-staged": "^15.0.2",
     "markdown-toc": "^1.2.0",
     "semver": "^7.5.4",
     "standard-version": "^9.5.0",
