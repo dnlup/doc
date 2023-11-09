@@ -12,6 +12,11 @@ declare interface SamplerOptions {
   sampleInterval?: number,
 
   /**
+   * Unreference the sampling timer. If set to `true` the timer
+   * will leep the event loop alive.
+   */
+  unref?: boolean
+  /**
    * Garbage collection metric options
    */
   gcOptions?: GCMetricOptions,
