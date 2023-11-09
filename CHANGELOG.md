@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.2](https://github.com/dnlup/doc/compare/v5.0.1...v5.0.2) (2023-11-09)
+
+
+### Bug Fixes
+
+* **types:** add missing unref option ([6ad9075](https://github.com/dnlup/doc/commit/6ad9075c4c40487b1ff166c6466842158c5a767a))
+
 ### [5.0.1](https://github.com/dnlup/doc/compare/v5.0.0...v5.0.1) (2023-11-02)
 
 
