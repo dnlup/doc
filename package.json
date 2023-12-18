@@ -61,7 +61,7 @@
   },
   "homepage": "https://github.com/dnlup/doc#readme",
   "engines": {
-    "node": ">=18",
+    "node": ">=18"
   },
   "tsd": {
     "directory": "."
