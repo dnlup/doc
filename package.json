@@ -67,7 +67,7 @@
     "directory": "."
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.13.1",
+    "@arethetypeswrong/cli": "^0.14.1",
     "@types/node": "^20.6.3",
     "atomic-sleep": "^1.0.0",
     "autocannon": "^7.12.0",
